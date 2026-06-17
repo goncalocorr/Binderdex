@@ -101,9 +101,14 @@ firestore.rules                    # regras de segurança
 
 ### 4.3 Atualização leve do dataset (confirmado)
 - O dataset incluído é a base — funciona offline para sempre.
-- No arranque (com rede), a app consulta um `dataset_version.json` remoto.
-- Se a versão remota for mais recente, descarrega o dataset atualizado em **segundo plano**
-  e reidrata o Drift. **Pokémon novos entram sem esperar por atualização na Play Store.**
+- **Alojamento:** `dataset_version.json` + `pokedex.json` no **Firebase Hosting** (mesmo
+  domínio da política de privacidade; sem segundo serviço).
+- **Versionamento:** `dataset_version.json` contém um inteiro `datasetVersion` + `generatedAt`.
+  O asset incluído carrega o seu próprio `datasetVersion`; a app compara o inteiro local com
+  o remoto.
+- No arranque (com rede), a app consulta o `dataset_version.json` remoto. Se o inteiro remoto
+  for maior, descarrega `pokedex.json` em **segundo plano** e reidrata o Drift. **Pokémon
+  novos entram sem esperar por atualização na Play Store.**
 - Sem rede → ignora silenciosamente e usa o dataset incluído.
 
 ### 4.4 Drift (local)
@@ -167,10 +172,23 @@ service cloud.firestore {
 - Base legal: consentimento (o sync é opt-in).
 
 ### 6.3 Eliminação de conta
-- **Na app (Definições → Eliminar conta):** apaga `users/{uid}` no Firestore, apaga o
-  utilizador no Firebase Auth e limpa o Drift local.
+> **Armadilhas do Firebase a respeitar:**
+> 1. Apagar `users/{uid}` **não** apaga a subcoleção `entries/` — os filhos ficam órfãos.
+>    A eliminação tem de apagar explicitamente todos os `users/{uid}/entries/{pokemonId}`
+>    (em lote/`WriteBatch`) **antes** (ou via Cloud Function com `recursiveDelete`).
+> 2. `user.delete()` exige **login recente**; sessões antigas devolvem
+>    `requires-recent-login`. O fluxo tem de **reautenticar** antes de apagar.
+
+- **Na app (Definições → Eliminar conta):**
+  1. Reautenticar o utilizador (re-login Google/email) — trata `requires-recent-login`.
+  2. **Cloud Function `deleteAccount` (callable, recomendada):** faz `recursiveDelete` de
+     `users/{uid}` (subcoleção `entries/` incluída) e `admin.auth().deleteUser(uid)` — a
+     única forma robusta de eliminação verdadeiramente completa.
+     *Fallback sem Cloud Function:* apagar `entries/` em `WriteBatch`, depois o doc do
+     utilizador, e por fim `user.delete()` no cliente.
+  3. Limpar o Drift local e voltar ao modo convidado.
 - **Via web:** página pública de pedido de eliminação (em `web_legal/`) com instruções +
-  contacto. *Opcional/futuro:* Cloud Function `deleteAccount` (callable) para automatizar.
+  contacto, satisfazendo o requisito da Play Store de um URL de eliminação fora da app.
 
 ### 6.4 Data Safety (Play Store)
 - Documento de mapeamento de dados (o que é recolhido, finalidade, se é partilhado) para
@@ -257,4 +275,5 @@ a query do Drift), e progresso (derivado da coleção).
 - Pagamentos / subscrições reais.
 - Trocas/social entre utilizadores.
 - Dados sensíveis ou permissões além de Internet.
-- Cloud Function de eliminação (fica preparada, não obrigatória no MVP).
+- Cloud Function de eliminação: **recomendada** para eliminação completa; se não a
+  ativarmos no MVP, usa-se o fallback cliente (`WriteBatch` + `user.delete()`) descrito em §6.3.
