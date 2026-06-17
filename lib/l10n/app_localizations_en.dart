@@ -9,13 +9,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Pokédex';
+  String get appTitle => 'Card Binder';
 
   @override
-  String get searchHint => 'Search by name or number';
-
-  @override
-  String get tabPokedex => 'Pokédex';
+  String get tabSets => 'Collections';
 
   @override
   String get tabProgress => 'Progress';
@@ -27,10 +24,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabSettings => 'Settings';
 
   @override
-  String get caught => 'Caught';
+  String get searchSetsHint => 'Search collections';
 
   @override
-  String get shiny => 'Shiny';
+  String get searchCardsHint => 'Search by name or number';
+
+  @override
+  String get owned => 'Owned';
 
   @override
   String get quantity => 'Quantity';
@@ -39,59 +39,56 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notes => 'Notes';
 
   @override
-  String get baseStats => 'Base stats';
+  String get variant => 'Variant';
 
   @override
-  String get statHp => 'HP';
+  String get variantNormal => 'Normal';
 
   @override
-  String get statAttack => 'Attack';
+  String get variantHolo => 'Holo';
 
   @override
-  String get statDefense => 'Defense';
+  String get variantReverse => 'Reverse holo';
 
   @override
-  String get statSpAttack => 'Sp. Atk';
-
-  @override
-  String get statSpDefense => 'Sp. Def';
-
-  @override
-  String get statSpeed => 'Speed';
-
-  @override
-  String get filterStatus => 'Status';
-
-  @override
-  String get filterGeneration => 'Generation';
-
-  @override
-  String get filterType => 'Type';
+  String get rarity => 'Rarity';
 
   @override
   String get statusAll => 'All';
 
   @override
-  String get statusCaught => 'Caught';
+  String get statusOwned => 'Owned';
 
   @override
   String get statusMissing => 'Missing';
 
   @override
-  String get statusShiny => 'Shiny';
-
-  @override
   String get progressGlobal => 'Global progress';
 
   @override
-  String progressGeneration(int n) {
-    return 'Generation $n';
+  String ownedOfTotal(int owned, int total) {
+    return '$owned/$total';
   }
 
   @override
   String missingCount(int n) {
     return 'Missing: $n';
   }
+
+  @override
+  String get loadingCards => 'Loading cards…';
+
+  @override
+  String get cardsLoadError => 'Couldn\'t load cards. Check your connection.';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get noCards => 'No cards';
+
+  @override
+  String get noSets => 'No collections';
 
   @override
   String get theme => 'Theme';

@@ -30,6 +30,9 @@ dependencies:
   # Internacionalização
   intl: any
 
+  # Cliente HTTP da Pokémon TCG API
+  dio: ^5.4.3+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -39,12 +42,9 @@ dev_dependencies:
   drift_dev: ^2.18.0
   build_runner: ^2.4.11
 
-  # Usado APENAS pelo script tool/generate_dataset.dart (geração do dataset)
-  dio: ^5.4.3+1
-
 flutter:
   uses-material-design: true
   # Ativa a geração das localizações a partir dos ficheiros .arb (ver l10n.yaml)
   generate: true
   assets:
-    - assets/data/pokedex.json
+    - assets/data/tcg_sets.json

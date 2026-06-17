@@ -1,66 +1,73 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../data/local/database.dart';
+import '../../data/remote/tcg_api.dart';
+import '../../data/repositories/cards_repository.dart';
 import '../../data/repositories/collection_repository.dart';
-import '../../data/repositories/pokemon_repository.dart';
-import '../../domain/entities/pokedex_filter.dart';
-import '../../domain/entities/pokemon.dart';
+import '../../data/repositories/sets_repository.dart';
+import '../../domain/entities/card_filter.dart';
+import '../../domain/entities/card_set.dart';
 import '../../domain/entities/progress.dart';
-import '../../domain/entities/user_entry.dart';
+import '../../domain/entities/tcg_card.dart';
+import '../../domain/entities/user_card_entry.dart';
 
-/// Base de dados (instância única para toda a app).
+// --- Infra ---
 final databaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
   ref.onDispose(db.close);
   return db;
 });
 
-final pokemonRepositoryProvider =
-    Provider((ref) => PokemonRepository(ref.watch(databaseProvider)));
+final tcgApiProvider = Provider<TcgApi>((ref) => TcgApi());
 
+final setsRepositoryProvider =
+    Provider((ref) => SetsRepository(ref.watch(databaseProvider)));
+final cardsRepositoryProvider = Provider((ref) =>
+    CardsRepository(ref.watch(databaseProvider), ref.watch(tcgApiProvider)));
 final collectionRepositoryProvider =
     Provider((ref) => CollectionRepository(ref.watch(databaseProvider)));
 
-/// Estado dos filtros da grelha principal.
-final filterProvider = StateProvider<PokedexFilter>((_) => const PokedexFilter());
+// --- Sets (ecrã inicial) ---
+final setsListProvider =
+    StreamProvider<List<SetProgress>>((ref) => ref.watch(setsRepositoryProvider).watchSets());
 
-/// Lista filtrada da Pokédex (reativa ao filtro e à coleção).
-final pokedexListProvider = StreamProvider<List<PokedexItem>>((ref) {
-  final filter = ref.watch(filterProvider);
-  return ref.watch(pokemonRepositoryProvider).watchFiltered(filter);
+/// Pesquisa de sets (filtrada em memória — a lista de sets é pequena, ~160).
+final setSearchProvider = StateProvider<String>((_) => '');
+
+final setByIdProvider = FutureProvider.family<CardSet?, String>(
+    (ref, id) => ref.watch(setsRepositoryProvider).byId(id));
+
+/// Sincroniza as cartas de um set (busca à API se necessário).
+final setSyncProvider = FutureProvider.family<void, String>(
+    (ref, setId) => ref.watch(cardsRepositoryProvider).ensureSetSynced(setId));
+
+// --- Cartas de um set ---
+/// Filtro por set (estado separado para cada set aberto).
+final cardFilterProvider =
+    StateProvider.family<CardFilter, String>((_, __) => const CardFilter());
+
+final cardsListProvider =
+    StreamProvider.family<List<CardItem>, String>((ref, setId) {
+  final f = ref.watch(cardFilterProvider(setId));
+  return ref.watch(cardsRepositoryProvider).watchCards(setId, f);
 });
 
-/// Lista dedicada de "em falta" (independente do filtro principal).
-final missingListProvider = StreamProvider<List<PokedexItem>>((ref) {
-  return ref
-      .watch(pokemonRepositoryProvider)
-      .watchFiltered(const PokedexFilter(status: StatusFilter.missing));
-});
+final raritiesProvider = FutureProvider.family<List<String>, String>(
+    (ref, setId) => ref.watch(cardsRepositoryProvider).rarities(setId));
 
-/// Um Pokémon do catálogo por id (cacheado por família).
-final pokemonByIdProvider = FutureProvider.family<Pokemon?, int>((ref, id) {
-  return ref.watch(pokemonRepositoryProvider).byId(id);
-});
+// --- Carta individual / coleção ---
+final cardByIdProvider = FutureProvider.family<TcgCard?, String>(
+    (ref, id) => ref.watch(cardsRepositoryProvider).byId(id));
 
-/// Registo de coleção de um Pokémon (reativo).
-final entryProvider = StreamProvider.family<UserEntry, int>((ref, id) {
-  return ref.watch(collectionRepositoryProvider).watchEntry(id);
-});
+final entryProvider = StreamProvider.family<UserCardEntry, String>(
+    (ref, id) => ref.watch(collectionRepositoryProvider).watchEntry(id));
 
-/// Progresso global. Recalcula quando a coleção muda (depende de pokedexList).
+// --- Progresso ---
 final globalProgressProvider = FutureProvider<ProgressStats>((ref) {
-  ref.watch(pokedexListProvider);
+  ref.watch(setsListProvider); // recalcula quando a coleção muda
   return ref.watch(collectionRepositoryProvider).globalProgress();
 });
 
-/// Progresso por geração.
-final progressByGenProvider = FutureProvider<Map<int, ProgressStats>>((ref) {
-  ref.watch(pokedexListProvider);
-  return ref.watch(collectionRepositoryProvider).progressByGeneration();
-});
-
-/// Preferências de UI (Etapa 1: em memória). 0=sistema, 1=claro, 2=escuro.
-final themeModeProvider = StateProvider<int>((_) => 0);
-
-/// Idioma: null = seguir o sistema; 'pt' ou 'en' para forçar.
+// --- Preferências de UI ---
+final themeModeProvider = StateProvider<int>((_) => 0); // 0=sistema,1=claro,2=escuro
 final localeProvider = StateProvider<String?>((_) => null);

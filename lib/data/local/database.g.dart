@@ -3,110 +3,92 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $PokemonTableTable extends PokemonTable
-    with TableInfo<$PokemonTableTable, PokemonTableData> {
+class $CardSetsTable extends CardSets
+    with TableInfo<$CardSetsTable, CardSetRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $PokemonTableTable(this.attachedDatabase, [this._alias]);
+  $CardSetsTable(this.attachedDatabase, [this._alias]);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: false);
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _nameEnMeta = const VerificationMeta('nameEn');
+  static const VerificationMeta _seriesMeta = const VerificationMeta('series');
   @override
-  late final GeneratedColumn<String> nameEn = GeneratedColumn<String>(
-      'name_en', aliasedName, false,
+  late final GeneratedColumn<String> series = GeneratedColumn<String>(
+      'series', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _type1Meta = const VerificationMeta('type1');
+  static const VerificationMeta _printedTotalMeta =
+      const VerificationMeta('printedTotal');
   @override
-  late final GeneratedColumn<String> type1 = GeneratedColumn<String>(
-      'type1', aliasedName, false,
+  late final GeneratedColumn<int> printedTotal = GeneratedColumn<int>(
+      'printed_total', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _totalMeta = const VerificationMeta('total');
+  @override
+  late final GeneratedColumn<int> total = GeneratedColumn<int>(
+      'total', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _releaseDateMeta =
+      const VerificationMeta('releaseDate');
+  @override
+  late final GeneratedColumn<String> releaseDate = GeneratedColumn<String>(
+      'release_date', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _type2Meta = const VerificationMeta('type2');
+  static const VerificationMeta _symbolUrlMeta =
+      const VerificationMeta('symbolUrl');
   @override
-  late final GeneratedColumn<String> type2 = GeneratedColumn<String>(
-      'type2', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _generationMeta =
-      const VerificationMeta('generation');
-  @override
-  late final GeneratedColumn<int> generation = GeneratedColumn<int>(
-      'generation', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _hpMeta = const VerificationMeta('hp');
-  @override
-  late final GeneratedColumn<int> hp = GeneratedColumn<int>(
-      'hp', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _attackMeta = const VerificationMeta('attack');
-  @override
-  late final GeneratedColumn<int> attack = GeneratedColumn<int>(
-      'attack', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _defenseMeta =
-      const VerificationMeta('defense');
-  @override
-  late final GeneratedColumn<int> defense = GeneratedColumn<int>(
-      'defense', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _spAttackMeta =
-      const VerificationMeta('spAttack');
-  @override
-  late final GeneratedColumn<int> spAttack = GeneratedColumn<int>(
-      'sp_attack', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _spDefenseMeta =
-      const VerificationMeta('spDefense');
-  @override
-  late final GeneratedColumn<int> spDefense = GeneratedColumn<int>(
-      'sp_defense', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _speedMeta = const VerificationMeta('speed');
-  @override
-  late final GeneratedColumn<int> speed = GeneratedColumn<int>(
-      'speed', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
-  @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, false,
+  late final GeneratedColumn<String> symbolUrl = GeneratedColumn<String>(
+      'symbol_url', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _logoUrlMeta =
+      const VerificationMeta('logoUrl');
+  @override
+  late final GeneratedColumn<String> logoUrl = GeneratedColumn<String>(
+      'logo_url', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _cardsSyncedMeta =
+      const VerificationMeta('cardsSynced');
+  @override
+  late final GeneratedColumn<bool> cardsSynced = GeneratedColumn<bool>(
+      'cards_synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("cards_synced" IN (0, 1))'),
+      defaultValue: const Constant(false));
   @override
   List<GeneratedColumn> get $columns => [
         id,
         name,
-        nameEn,
-        type1,
-        type2,
-        generation,
-        hp,
-        attack,
-        defense,
-        spAttack,
-        spDefense,
-        speed,
-        description
+        series,
+        printedTotal,
+        total,
+        releaseDate,
+        symbolUrl,
+        logoUrl,
+        cardsSynced
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'pokemon_table';
+  static const String $name = 'card_sets';
   @override
-  VerificationContext validateIntegrity(Insertable<PokemonTableData> instance,
+  VerificationContext validateIntegrity(Insertable<CardSetRow> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -114,72 +96,51 @@ class $PokemonTableTable extends PokemonTable
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('name_en')) {
-      context.handle(_nameEnMeta,
-          nameEn.isAcceptableOrUnknown(data['name_en']!, _nameEnMeta));
+    if (data.containsKey('series')) {
+      context.handle(_seriesMeta,
+          series.isAcceptableOrUnknown(data['series']!, _seriesMeta));
     } else if (isInserting) {
-      context.missing(_nameEnMeta);
+      context.missing(_seriesMeta);
     }
-    if (data.containsKey('type1')) {
+    if (data.containsKey('printed_total')) {
       context.handle(
-          _type1Meta, type1.isAcceptableOrUnknown(data['type1']!, _type1Meta));
+          _printedTotalMeta,
+          printedTotal.isAcceptableOrUnknown(
+              data['printed_total']!, _printedTotalMeta));
     } else if (isInserting) {
-      context.missing(_type1Meta);
+      context.missing(_printedTotalMeta);
     }
-    if (data.containsKey('type2')) {
+    if (data.containsKey('total')) {
       context.handle(
-          _type2Meta, type2.isAcceptableOrUnknown(data['type2']!, _type2Meta));
+          _totalMeta, total.isAcceptableOrUnknown(data['total']!, _totalMeta));
+    } else if (isInserting) {
+      context.missing(_totalMeta);
     }
-    if (data.containsKey('generation')) {
+    if (data.containsKey('release_date')) {
       context.handle(
-          _generationMeta,
-          generation.isAcceptableOrUnknown(
-              data['generation']!, _generationMeta));
+          _releaseDateMeta,
+          releaseDate.isAcceptableOrUnknown(
+              data['release_date']!, _releaseDateMeta));
     } else if (isInserting) {
-      context.missing(_generationMeta);
+      context.missing(_releaseDateMeta);
     }
-    if (data.containsKey('hp')) {
-      context.handle(_hpMeta, hp.isAcceptableOrUnknown(data['hp']!, _hpMeta));
+    if (data.containsKey('symbol_url')) {
+      context.handle(_symbolUrlMeta,
+          symbolUrl.isAcceptableOrUnknown(data['symbol_url']!, _symbolUrlMeta));
     } else if (isInserting) {
-      context.missing(_hpMeta);
+      context.missing(_symbolUrlMeta);
     }
-    if (data.containsKey('attack')) {
-      context.handle(_attackMeta,
-          attack.isAcceptableOrUnknown(data['attack']!, _attackMeta));
+    if (data.containsKey('logo_url')) {
+      context.handle(_logoUrlMeta,
+          logoUrl.isAcceptableOrUnknown(data['logo_url']!, _logoUrlMeta));
     } else if (isInserting) {
-      context.missing(_attackMeta);
+      context.missing(_logoUrlMeta);
     }
-    if (data.containsKey('defense')) {
-      context.handle(_defenseMeta,
-          defense.isAcceptableOrUnknown(data['defense']!, _defenseMeta));
-    } else if (isInserting) {
-      context.missing(_defenseMeta);
-    }
-    if (data.containsKey('sp_attack')) {
-      context.handle(_spAttackMeta,
-          spAttack.isAcceptableOrUnknown(data['sp_attack']!, _spAttackMeta));
-    } else if (isInserting) {
-      context.missing(_spAttackMeta);
-    }
-    if (data.containsKey('sp_defense')) {
-      context.handle(_spDefenseMeta,
-          spDefense.isAcceptableOrUnknown(data['sp_defense']!, _spDefenseMeta));
-    } else if (isInserting) {
-      context.missing(_spDefenseMeta);
-    }
-    if (data.containsKey('speed')) {
+    if (data.containsKey('cards_synced')) {
       context.handle(
-          _speedMeta, speed.isAcceptableOrUnknown(data['speed']!, _speedMeta));
-    } else if (isInserting) {
-      context.missing(_speedMeta);
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
-    } else if (isInserting) {
-      context.missing(_descriptionMeta);
+          _cardsSyncedMeta,
+          cardsSynced.isAcceptableOrUnknown(
+              data['cards_synced']!, _cardsSyncedMeta));
     }
     return context;
   }
@@ -187,357 +148,281 @@ class $PokemonTableTable extends PokemonTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  PokemonTableData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  CardSetRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PokemonTableData(
+    return CardSetRow(
       id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      nameEn: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name_en'])!,
-      type1: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}type1'])!,
-      type2: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}type2']),
-      generation: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}generation'])!,
-      hp: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}hp'])!,
-      attack: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}attack'])!,
-      defense: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}defense'])!,
-      spAttack: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}sp_attack'])!,
-      spDefense: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}sp_defense'])!,
-      speed: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}speed'])!,
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      series: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}series'])!,
+      printedTotal: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}printed_total'])!,
+      total: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}total'])!,
+      releaseDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}release_date'])!,
+      symbolUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}symbol_url'])!,
+      logoUrl: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}logo_url'])!,
+      cardsSynced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}cards_synced'])!,
     );
   }
 
   @override
-  $PokemonTableTable createAlias(String alias) {
-    return $PokemonTableTable(attachedDatabase, alias);
+  $CardSetsTable createAlias(String alias) {
+    return $CardSetsTable(attachedDatabase, alias);
   }
 }
 
-class PokemonTableData extends DataClass
-    implements Insertable<PokemonTableData> {
-  final int id;
+class CardSetRow extends DataClass implements Insertable<CardSetRow> {
+  final String id;
   final String name;
-  final String nameEn;
-  final String type1;
-  final String? type2;
-  final int generation;
-  final int hp;
-  final int attack;
-  final int defense;
-  final int spAttack;
-  final int spDefense;
-  final int speed;
-  final String description;
-  const PokemonTableData(
+  final String series;
+  final int printedTotal;
+  final int total;
+  final String releaseDate;
+  final String symbolUrl;
+  final String logoUrl;
+
+  /// True quando as cartas deste set já foram buscadas e cacheadas.
+  final bool cardsSynced;
+  const CardSetRow(
       {required this.id,
       required this.name,
-      required this.nameEn,
-      required this.type1,
-      this.type2,
-      required this.generation,
-      required this.hp,
-      required this.attack,
-      required this.defense,
-      required this.spAttack,
-      required this.spDefense,
-      required this.speed,
-      required this.description});
+      required this.series,
+      required this.printedTotal,
+      required this.total,
+      required this.releaseDate,
+      required this.symbolUrl,
+      required this.logoUrl,
+      required this.cardsSynced});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
-    map['name_en'] = Variable<String>(nameEn);
-    map['type1'] = Variable<String>(type1);
-    if (!nullToAbsent || type2 != null) {
-      map['type2'] = Variable<String>(type2);
-    }
-    map['generation'] = Variable<int>(generation);
-    map['hp'] = Variable<int>(hp);
-    map['attack'] = Variable<int>(attack);
-    map['defense'] = Variable<int>(defense);
-    map['sp_attack'] = Variable<int>(spAttack);
-    map['sp_defense'] = Variable<int>(spDefense);
-    map['speed'] = Variable<int>(speed);
-    map['description'] = Variable<String>(description);
+    map['series'] = Variable<String>(series);
+    map['printed_total'] = Variable<int>(printedTotal);
+    map['total'] = Variable<int>(total);
+    map['release_date'] = Variable<String>(releaseDate);
+    map['symbol_url'] = Variable<String>(symbolUrl);
+    map['logo_url'] = Variable<String>(logoUrl);
+    map['cards_synced'] = Variable<bool>(cardsSynced);
     return map;
   }
 
-  PokemonTableCompanion toCompanion(bool nullToAbsent) {
-    return PokemonTableCompanion(
+  CardSetsCompanion toCompanion(bool nullToAbsent) {
+    return CardSetsCompanion(
       id: Value(id),
       name: Value(name),
-      nameEn: Value(nameEn),
-      type1: Value(type1),
-      type2:
-          type2 == null && nullToAbsent ? const Value.absent() : Value(type2),
-      generation: Value(generation),
-      hp: Value(hp),
-      attack: Value(attack),
-      defense: Value(defense),
-      spAttack: Value(spAttack),
-      spDefense: Value(spDefense),
-      speed: Value(speed),
-      description: Value(description),
+      series: Value(series),
+      printedTotal: Value(printedTotal),
+      total: Value(total),
+      releaseDate: Value(releaseDate),
+      symbolUrl: Value(symbolUrl),
+      logoUrl: Value(logoUrl),
+      cardsSynced: Value(cardsSynced),
     );
   }
 
-  factory PokemonTableData.fromJson(Map<String, dynamic> json,
+  factory CardSetRow.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PokemonTableData(
-      id: serializer.fromJson<int>(json['id']),
+    return CardSetRow(
+      id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
-      nameEn: serializer.fromJson<String>(json['nameEn']),
-      type1: serializer.fromJson<String>(json['type1']),
-      type2: serializer.fromJson<String?>(json['type2']),
-      generation: serializer.fromJson<int>(json['generation']),
-      hp: serializer.fromJson<int>(json['hp']),
-      attack: serializer.fromJson<int>(json['attack']),
-      defense: serializer.fromJson<int>(json['defense']),
-      spAttack: serializer.fromJson<int>(json['spAttack']),
-      spDefense: serializer.fromJson<int>(json['spDefense']),
-      speed: serializer.fromJson<int>(json['speed']),
-      description: serializer.fromJson<String>(json['description']),
+      series: serializer.fromJson<String>(json['series']),
+      printedTotal: serializer.fromJson<int>(json['printedTotal']),
+      total: serializer.fromJson<int>(json['total']),
+      releaseDate: serializer.fromJson<String>(json['releaseDate']),
+      symbolUrl: serializer.fromJson<String>(json['symbolUrl']),
+      logoUrl: serializer.fromJson<String>(json['logoUrl']),
+      cardsSynced: serializer.fromJson<bool>(json['cardsSynced']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
-      'nameEn': serializer.toJson<String>(nameEn),
-      'type1': serializer.toJson<String>(type1),
-      'type2': serializer.toJson<String?>(type2),
-      'generation': serializer.toJson<int>(generation),
-      'hp': serializer.toJson<int>(hp),
-      'attack': serializer.toJson<int>(attack),
-      'defense': serializer.toJson<int>(defense),
-      'spAttack': serializer.toJson<int>(spAttack),
-      'spDefense': serializer.toJson<int>(spDefense),
-      'speed': serializer.toJson<int>(speed),
-      'description': serializer.toJson<String>(description),
+      'series': serializer.toJson<String>(series),
+      'printedTotal': serializer.toJson<int>(printedTotal),
+      'total': serializer.toJson<int>(total),
+      'releaseDate': serializer.toJson<String>(releaseDate),
+      'symbolUrl': serializer.toJson<String>(symbolUrl),
+      'logoUrl': serializer.toJson<String>(logoUrl),
+      'cardsSynced': serializer.toJson<bool>(cardsSynced),
     };
   }
 
-  PokemonTableData copyWith(
-          {int? id,
+  CardSetRow copyWith(
+          {String? id,
           String? name,
-          String? nameEn,
-          String? type1,
-          Value<String?> type2 = const Value.absent(),
-          int? generation,
-          int? hp,
-          int? attack,
-          int? defense,
-          int? spAttack,
-          int? spDefense,
-          int? speed,
-          String? description}) =>
-      PokemonTableData(
+          String? series,
+          int? printedTotal,
+          int? total,
+          String? releaseDate,
+          String? symbolUrl,
+          String? logoUrl,
+          bool? cardsSynced}) =>
+      CardSetRow(
         id: id ?? this.id,
         name: name ?? this.name,
-        nameEn: nameEn ?? this.nameEn,
-        type1: type1 ?? this.type1,
-        type2: type2.present ? type2.value : this.type2,
-        generation: generation ?? this.generation,
-        hp: hp ?? this.hp,
-        attack: attack ?? this.attack,
-        defense: defense ?? this.defense,
-        spAttack: spAttack ?? this.spAttack,
-        spDefense: spDefense ?? this.spDefense,
-        speed: speed ?? this.speed,
-        description: description ?? this.description,
+        series: series ?? this.series,
+        printedTotal: printedTotal ?? this.printedTotal,
+        total: total ?? this.total,
+        releaseDate: releaseDate ?? this.releaseDate,
+        symbolUrl: symbolUrl ?? this.symbolUrl,
+        logoUrl: logoUrl ?? this.logoUrl,
+        cardsSynced: cardsSynced ?? this.cardsSynced,
       );
-  PokemonTableData copyWithCompanion(PokemonTableCompanion data) {
-    return PokemonTableData(
+  CardSetRow copyWithCompanion(CardSetsCompanion data) {
+    return CardSetRow(
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
-      nameEn: data.nameEn.present ? data.nameEn.value : this.nameEn,
-      type1: data.type1.present ? data.type1.value : this.type1,
-      type2: data.type2.present ? data.type2.value : this.type2,
-      generation:
-          data.generation.present ? data.generation.value : this.generation,
-      hp: data.hp.present ? data.hp.value : this.hp,
-      attack: data.attack.present ? data.attack.value : this.attack,
-      defense: data.defense.present ? data.defense.value : this.defense,
-      spAttack: data.spAttack.present ? data.spAttack.value : this.spAttack,
-      spDefense: data.spDefense.present ? data.spDefense.value : this.spDefense,
-      speed: data.speed.present ? data.speed.value : this.speed,
-      description:
-          data.description.present ? data.description.value : this.description,
+      series: data.series.present ? data.series.value : this.series,
+      printedTotal: data.printedTotal.present
+          ? data.printedTotal.value
+          : this.printedTotal,
+      total: data.total.present ? data.total.value : this.total,
+      releaseDate:
+          data.releaseDate.present ? data.releaseDate.value : this.releaseDate,
+      symbolUrl: data.symbolUrl.present ? data.symbolUrl.value : this.symbolUrl,
+      logoUrl: data.logoUrl.present ? data.logoUrl.value : this.logoUrl,
+      cardsSynced:
+          data.cardsSynced.present ? data.cardsSynced.value : this.cardsSynced,
     );
   }
 
   @override
   String toString() {
-    return (StringBuffer('PokemonTableData(')
+    return (StringBuffer('CardSetRow(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('nameEn: $nameEn, ')
-          ..write('type1: $type1, ')
-          ..write('type2: $type2, ')
-          ..write('generation: $generation, ')
-          ..write('hp: $hp, ')
-          ..write('attack: $attack, ')
-          ..write('defense: $defense, ')
-          ..write('spAttack: $spAttack, ')
-          ..write('spDefense: $spDefense, ')
-          ..write('speed: $speed, ')
-          ..write('description: $description')
+          ..write('series: $series, ')
+          ..write('printedTotal: $printedTotal, ')
+          ..write('total: $total, ')
+          ..write('releaseDate: $releaseDate, ')
+          ..write('symbolUrl: $symbolUrl, ')
+          ..write('logoUrl: $logoUrl, ')
+          ..write('cardsSynced: $cardsSynced')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, nameEn, type1, type2, generation,
-      hp, attack, defense, spAttack, spDefense, speed, description);
+  int get hashCode => Object.hash(id, name, series, printedTotal, total,
+      releaseDate, symbolUrl, logoUrl, cardsSynced);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is PokemonTableData &&
+      (other is CardSetRow &&
           other.id == this.id &&
           other.name == this.name &&
-          other.nameEn == this.nameEn &&
-          other.type1 == this.type1 &&
-          other.type2 == this.type2 &&
-          other.generation == this.generation &&
-          other.hp == this.hp &&
-          other.attack == this.attack &&
-          other.defense == this.defense &&
-          other.spAttack == this.spAttack &&
-          other.spDefense == this.spDefense &&
-          other.speed == this.speed &&
-          other.description == this.description);
+          other.series == this.series &&
+          other.printedTotal == this.printedTotal &&
+          other.total == this.total &&
+          other.releaseDate == this.releaseDate &&
+          other.symbolUrl == this.symbolUrl &&
+          other.logoUrl == this.logoUrl &&
+          other.cardsSynced == this.cardsSynced);
 }
 
-class PokemonTableCompanion extends UpdateCompanion<PokemonTableData> {
-  final Value<int> id;
+class CardSetsCompanion extends UpdateCompanion<CardSetRow> {
+  final Value<String> id;
   final Value<String> name;
-  final Value<String> nameEn;
-  final Value<String> type1;
-  final Value<String?> type2;
-  final Value<int> generation;
-  final Value<int> hp;
-  final Value<int> attack;
-  final Value<int> defense;
-  final Value<int> spAttack;
-  final Value<int> spDefense;
-  final Value<int> speed;
-  final Value<String> description;
-  const PokemonTableCompanion({
+  final Value<String> series;
+  final Value<int> printedTotal;
+  final Value<int> total;
+  final Value<String> releaseDate;
+  final Value<String> symbolUrl;
+  final Value<String> logoUrl;
+  final Value<bool> cardsSynced;
+  final Value<int> rowid;
+  const CardSetsCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
-    this.nameEn = const Value.absent(),
-    this.type1 = const Value.absent(),
-    this.type2 = const Value.absent(),
-    this.generation = const Value.absent(),
-    this.hp = const Value.absent(),
-    this.attack = const Value.absent(),
-    this.defense = const Value.absent(),
-    this.spAttack = const Value.absent(),
-    this.spDefense = const Value.absent(),
-    this.speed = const Value.absent(),
-    this.description = const Value.absent(),
+    this.series = const Value.absent(),
+    this.printedTotal = const Value.absent(),
+    this.total = const Value.absent(),
+    this.releaseDate = const Value.absent(),
+    this.symbolUrl = const Value.absent(),
+    this.logoUrl = const Value.absent(),
+    this.cardsSynced = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
-  PokemonTableCompanion.insert({
-    this.id = const Value.absent(),
+  CardSetsCompanion.insert({
+    required String id,
     required String name,
-    required String nameEn,
-    required String type1,
-    this.type2 = const Value.absent(),
-    required int generation,
-    required int hp,
-    required int attack,
-    required int defense,
-    required int spAttack,
-    required int spDefense,
-    required int speed,
-    required String description,
-  })  : name = Value(name),
-        nameEn = Value(nameEn),
-        type1 = Value(type1),
-        generation = Value(generation),
-        hp = Value(hp),
-        attack = Value(attack),
-        defense = Value(defense),
-        spAttack = Value(spAttack),
-        spDefense = Value(spDefense),
-        speed = Value(speed),
-        description = Value(description);
-  static Insertable<PokemonTableData> custom({
-    Expression<int>? id,
+    required String series,
+    required int printedTotal,
+    required int total,
+    required String releaseDate,
+    required String symbolUrl,
+    required String logoUrl,
+    this.cardsSynced = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        name = Value(name),
+        series = Value(series),
+        printedTotal = Value(printedTotal),
+        total = Value(total),
+        releaseDate = Value(releaseDate),
+        symbolUrl = Value(symbolUrl),
+        logoUrl = Value(logoUrl);
+  static Insertable<CardSetRow> custom({
+    Expression<String>? id,
     Expression<String>? name,
-    Expression<String>? nameEn,
-    Expression<String>? type1,
-    Expression<String>? type2,
-    Expression<int>? generation,
-    Expression<int>? hp,
-    Expression<int>? attack,
-    Expression<int>? defense,
-    Expression<int>? spAttack,
-    Expression<int>? spDefense,
-    Expression<int>? speed,
-    Expression<String>? description,
+    Expression<String>? series,
+    Expression<int>? printedTotal,
+    Expression<int>? total,
+    Expression<String>? releaseDate,
+    Expression<String>? symbolUrl,
+    Expression<String>? logoUrl,
+    Expression<bool>? cardsSynced,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
-      if (nameEn != null) 'name_en': nameEn,
-      if (type1 != null) 'type1': type1,
-      if (type2 != null) 'type2': type2,
-      if (generation != null) 'generation': generation,
-      if (hp != null) 'hp': hp,
-      if (attack != null) 'attack': attack,
-      if (defense != null) 'defense': defense,
-      if (spAttack != null) 'sp_attack': spAttack,
-      if (spDefense != null) 'sp_defense': spDefense,
-      if (speed != null) 'speed': speed,
-      if (description != null) 'description': description,
+      if (series != null) 'series': series,
+      if (printedTotal != null) 'printed_total': printedTotal,
+      if (total != null) 'total': total,
+      if (releaseDate != null) 'release_date': releaseDate,
+      if (symbolUrl != null) 'symbol_url': symbolUrl,
+      if (logoUrl != null) 'logo_url': logoUrl,
+      if (cardsSynced != null) 'cards_synced': cardsSynced,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  PokemonTableCompanion copyWith(
-      {Value<int>? id,
+  CardSetsCompanion copyWith(
+      {Value<String>? id,
       Value<String>? name,
-      Value<String>? nameEn,
-      Value<String>? type1,
-      Value<String?>? type2,
-      Value<int>? generation,
-      Value<int>? hp,
-      Value<int>? attack,
-      Value<int>? defense,
-      Value<int>? spAttack,
-      Value<int>? spDefense,
-      Value<int>? speed,
-      Value<String>? description}) {
-    return PokemonTableCompanion(
+      Value<String>? series,
+      Value<int>? printedTotal,
+      Value<int>? total,
+      Value<String>? releaseDate,
+      Value<String>? symbolUrl,
+      Value<String>? logoUrl,
+      Value<bool>? cardsSynced,
+      Value<int>? rowid}) {
+    return CardSetsCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
-      nameEn: nameEn ?? this.nameEn,
-      type1: type1 ?? this.type1,
-      type2: type2 ?? this.type2,
-      generation: generation ?? this.generation,
-      hp: hp ?? this.hp,
-      attack: attack ?? this.attack,
-      defense: defense ?? this.defense,
-      spAttack: spAttack ?? this.spAttack,
-      spDefense: spDefense ?? this.spDefense,
-      speed: speed ?? this.speed,
-      description: description ?? this.description,
+      series: series ?? this.series,
+      printedTotal: printedTotal ?? this.printedTotal,
+      total: total ?? this.total,
+      releaseDate: releaseDate ?? this.releaseDate,
+      symbolUrl: symbolUrl ?? this.symbolUrl,
+      logoUrl: logoUrl ?? this.logoUrl,
+      cardsSynced: cardsSynced ?? this.cardsSynced,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -545,97 +430,584 @@ class PokemonTableCompanion extends UpdateCompanion<PokemonTableData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (id.present) {
-      map['id'] = Variable<int>(id.value);
+      map['id'] = Variable<String>(id.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (nameEn.present) {
-      map['name_en'] = Variable<String>(nameEn.value);
+    if (series.present) {
+      map['series'] = Variable<String>(series.value);
     }
-    if (type1.present) {
-      map['type1'] = Variable<String>(type1.value);
+    if (printedTotal.present) {
+      map['printed_total'] = Variable<int>(printedTotal.value);
     }
-    if (type2.present) {
-      map['type2'] = Variable<String>(type2.value);
+    if (total.present) {
+      map['total'] = Variable<int>(total.value);
     }
-    if (generation.present) {
-      map['generation'] = Variable<int>(generation.value);
+    if (releaseDate.present) {
+      map['release_date'] = Variable<String>(releaseDate.value);
     }
-    if (hp.present) {
-      map['hp'] = Variable<int>(hp.value);
+    if (symbolUrl.present) {
+      map['symbol_url'] = Variable<String>(symbolUrl.value);
     }
-    if (attack.present) {
-      map['attack'] = Variable<int>(attack.value);
+    if (logoUrl.present) {
+      map['logo_url'] = Variable<String>(logoUrl.value);
     }
-    if (defense.present) {
-      map['defense'] = Variable<int>(defense.value);
+    if (cardsSynced.present) {
+      map['cards_synced'] = Variable<bool>(cardsSynced.value);
     }
-    if (spAttack.present) {
-      map['sp_attack'] = Variable<int>(spAttack.value);
-    }
-    if (spDefense.present) {
-      map['sp_defense'] = Variable<int>(spDefense.value);
-    }
-    if (speed.present) {
-      map['speed'] = Variable<int>(speed.value);
-    }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('PokemonTableCompanion(')
+    return (StringBuffer('CardSetsCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('nameEn: $nameEn, ')
-          ..write('type1: $type1, ')
-          ..write('type2: $type2, ')
-          ..write('generation: $generation, ')
-          ..write('hp: $hp, ')
-          ..write('attack: $attack, ')
-          ..write('defense: $defense, ')
-          ..write('spAttack: $spAttack, ')
-          ..write('spDefense: $spDefense, ')
-          ..write('speed: $speed, ')
-          ..write('description: $description')
+          ..write('series: $series, ')
+          ..write('printedTotal: $printedTotal, ')
+          ..write('total: $total, ')
+          ..write('releaseDate: $releaseDate, ')
+          ..write('symbolUrl: $symbolUrl, ')
+          ..write('logoUrl: $logoUrl, ')
+          ..write('cardsSynced: $cardsSynced, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
 }
 
-class $UserEntriesTable extends UserEntries
-    with TableInfo<$UserEntriesTable, UserEntryRow> {
+class $TcgCardsTable extends TcgCards
+    with TableInfo<$TcgCardsTable, TcgCardRow> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $UserEntriesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _pokemonIdMeta =
-      const VerificationMeta('pokemonId');
+  $TcgCardsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int> pokemonId = GeneratedColumn<int>(
-      'pokemon_id', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _caughtMeta = const VerificationMeta('caught');
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _setIdMeta = const VerificationMeta('setId');
   @override
-  late final GeneratedColumn<bool> caught = GeneratedColumn<bool>(
-      'caught', aliasedName, false,
+  late final GeneratedColumn<String> setId = GeneratedColumn<String>(
+      'set_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _numberMeta = const VerificationMeta('number');
+  @override
+  late final GeneratedColumn<String> number = GeneratedColumn<String>(
+      'number', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _numberSortMeta =
+      const VerificationMeta('numberSort');
+  @override
+  late final GeneratedColumn<int> numberSort = GeneratedColumn<int>(
+      'number_sort', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _rarityMeta = const VerificationMeta('rarity');
+  @override
+  late final GeneratedColumn<String> rarity = GeneratedColumn<String>(
+      'rarity', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _supertypeMeta =
+      const VerificationMeta('supertype');
+  @override
+  late final GeneratedColumn<String> supertype = GeneratedColumn<String>(
+      'supertype', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumn<String> type = GeneratedColumn<String>(
+      'type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _imageSmallMeta =
+      const VerificationMeta('imageSmall');
+  @override
+  late final GeneratedColumn<String> imageSmall = GeneratedColumn<String>(
+      'image_small', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _imageLargeMeta =
+      const VerificationMeta('imageLarge');
+  @override
+  late final GeneratedColumn<String> imageLarge = GeneratedColumn<String>(
+      'image_large', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        setId,
+        name,
+        number,
+        numberSort,
+        rarity,
+        supertype,
+        type,
+        imageSmall,
+        imageLarge
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'tcg_cards';
+  @override
+  VerificationContext validateIntegrity(Insertable<TcgCardRow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('set_id')) {
+      context.handle(
+          _setIdMeta, setId.isAcceptableOrUnknown(data['set_id']!, _setIdMeta));
+    } else if (isInserting) {
+      context.missing(_setIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('number')) {
+      context.handle(_numberMeta,
+          number.isAcceptableOrUnknown(data['number']!, _numberMeta));
+    } else if (isInserting) {
+      context.missing(_numberMeta);
+    }
+    if (data.containsKey('number_sort')) {
+      context.handle(
+          _numberSortMeta,
+          numberSort.isAcceptableOrUnknown(
+              data['number_sort']!, _numberSortMeta));
+    } else if (isInserting) {
+      context.missing(_numberSortMeta);
+    }
+    if (data.containsKey('rarity')) {
+      context.handle(_rarityMeta,
+          rarity.isAcceptableOrUnknown(data['rarity']!, _rarityMeta));
+    }
+    if (data.containsKey('supertype')) {
+      context.handle(_supertypeMeta,
+          supertype.isAcceptableOrUnknown(data['supertype']!, _supertypeMeta));
+    }
+    if (data.containsKey('type')) {
+      context.handle(
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
+    }
+    if (data.containsKey('image_small')) {
+      context.handle(
+          _imageSmallMeta,
+          imageSmall.isAcceptableOrUnknown(
+              data['image_small']!, _imageSmallMeta));
+    } else if (isInserting) {
+      context.missing(_imageSmallMeta);
+    }
+    if (data.containsKey('image_large')) {
+      context.handle(
+          _imageLargeMeta,
+          imageLarge.isAcceptableOrUnknown(
+              data['image_large']!, _imageLargeMeta));
+    } else if (isInserting) {
+      context.missing(_imageLargeMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TcgCardRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TcgCardRow(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      setId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}set_id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      number: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}number'])!,
+      numberSort: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}number_sort'])!,
+      rarity: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}rarity']),
+      supertype: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}supertype']),
+      type: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}type']),
+      imageSmall: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_small'])!,
+      imageLarge: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image_large'])!,
+    );
+  }
+
+  @override
+  $TcgCardsTable createAlias(String alias) {
+    return $TcgCardsTable(attachedDatabase, alias);
+  }
+}
+
+class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
+  final String id;
+  final String setId;
+  final String name;
+  final String number;
+  final int numberSort;
+  final String? rarity;
+  final String? supertype;
+  final String? type;
+  final String imageSmall;
+  final String imageLarge;
+  const TcgCardRow(
+      {required this.id,
+      required this.setId,
+      required this.name,
+      required this.number,
+      required this.numberSort,
+      this.rarity,
+      this.supertype,
+      this.type,
+      required this.imageSmall,
+      required this.imageLarge});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['set_id'] = Variable<String>(setId);
+    map['name'] = Variable<String>(name);
+    map['number'] = Variable<String>(number);
+    map['number_sort'] = Variable<int>(numberSort);
+    if (!nullToAbsent || rarity != null) {
+      map['rarity'] = Variable<String>(rarity);
+    }
+    if (!nullToAbsent || supertype != null) {
+      map['supertype'] = Variable<String>(supertype);
+    }
+    if (!nullToAbsent || type != null) {
+      map['type'] = Variable<String>(type);
+    }
+    map['image_small'] = Variable<String>(imageSmall);
+    map['image_large'] = Variable<String>(imageLarge);
+    return map;
+  }
+
+  TcgCardsCompanion toCompanion(bool nullToAbsent) {
+    return TcgCardsCompanion(
+      id: Value(id),
+      setId: Value(setId),
+      name: Value(name),
+      number: Value(number),
+      numberSort: Value(numberSort),
+      rarity:
+          rarity == null && nullToAbsent ? const Value.absent() : Value(rarity),
+      supertype: supertype == null && nullToAbsent
+          ? const Value.absent()
+          : Value(supertype),
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      imageSmall: Value(imageSmall),
+      imageLarge: Value(imageLarge),
+    );
+  }
+
+  factory TcgCardRow.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TcgCardRow(
+      id: serializer.fromJson<String>(json['id']),
+      setId: serializer.fromJson<String>(json['setId']),
+      name: serializer.fromJson<String>(json['name']),
+      number: serializer.fromJson<String>(json['number']),
+      numberSort: serializer.fromJson<int>(json['numberSort']),
+      rarity: serializer.fromJson<String?>(json['rarity']),
+      supertype: serializer.fromJson<String?>(json['supertype']),
+      type: serializer.fromJson<String?>(json['type']),
+      imageSmall: serializer.fromJson<String>(json['imageSmall']),
+      imageLarge: serializer.fromJson<String>(json['imageLarge']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'setId': serializer.toJson<String>(setId),
+      'name': serializer.toJson<String>(name),
+      'number': serializer.toJson<String>(number),
+      'numberSort': serializer.toJson<int>(numberSort),
+      'rarity': serializer.toJson<String?>(rarity),
+      'supertype': serializer.toJson<String?>(supertype),
+      'type': serializer.toJson<String?>(type),
+      'imageSmall': serializer.toJson<String>(imageSmall),
+      'imageLarge': serializer.toJson<String>(imageLarge),
+    };
+  }
+
+  TcgCardRow copyWith(
+          {String? id,
+          String? setId,
+          String? name,
+          String? number,
+          int? numberSort,
+          Value<String?> rarity = const Value.absent(),
+          Value<String?> supertype = const Value.absent(),
+          Value<String?> type = const Value.absent(),
+          String? imageSmall,
+          String? imageLarge}) =>
+      TcgCardRow(
+        id: id ?? this.id,
+        setId: setId ?? this.setId,
+        name: name ?? this.name,
+        number: number ?? this.number,
+        numberSort: numberSort ?? this.numberSort,
+        rarity: rarity.present ? rarity.value : this.rarity,
+        supertype: supertype.present ? supertype.value : this.supertype,
+        type: type.present ? type.value : this.type,
+        imageSmall: imageSmall ?? this.imageSmall,
+        imageLarge: imageLarge ?? this.imageLarge,
+      );
+  TcgCardRow copyWithCompanion(TcgCardsCompanion data) {
+    return TcgCardRow(
+      id: data.id.present ? data.id.value : this.id,
+      setId: data.setId.present ? data.setId.value : this.setId,
+      name: data.name.present ? data.name.value : this.name,
+      number: data.number.present ? data.number.value : this.number,
+      numberSort:
+          data.numberSort.present ? data.numberSort.value : this.numberSort,
+      rarity: data.rarity.present ? data.rarity.value : this.rarity,
+      supertype: data.supertype.present ? data.supertype.value : this.supertype,
+      type: data.type.present ? data.type.value : this.type,
+      imageSmall:
+          data.imageSmall.present ? data.imageSmall.value : this.imageSmall,
+      imageLarge:
+          data.imageLarge.present ? data.imageLarge.value : this.imageLarge,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TcgCardRow(')
+          ..write('id: $id, ')
+          ..write('setId: $setId, ')
+          ..write('name: $name, ')
+          ..write('number: $number, ')
+          ..write('numberSort: $numberSort, ')
+          ..write('rarity: $rarity, ')
+          ..write('supertype: $supertype, ')
+          ..write('type: $type, ')
+          ..write('imageSmall: $imageSmall, ')
+          ..write('imageLarge: $imageLarge')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, setId, name, number, numberSort, rarity,
+      supertype, type, imageSmall, imageLarge);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TcgCardRow &&
+          other.id == this.id &&
+          other.setId == this.setId &&
+          other.name == this.name &&
+          other.number == this.number &&
+          other.numberSort == this.numberSort &&
+          other.rarity == this.rarity &&
+          other.supertype == this.supertype &&
+          other.type == this.type &&
+          other.imageSmall == this.imageSmall &&
+          other.imageLarge == this.imageLarge);
+}
+
+class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
+  final Value<String> id;
+  final Value<String> setId;
+  final Value<String> name;
+  final Value<String> number;
+  final Value<int> numberSort;
+  final Value<String?> rarity;
+  final Value<String?> supertype;
+  final Value<String?> type;
+  final Value<String> imageSmall;
+  final Value<String> imageLarge;
+  final Value<int> rowid;
+  const TcgCardsCompanion({
+    this.id = const Value.absent(),
+    this.setId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.number = const Value.absent(),
+    this.numberSort = const Value.absent(),
+    this.rarity = const Value.absent(),
+    this.supertype = const Value.absent(),
+    this.type = const Value.absent(),
+    this.imageSmall = const Value.absent(),
+    this.imageLarge = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TcgCardsCompanion.insert({
+    required String id,
+    required String setId,
+    required String name,
+    required String number,
+    required int numberSort,
+    this.rarity = const Value.absent(),
+    this.supertype = const Value.absent(),
+    this.type = const Value.absent(),
+    required String imageSmall,
+    required String imageLarge,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        setId = Value(setId),
+        name = Value(name),
+        number = Value(number),
+        numberSort = Value(numberSort),
+        imageSmall = Value(imageSmall),
+        imageLarge = Value(imageLarge);
+  static Insertable<TcgCardRow> custom({
+    Expression<String>? id,
+    Expression<String>? setId,
+    Expression<String>? name,
+    Expression<String>? number,
+    Expression<int>? numberSort,
+    Expression<String>? rarity,
+    Expression<String>? supertype,
+    Expression<String>? type,
+    Expression<String>? imageSmall,
+    Expression<String>? imageLarge,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (setId != null) 'set_id': setId,
+      if (name != null) 'name': name,
+      if (number != null) 'number': number,
+      if (numberSort != null) 'number_sort': numberSort,
+      if (rarity != null) 'rarity': rarity,
+      if (supertype != null) 'supertype': supertype,
+      if (type != null) 'type': type,
+      if (imageSmall != null) 'image_small': imageSmall,
+      if (imageLarge != null) 'image_large': imageLarge,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TcgCardsCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? setId,
+      Value<String>? name,
+      Value<String>? number,
+      Value<int>? numberSort,
+      Value<String?>? rarity,
+      Value<String?>? supertype,
+      Value<String?>? type,
+      Value<String>? imageSmall,
+      Value<String>? imageLarge,
+      Value<int>? rowid}) {
+    return TcgCardsCompanion(
+      id: id ?? this.id,
+      setId: setId ?? this.setId,
+      name: name ?? this.name,
+      number: number ?? this.number,
+      numberSort: numberSort ?? this.numberSort,
+      rarity: rarity ?? this.rarity,
+      supertype: supertype ?? this.supertype,
+      type: type ?? this.type,
+      imageSmall: imageSmall ?? this.imageSmall,
+      imageLarge: imageLarge ?? this.imageLarge,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (setId.present) {
+      map['set_id'] = Variable<String>(setId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (number.present) {
+      map['number'] = Variable<String>(number.value);
+    }
+    if (numberSort.present) {
+      map['number_sort'] = Variable<int>(numberSort.value);
+    }
+    if (rarity.present) {
+      map['rarity'] = Variable<String>(rarity.value);
+    }
+    if (supertype.present) {
+      map['supertype'] = Variable<String>(supertype.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(type.value);
+    }
+    if (imageSmall.present) {
+      map['image_small'] = Variable<String>(imageSmall.value);
+    }
+    if (imageLarge.present) {
+      map['image_large'] = Variable<String>(imageLarge.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TcgCardsCompanion(')
+          ..write('id: $id, ')
+          ..write('setId: $setId, ')
+          ..write('name: $name, ')
+          ..write('number: $number, ')
+          ..write('numberSort: $numberSort, ')
+          ..write('rarity: $rarity, ')
+          ..write('supertype: $supertype, ')
+          ..write('type: $type, ')
+          ..write('imageSmall: $imageSmall, ')
+          ..write('imageLarge: $imageLarge, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $UserCardEntriesTable extends UserCardEntries
+    with TableInfo<$UserCardEntriesTable, UserCardEntryRow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserCardEntriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _cardIdMeta = const VerificationMeta('cardId');
+  @override
+  late final GeneratedColumn<String> cardId = GeneratedColumn<String>(
+      'card_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _ownedMeta = const VerificationMeta('owned');
+  @override
+  late final GeneratedColumn<bool> owned = GeneratedColumn<bool>(
+      'owned', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
       defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("caught" IN (0, 1))'),
-      defaultValue: const Constant(false));
-  static const VerificationMeta _shinyMeta = const VerificationMeta('shiny');
-  @override
-  late final GeneratedColumn<bool> shiny = GeneratedColumn<bool>(
-      'shiny', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("shiny" IN (0, 1))'),
+          GeneratedColumn.constraintIsAlways('CHECK ("owned" IN (0, 1))'),
       defaultValue: const Constant(false));
   static const VerificationMeta _quantityMeta =
       const VerificationMeta('quantity');
@@ -645,6 +1017,14 @@ class $UserEntriesTable extends UserEntries
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultValue: const Constant(0));
+  static const VerificationMeta _variantMeta =
+      const VerificationMeta('variant');
+  @override
+  late final GeneratedColumn<String> variant = GeneratedColumn<String>(
+      'variant', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('normal'));
   static const VerificationMeta _notesMeta = const VerificationMeta('notes');
   @override
   late final GeneratedColumn<String> notes = GeneratedColumn<String>(
@@ -669,32 +1049,34 @@ class $UserEntriesTable extends UserEntries
       defaultValue: const Constant(true));
   @override
   List<GeneratedColumn> get $columns =>
-      [pokemonId, caught, shiny, quantity, notes, updatedAt, dirty];
+      [cardId, owned, quantity, variant, notes, updatedAt, dirty];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
   String get actualTableName => $name;
-  static const String $name = 'user_entries';
+  static const String $name = 'user_card_entries';
   @override
-  VerificationContext validateIntegrity(Insertable<UserEntryRow> instance,
+  VerificationContext validateIntegrity(Insertable<UserCardEntryRow> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('pokemon_id')) {
-      context.handle(_pokemonIdMeta,
-          pokemonId.isAcceptableOrUnknown(data['pokemon_id']!, _pokemonIdMeta));
+    if (data.containsKey('card_id')) {
+      context.handle(_cardIdMeta,
+          cardId.isAcceptableOrUnknown(data['card_id']!, _cardIdMeta));
+    } else if (isInserting) {
+      context.missing(_cardIdMeta);
     }
-    if (data.containsKey('caught')) {
-      context.handle(_caughtMeta,
-          caught.isAcceptableOrUnknown(data['caught']!, _caughtMeta));
-    }
-    if (data.containsKey('shiny')) {
+    if (data.containsKey('owned')) {
       context.handle(
-          _shinyMeta, shiny.isAcceptableOrUnknown(data['shiny']!, _shinyMeta));
+          _ownedMeta, owned.isAcceptableOrUnknown(data['owned']!, _ownedMeta));
     }
     if (data.containsKey('quantity')) {
       context.handle(_quantityMeta,
           quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    }
+    if (data.containsKey('variant')) {
+      context.handle(_variantMeta,
+          variant.isAcceptableOrUnknown(data['variant']!, _variantMeta));
     }
     if (data.containsKey('notes')) {
       context.handle(
@@ -714,19 +1096,19 @@ class $UserEntriesTable extends UserEntries
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {pokemonId};
+  Set<GeneratedColumn> get $primaryKey => {cardId};
   @override
-  UserEntryRow map(Map<String, dynamic> data, {String? tablePrefix}) {
+  UserCardEntryRow map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return UserEntryRow(
-      pokemonId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}pokemon_id'])!,
-      caught: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}caught'])!,
-      shiny: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}shiny'])!,
+    return UserCardEntryRow(
+      cardId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}card_id'])!,
+      owned: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}owned'])!,
       quantity: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}quantity'])!,
+      variant: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}variant'])!,
       notes: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}notes'])!,
       updatedAt: attachedDatabase.typeMapping
@@ -737,62 +1119,61 @@ class $UserEntriesTable extends UserEntries
   }
 
   @override
-  $UserEntriesTable createAlias(String alias) {
-    return $UserEntriesTable(attachedDatabase, alias);
+  $UserCardEntriesTable createAlias(String alias) {
+    return $UserCardEntriesTable(attachedDatabase, alias);
   }
 }
 
-class UserEntryRow extends DataClass implements Insertable<UserEntryRow> {
-  final int pokemonId;
-  final bool caught;
-  final bool shiny;
+class UserCardEntryRow extends DataClass
+    implements Insertable<UserCardEntryRow> {
+  final String cardId;
+  final bool owned;
   final int quantity;
+  final String variant;
   final String notes;
   final DateTime updatedAt;
-
-  /// Marcado quando há alterações por sincronizar. Usado na Etapa 2.
   final bool dirty;
-  const UserEntryRow(
-      {required this.pokemonId,
-      required this.caught,
-      required this.shiny,
+  const UserCardEntryRow(
+      {required this.cardId,
+      required this.owned,
       required this.quantity,
+      required this.variant,
       required this.notes,
       required this.updatedAt,
       required this.dirty});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['pokemon_id'] = Variable<int>(pokemonId);
-    map['caught'] = Variable<bool>(caught);
-    map['shiny'] = Variable<bool>(shiny);
+    map['card_id'] = Variable<String>(cardId);
+    map['owned'] = Variable<bool>(owned);
     map['quantity'] = Variable<int>(quantity);
+    map['variant'] = Variable<String>(variant);
     map['notes'] = Variable<String>(notes);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['dirty'] = Variable<bool>(dirty);
     return map;
   }
 
-  UserEntriesCompanion toCompanion(bool nullToAbsent) {
-    return UserEntriesCompanion(
-      pokemonId: Value(pokemonId),
-      caught: Value(caught),
-      shiny: Value(shiny),
+  UserCardEntriesCompanion toCompanion(bool nullToAbsent) {
+    return UserCardEntriesCompanion(
+      cardId: Value(cardId),
+      owned: Value(owned),
       quantity: Value(quantity),
+      variant: Value(variant),
       notes: Value(notes),
       updatedAt: Value(updatedAt),
       dirty: Value(dirty),
     );
   }
 
-  factory UserEntryRow.fromJson(Map<String, dynamic> json,
+  factory UserCardEntryRow.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return UserEntryRow(
-      pokemonId: serializer.fromJson<int>(json['pokemonId']),
-      caught: serializer.fromJson<bool>(json['caught']),
-      shiny: serializer.fromJson<bool>(json['shiny']),
+    return UserCardEntryRow(
+      cardId: serializer.fromJson<String>(json['cardId']),
+      owned: serializer.fromJson<bool>(json['owned']),
       quantity: serializer.fromJson<int>(json['quantity']),
+      variant: serializer.fromJson<String>(json['variant']),
       notes: serializer.fromJson<String>(json['notes']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       dirty: serializer.fromJson<bool>(json['dirty']),
@@ -802,39 +1183,39 @@ class UserEntryRow extends DataClass implements Insertable<UserEntryRow> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'pokemonId': serializer.toJson<int>(pokemonId),
-      'caught': serializer.toJson<bool>(caught),
-      'shiny': serializer.toJson<bool>(shiny),
+      'cardId': serializer.toJson<String>(cardId),
+      'owned': serializer.toJson<bool>(owned),
       'quantity': serializer.toJson<int>(quantity),
+      'variant': serializer.toJson<String>(variant),
       'notes': serializer.toJson<String>(notes),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'dirty': serializer.toJson<bool>(dirty),
     };
   }
 
-  UserEntryRow copyWith(
-          {int? pokemonId,
-          bool? caught,
-          bool? shiny,
+  UserCardEntryRow copyWith(
+          {String? cardId,
+          bool? owned,
           int? quantity,
+          String? variant,
           String? notes,
           DateTime? updatedAt,
           bool? dirty}) =>
-      UserEntryRow(
-        pokemonId: pokemonId ?? this.pokemonId,
-        caught: caught ?? this.caught,
-        shiny: shiny ?? this.shiny,
+      UserCardEntryRow(
+        cardId: cardId ?? this.cardId,
+        owned: owned ?? this.owned,
         quantity: quantity ?? this.quantity,
+        variant: variant ?? this.variant,
         notes: notes ?? this.notes,
         updatedAt: updatedAt ?? this.updatedAt,
         dirty: dirty ?? this.dirty,
       );
-  UserEntryRow copyWithCompanion(UserEntriesCompanion data) {
-    return UserEntryRow(
-      pokemonId: data.pokemonId.present ? data.pokemonId.value : this.pokemonId,
-      caught: data.caught.present ? data.caught.value : this.caught,
-      shiny: data.shiny.present ? data.shiny.value : this.shiny,
+  UserCardEntryRow copyWithCompanion(UserCardEntriesCompanion data) {
+    return UserCardEntryRow(
+      cardId: data.cardId.present ? data.cardId.value : this.cardId,
+      owned: data.owned.present ? data.owned.value : this.owned,
       quantity: data.quantity.present ? data.quantity.value : this.quantity,
+      variant: data.variant.present ? data.variant.value : this.variant,
       notes: data.notes.present ? data.notes.value : this.notes,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       dirty: data.dirty.present ? data.dirty.value : this.dirty,
@@ -843,11 +1224,11 @@ class UserEntryRow extends DataClass implements Insertable<UserEntryRow> {
 
   @override
   String toString() {
-    return (StringBuffer('UserEntryRow(')
-          ..write('pokemonId: $pokemonId, ')
-          ..write('caught: $caught, ')
-          ..write('shiny: $shiny, ')
+    return (StringBuffer('UserCardEntryRow(')
+          ..write('cardId: $cardId, ')
+          ..write('owned: $owned, ')
           ..write('quantity: $quantity, ')
+          ..write('variant: $variant, ')
           ..write('notes: $notes, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('dirty: $dirty')
@@ -857,99 +1238,107 @@ class UserEntryRow extends DataClass implements Insertable<UserEntryRow> {
 
   @override
   int get hashCode =>
-      Object.hash(pokemonId, caught, shiny, quantity, notes, updatedAt, dirty);
+      Object.hash(cardId, owned, quantity, variant, notes, updatedAt, dirty);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is UserEntryRow &&
-          other.pokemonId == this.pokemonId &&
-          other.caught == this.caught &&
-          other.shiny == this.shiny &&
+      (other is UserCardEntryRow &&
+          other.cardId == this.cardId &&
+          other.owned == this.owned &&
           other.quantity == this.quantity &&
+          other.variant == this.variant &&
           other.notes == this.notes &&
           other.updatedAt == this.updatedAt &&
           other.dirty == this.dirty);
 }
 
-class UserEntriesCompanion extends UpdateCompanion<UserEntryRow> {
-  final Value<int> pokemonId;
-  final Value<bool> caught;
-  final Value<bool> shiny;
+class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
+  final Value<String> cardId;
+  final Value<bool> owned;
   final Value<int> quantity;
+  final Value<String> variant;
   final Value<String> notes;
   final Value<DateTime> updatedAt;
   final Value<bool> dirty;
-  const UserEntriesCompanion({
-    this.pokemonId = const Value.absent(),
-    this.caught = const Value.absent(),
-    this.shiny = const Value.absent(),
+  final Value<int> rowid;
+  const UserCardEntriesCompanion({
+    this.cardId = const Value.absent(),
+    this.owned = const Value.absent(),
     this.quantity = const Value.absent(),
+    this.variant = const Value.absent(),
     this.notes = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.dirty = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
-  UserEntriesCompanion.insert({
-    this.pokemonId = const Value.absent(),
-    this.caught = const Value.absent(),
-    this.shiny = const Value.absent(),
+  UserCardEntriesCompanion.insert({
+    required String cardId,
+    this.owned = const Value.absent(),
     this.quantity = const Value.absent(),
+    this.variant = const Value.absent(),
     this.notes = const Value.absent(),
     required DateTime updatedAt,
     this.dirty = const Value.absent(),
-  }) : updatedAt = Value(updatedAt);
-  static Insertable<UserEntryRow> custom({
-    Expression<int>? pokemonId,
-    Expression<bool>? caught,
-    Expression<bool>? shiny,
+    this.rowid = const Value.absent(),
+  })  : cardId = Value(cardId),
+        updatedAt = Value(updatedAt);
+  static Insertable<UserCardEntryRow> custom({
+    Expression<String>? cardId,
+    Expression<bool>? owned,
     Expression<int>? quantity,
+    Expression<String>? variant,
     Expression<String>? notes,
     Expression<DateTime>? updatedAt,
     Expression<bool>? dirty,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (pokemonId != null) 'pokemon_id': pokemonId,
-      if (caught != null) 'caught': caught,
-      if (shiny != null) 'shiny': shiny,
+      if (cardId != null) 'card_id': cardId,
+      if (owned != null) 'owned': owned,
       if (quantity != null) 'quantity': quantity,
+      if (variant != null) 'variant': variant,
       if (notes != null) 'notes': notes,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (dirty != null) 'dirty': dirty,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
-  UserEntriesCompanion copyWith(
-      {Value<int>? pokemonId,
-      Value<bool>? caught,
-      Value<bool>? shiny,
+  UserCardEntriesCompanion copyWith(
+      {Value<String>? cardId,
+      Value<bool>? owned,
       Value<int>? quantity,
+      Value<String>? variant,
       Value<String>? notes,
       Value<DateTime>? updatedAt,
-      Value<bool>? dirty}) {
-    return UserEntriesCompanion(
-      pokemonId: pokemonId ?? this.pokemonId,
-      caught: caught ?? this.caught,
-      shiny: shiny ?? this.shiny,
+      Value<bool>? dirty,
+      Value<int>? rowid}) {
+    return UserCardEntriesCompanion(
+      cardId: cardId ?? this.cardId,
+      owned: owned ?? this.owned,
       quantity: quantity ?? this.quantity,
+      variant: variant ?? this.variant,
       notes: notes ?? this.notes,
       updatedAt: updatedAt ?? this.updatedAt,
       dirty: dirty ?? this.dirty,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (pokemonId.present) {
-      map['pokemon_id'] = Variable<int>(pokemonId.value);
+    if (cardId.present) {
+      map['card_id'] = Variable<String>(cardId.value);
     }
-    if (caught.present) {
-      map['caught'] = Variable<bool>(caught.value);
-    }
-    if (shiny.present) {
-      map['shiny'] = Variable<bool>(shiny.value);
+    if (owned.present) {
+      map['owned'] = Variable<bool>(owned.value);
     }
     if (quantity.present) {
       map['quantity'] = Variable<int>(quantity.value);
+    }
+    if (variant.present) {
+      map['variant'] = Variable<String>(variant.value);
     }
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
@@ -960,19 +1349,23 @@ class UserEntriesCompanion extends UpdateCompanion<UserEntryRow> {
     if (dirty.present) {
       map['dirty'] = Variable<bool>(dirty.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
-    return (StringBuffer('UserEntriesCompanion(')
-          ..write('pokemonId: $pokemonId, ')
-          ..write('caught: $caught, ')
-          ..write('shiny: $shiny, ')
+    return (StringBuffer('UserCardEntriesCompanion(')
+          ..write('cardId: $cardId, ')
+          ..write('owned: $owned, ')
           ..write('quantity: $quantity, ')
+          ..write('variant: $variant, ')
           ..write('notes: $notes, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('dirty: $dirty')
+          ..write('dirty: $dirty, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -981,280 +1374,224 @@ class UserEntriesCompanion extends UpdateCompanion<UserEntryRow> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
-  late final $PokemonTableTable pokemonTable = $PokemonTableTable(this);
-  late final $UserEntriesTable userEntries = $UserEntriesTable(this);
+  late final $CardSetsTable cardSets = $CardSetsTable(this);
+  late final $TcgCardsTable tcgCards = $TcgCardsTable(this);
+  late final $UserCardEntriesTable userCardEntries =
+      $UserCardEntriesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [pokemonTable, userEntries];
+      [cardSets, tcgCards, userCardEntries];
 }
 
-typedef $$PokemonTableTableCreateCompanionBuilder = PokemonTableCompanion
-    Function({
-  Value<int> id,
+typedef $$CardSetsTableCreateCompanionBuilder = CardSetsCompanion Function({
+  required String id,
   required String name,
-  required String nameEn,
-  required String type1,
-  Value<String?> type2,
-  required int generation,
-  required int hp,
-  required int attack,
-  required int defense,
-  required int spAttack,
-  required int spDefense,
-  required int speed,
-  required String description,
+  required String series,
+  required int printedTotal,
+  required int total,
+  required String releaseDate,
+  required String symbolUrl,
+  required String logoUrl,
+  Value<bool> cardsSynced,
+  Value<int> rowid,
 });
-typedef $$PokemonTableTableUpdateCompanionBuilder = PokemonTableCompanion
-    Function({
-  Value<int> id,
+typedef $$CardSetsTableUpdateCompanionBuilder = CardSetsCompanion Function({
+  Value<String> id,
   Value<String> name,
-  Value<String> nameEn,
-  Value<String> type1,
-  Value<String?> type2,
-  Value<int> generation,
-  Value<int> hp,
-  Value<int> attack,
-  Value<int> defense,
-  Value<int> spAttack,
-  Value<int> spDefense,
-  Value<int> speed,
-  Value<String> description,
+  Value<String> series,
+  Value<int> printedTotal,
+  Value<int> total,
+  Value<String> releaseDate,
+  Value<String> symbolUrl,
+  Value<String> logoUrl,
+  Value<bool> cardsSynced,
+  Value<int> rowid,
 });
 
-class $$PokemonTableTableFilterComposer
-    extends Composer<_$AppDatabase, $PokemonTableTable> {
-  $$PokemonTableTableFilterComposer({
+class $$CardSetsTableFilterComposer
+    extends Composer<_$AppDatabase, $CardSetsTable> {
+  $$CardSetsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
+  ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get nameEn => $composableBuilder(
-      column: $table.nameEn, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get series => $composableBuilder(
+      column: $table.series, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get type1 => $composableBuilder(
-      column: $table.type1, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get printedTotal => $composableBuilder(
+      column: $table.printedTotal, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get type2 => $composableBuilder(
-      column: $table.type2, builder: (column) => ColumnFilters(column));
+  ColumnFilters<int> get total => $composableBuilder(
+      column: $table.total, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get generation => $composableBuilder(
-      column: $table.generation, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get releaseDate => $composableBuilder(
+      column: $table.releaseDate, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get hp => $composableBuilder(
-      column: $table.hp, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get symbolUrl => $composableBuilder(
+      column: $table.symbolUrl, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get attack => $composableBuilder(
-      column: $table.attack, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get logoUrl => $composableBuilder(
+      column: $table.logoUrl, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get defense => $composableBuilder(
-      column: $table.defense, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<int> get spAttack => $composableBuilder(
-      column: $table.spAttack, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<int> get spDefense => $composableBuilder(
-      column: $table.spDefense, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<int> get speed => $composableBuilder(
-      column: $table.speed, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get cardsSynced => $composableBuilder(
+      column: $table.cardsSynced, builder: (column) => ColumnFilters(column));
 }
 
-class $$PokemonTableTableOrderingComposer
-    extends Composer<_$AppDatabase, $PokemonTableTable> {
-  $$PokemonTableTableOrderingComposer({
+class $$CardSetsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CardSetsTable> {
+  $$CardSetsTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
+  ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get name => $composableBuilder(
       column: $table.name, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get nameEn => $composableBuilder(
-      column: $table.nameEn, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get series => $composableBuilder(
+      column: $table.series, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get type1 => $composableBuilder(
-      column: $table.type1, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get printedTotal => $composableBuilder(
+      column: $table.printedTotal,
+      builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get type2 => $composableBuilder(
-      column: $table.type2, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<int> get total => $composableBuilder(
+      column: $table.total, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get generation => $composableBuilder(
-      column: $table.generation, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get releaseDate => $composableBuilder(
+      column: $table.releaseDate, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get hp => $composableBuilder(
-      column: $table.hp, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get symbolUrl => $composableBuilder(
+      column: $table.symbolUrl, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get attack => $composableBuilder(
-      column: $table.attack, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get logoUrl => $composableBuilder(
+      column: $table.logoUrl, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get defense => $composableBuilder(
-      column: $table.defense, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<int> get spAttack => $composableBuilder(
-      column: $table.spAttack, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<int> get spDefense => $composableBuilder(
-      column: $table.spDefense, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<int> get speed => $composableBuilder(
-      column: $table.speed, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get cardsSynced => $composableBuilder(
+      column: $table.cardsSynced, builder: (column) => ColumnOrderings(column));
 }
 
-class $$PokemonTableTableAnnotationComposer
-    extends Composer<_$AppDatabase, $PokemonTableTable> {
-  $$PokemonTableTableAnnotationComposer({
+class $$CardSetsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CardSetsTable> {
+  $$CardSetsTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
+  GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get nameEn =>
-      $composableBuilder(column: $table.nameEn, builder: (column) => column);
+  GeneratedColumn<String> get series =>
+      $composableBuilder(column: $table.series, builder: (column) => column);
 
-  GeneratedColumn<String> get type1 =>
-      $composableBuilder(column: $table.type1, builder: (column) => column);
+  GeneratedColumn<int> get printedTotal => $composableBuilder(
+      column: $table.printedTotal, builder: (column) => column);
 
-  GeneratedColumn<String> get type2 =>
-      $composableBuilder(column: $table.type2, builder: (column) => column);
+  GeneratedColumn<int> get total =>
+      $composableBuilder(column: $table.total, builder: (column) => column);
 
-  GeneratedColumn<int> get generation => $composableBuilder(
-      column: $table.generation, builder: (column) => column);
+  GeneratedColumn<String> get releaseDate => $composableBuilder(
+      column: $table.releaseDate, builder: (column) => column);
 
-  GeneratedColumn<int> get hp =>
-      $composableBuilder(column: $table.hp, builder: (column) => column);
+  GeneratedColumn<String> get symbolUrl =>
+      $composableBuilder(column: $table.symbolUrl, builder: (column) => column);
 
-  GeneratedColumn<int> get attack =>
-      $composableBuilder(column: $table.attack, builder: (column) => column);
+  GeneratedColumn<String> get logoUrl =>
+      $composableBuilder(column: $table.logoUrl, builder: (column) => column);
 
-  GeneratedColumn<int> get defense =>
-      $composableBuilder(column: $table.defense, builder: (column) => column);
-
-  GeneratedColumn<int> get spAttack =>
-      $composableBuilder(column: $table.spAttack, builder: (column) => column);
-
-  GeneratedColumn<int> get spDefense =>
-      $composableBuilder(column: $table.spDefense, builder: (column) => column);
-
-  GeneratedColumn<int> get speed =>
-      $composableBuilder(column: $table.speed, builder: (column) => column);
-
-  GeneratedColumn<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => column);
+  GeneratedColumn<bool> get cardsSynced => $composableBuilder(
+      column: $table.cardsSynced, builder: (column) => column);
 }
 
-class $$PokemonTableTableTableManager extends RootTableManager<
+class $$CardSetsTableTableManager extends RootTableManager<
     _$AppDatabase,
-    $PokemonTableTable,
-    PokemonTableData,
-    $$PokemonTableTableFilterComposer,
-    $$PokemonTableTableOrderingComposer,
-    $$PokemonTableTableAnnotationComposer,
-    $$PokemonTableTableCreateCompanionBuilder,
-    $$PokemonTableTableUpdateCompanionBuilder,
-    (
-      PokemonTableData,
-      BaseReferences<_$AppDatabase, $PokemonTableTable, PokemonTableData>
-    ),
-    PokemonTableData,
+    $CardSetsTable,
+    CardSetRow,
+    $$CardSetsTableFilterComposer,
+    $$CardSetsTableOrderingComposer,
+    $$CardSetsTableAnnotationComposer,
+    $$CardSetsTableCreateCompanionBuilder,
+    $$CardSetsTableUpdateCompanionBuilder,
+    (CardSetRow, BaseReferences<_$AppDatabase, $CardSetsTable, CardSetRow>),
+    CardSetRow,
     PrefetchHooks Function()> {
-  $$PokemonTableTableTableManager(_$AppDatabase db, $PokemonTableTable table)
+  $$CardSetsTableTableManager(_$AppDatabase db, $CardSetsTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$PokemonTableTableFilterComposer($db: db, $table: table),
+              $$CardSetsTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$PokemonTableTableOrderingComposer($db: db, $table: table),
+              $$CardSetsTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$PokemonTableTableAnnotationComposer($db: db, $table: table),
+              $$CardSetsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
+            Value<String> id = const Value.absent(),
             Value<String> name = const Value.absent(),
-            Value<String> nameEn = const Value.absent(),
-            Value<String> type1 = const Value.absent(),
-            Value<String?> type2 = const Value.absent(),
-            Value<int> generation = const Value.absent(),
-            Value<int> hp = const Value.absent(),
-            Value<int> attack = const Value.absent(),
-            Value<int> defense = const Value.absent(),
-            Value<int> spAttack = const Value.absent(),
-            Value<int> spDefense = const Value.absent(),
-            Value<int> speed = const Value.absent(),
-            Value<String> description = const Value.absent(),
+            Value<String> series = const Value.absent(),
+            Value<int> printedTotal = const Value.absent(),
+            Value<int> total = const Value.absent(),
+            Value<String> releaseDate = const Value.absent(),
+            Value<String> symbolUrl = const Value.absent(),
+            Value<String> logoUrl = const Value.absent(),
+            Value<bool> cardsSynced = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
-              PokemonTableCompanion(
+              CardSetsCompanion(
             id: id,
             name: name,
-            nameEn: nameEn,
-            type1: type1,
-            type2: type2,
-            generation: generation,
-            hp: hp,
-            attack: attack,
-            defense: defense,
-            spAttack: spAttack,
-            spDefense: spDefense,
-            speed: speed,
-            description: description,
+            series: series,
+            printedTotal: printedTotal,
+            total: total,
+            releaseDate: releaseDate,
+            symbolUrl: symbolUrl,
+            logoUrl: logoUrl,
+            cardsSynced: cardsSynced,
+            rowid: rowid,
           ),
           createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
+            required String id,
             required String name,
-            required String nameEn,
-            required String type1,
-            Value<String?> type2 = const Value.absent(),
-            required int generation,
-            required int hp,
-            required int attack,
-            required int defense,
-            required int spAttack,
-            required int spDefense,
-            required int speed,
-            required String description,
+            required String series,
+            required int printedTotal,
+            required int total,
+            required String releaseDate,
+            required String symbolUrl,
+            required String logoUrl,
+            Value<bool> cardsSynced = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
-              PokemonTableCompanion.insert(
+              CardSetsCompanion.insert(
             id: id,
             name: name,
-            nameEn: nameEn,
-            type1: type1,
-            type2: type2,
-            generation: generation,
-            hp: hp,
-            attack: attack,
-            defense: defense,
-            spAttack: spAttack,
-            spDefense: spDefense,
-            speed: speed,
-            description: description,
+            series: series,
+            printedTotal: printedTotal,
+            total: total,
+            releaseDate: releaseDate,
+            symbolUrl: symbolUrl,
+            logoUrl: logoUrl,
+            cardsSynced: cardsSynced,
+            rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -1263,62 +1600,301 @@ class $$PokemonTableTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$PokemonTableTableProcessedTableManager = ProcessedTableManager<
+typedef $$CardSetsTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
-    $PokemonTableTable,
-    PokemonTableData,
-    $$PokemonTableTableFilterComposer,
-    $$PokemonTableTableOrderingComposer,
-    $$PokemonTableTableAnnotationComposer,
-    $$PokemonTableTableCreateCompanionBuilder,
-    $$PokemonTableTableUpdateCompanionBuilder,
-    (
-      PokemonTableData,
-      BaseReferences<_$AppDatabase, $PokemonTableTable, PokemonTableData>
-    ),
-    PokemonTableData,
+    $CardSetsTable,
+    CardSetRow,
+    $$CardSetsTableFilterComposer,
+    $$CardSetsTableOrderingComposer,
+    $$CardSetsTableAnnotationComposer,
+    $$CardSetsTableCreateCompanionBuilder,
+    $$CardSetsTableUpdateCompanionBuilder,
+    (CardSetRow, BaseReferences<_$AppDatabase, $CardSetsTable, CardSetRow>),
+    CardSetRow,
     PrefetchHooks Function()>;
-typedef $$UserEntriesTableCreateCompanionBuilder = UserEntriesCompanion
-    Function({
-  Value<int> pokemonId,
-  Value<bool> caught,
-  Value<bool> shiny,
-  Value<int> quantity,
-  Value<String> notes,
-  required DateTime updatedAt,
-  Value<bool> dirty,
+typedef $$TcgCardsTableCreateCompanionBuilder = TcgCardsCompanion Function({
+  required String id,
+  required String setId,
+  required String name,
+  required String number,
+  required int numberSort,
+  Value<String?> rarity,
+  Value<String?> supertype,
+  Value<String?> type,
+  required String imageSmall,
+  required String imageLarge,
+  Value<int> rowid,
 });
-typedef $$UserEntriesTableUpdateCompanionBuilder = UserEntriesCompanion
-    Function({
-  Value<int> pokemonId,
-  Value<bool> caught,
-  Value<bool> shiny,
-  Value<int> quantity,
-  Value<String> notes,
-  Value<DateTime> updatedAt,
-  Value<bool> dirty,
+typedef $$TcgCardsTableUpdateCompanionBuilder = TcgCardsCompanion Function({
+  Value<String> id,
+  Value<String> setId,
+  Value<String> name,
+  Value<String> number,
+  Value<int> numberSort,
+  Value<String?> rarity,
+  Value<String?> supertype,
+  Value<String?> type,
+  Value<String> imageSmall,
+  Value<String> imageLarge,
+  Value<int> rowid,
 });
 
-class $$UserEntriesTableFilterComposer
-    extends Composer<_$AppDatabase, $UserEntriesTable> {
-  $$UserEntriesTableFilterComposer({
+class $$TcgCardsTableFilterComposer
+    extends Composer<_$AppDatabase, $TcgCardsTable> {
+  $$TcgCardsTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get pokemonId => $composableBuilder(
-      column: $table.pokemonId, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<bool> get caught => $composableBuilder(
-      column: $table.caught, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get setId => $composableBuilder(
+      column: $table.setId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<bool> get shiny => $composableBuilder(
-      column: $table.shiny, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get number => $composableBuilder(
+      column: $table.number, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get numberSort => $composableBuilder(
+      column: $table.numberSort, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rarity => $composableBuilder(
+      column: $table.rarity, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get supertype => $composableBuilder(
+      column: $table.supertype, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get imageSmall => $composableBuilder(
+      column: $table.imageSmall, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get imageLarge => $composableBuilder(
+      column: $table.imageLarge, builder: (column) => ColumnFilters(column));
+}
+
+class $$TcgCardsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TcgCardsTable> {
+  $$TcgCardsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get setId => $composableBuilder(
+      column: $table.setId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get number => $composableBuilder(
+      column: $table.number, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get numberSort => $composableBuilder(
+      column: $table.numberSort, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rarity => $composableBuilder(
+      column: $table.rarity, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get supertype => $composableBuilder(
+      column: $table.supertype, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get imageSmall => $composableBuilder(
+      column: $table.imageSmall, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get imageLarge => $composableBuilder(
+      column: $table.imageLarge, builder: (column) => ColumnOrderings(column));
+}
+
+class $$TcgCardsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TcgCardsTable> {
+  $$TcgCardsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get setId =>
+      $composableBuilder(column: $table.setId, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get number =>
+      $composableBuilder(column: $table.number, builder: (column) => column);
+
+  GeneratedColumn<int> get numberSort => $composableBuilder(
+      column: $table.numberSort, builder: (column) => column);
+
+  GeneratedColumn<String> get rarity =>
+      $composableBuilder(column: $table.rarity, builder: (column) => column);
+
+  GeneratedColumn<String> get supertype =>
+      $composableBuilder(column: $table.supertype, builder: (column) => column);
+
+  GeneratedColumn<String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<String> get imageSmall => $composableBuilder(
+      column: $table.imageSmall, builder: (column) => column);
+
+  GeneratedColumn<String> get imageLarge => $composableBuilder(
+      column: $table.imageLarge, builder: (column) => column);
+}
+
+class $$TcgCardsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $TcgCardsTable,
+    TcgCardRow,
+    $$TcgCardsTableFilterComposer,
+    $$TcgCardsTableOrderingComposer,
+    $$TcgCardsTableAnnotationComposer,
+    $$TcgCardsTableCreateCompanionBuilder,
+    $$TcgCardsTableUpdateCompanionBuilder,
+    (TcgCardRow, BaseReferences<_$AppDatabase, $TcgCardsTable, TcgCardRow>),
+    TcgCardRow,
+    PrefetchHooks Function()> {
+  $$TcgCardsTableTableManager(_$AppDatabase db, $TcgCardsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TcgCardsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TcgCardsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TcgCardsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> setId = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> number = const Value.absent(),
+            Value<int> numberSort = const Value.absent(),
+            Value<String?> rarity = const Value.absent(),
+            Value<String?> supertype = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            Value<String> imageSmall = const Value.absent(),
+            Value<String> imageLarge = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TcgCardsCompanion(
+            id: id,
+            setId: setId,
+            name: name,
+            number: number,
+            numberSort: numberSort,
+            rarity: rarity,
+            supertype: supertype,
+            type: type,
+            imageSmall: imageSmall,
+            imageLarge: imageLarge,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String setId,
+            required String name,
+            required String number,
+            required int numberSort,
+            Value<String?> rarity = const Value.absent(),
+            Value<String?> supertype = const Value.absent(),
+            Value<String?> type = const Value.absent(),
+            required String imageSmall,
+            required String imageLarge,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TcgCardsCompanion.insert(
+            id: id,
+            setId: setId,
+            name: name,
+            number: number,
+            numberSort: numberSort,
+            rarity: rarity,
+            supertype: supertype,
+            type: type,
+            imageSmall: imageSmall,
+            imageLarge: imageLarge,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$TcgCardsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $TcgCardsTable,
+    TcgCardRow,
+    $$TcgCardsTableFilterComposer,
+    $$TcgCardsTableOrderingComposer,
+    $$TcgCardsTableAnnotationComposer,
+    $$TcgCardsTableCreateCompanionBuilder,
+    $$TcgCardsTableUpdateCompanionBuilder,
+    (TcgCardRow, BaseReferences<_$AppDatabase, $TcgCardsTable, TcgCardRow>),
+    TcgCardRow,
+    PrefetchHooks Function()>;
+typedef $$UserCardEntriesTableCreateCompanionBuilder = UserCardEntriesCompanion
+    Function({
+  required String cardId,
+  Value<bool> owned,
+  Value<int> quantity,
+  Value<String> variant,
+  Value<String> notes,
+  required DateTime updatedAt,
+  Value<bool> dirty,
+  Value<int> rowid,
+});
+typedef $$UserCardEntriesTableUpdateCompanionBuilder = UserCardEntriesCompanion
+    Function({
+  Value<String> cardId,
+  Value<bool> owned,
+  Value<int> quantity,
+  Value<String> variant,
+  Value<String> notes,
+  Value<DateTime> updatedAt,
+  Value<bool> dirty,
+  Value<int> rowid,
+});
+
+class $$UserCardEntriesTableFilterComposer
+    extends Composer<_$AppDatabase, $UserCardEntriesTable> {
+  $$UserCardEntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get cardId => $composableBuilder(
+      column: $table.cardId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get owned => $composableBuilder(
+      column: $table.owned, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<int> get quantity => $composableBuilder(
       column: $table.quantity, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get variant => $composableBuilder(
+      column: $table.variant, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get notes => $composableBuilder(
       column: $table.notes, builder: (column) => ColumnFilters(column));
@@ -1330,26 +1906,26 @@ class $$UserEntriesTableFilterComposer
       column: $table.dirty, builder: (column) => ColumnFilters(column));
 }
 
-class $$UserEntriesTableOrderingComposer
-    extends Composer<_$AppDatabase, $UserEntriesTable> {
-  $$UserEntriesTableOrderingComposer({
+class $$UserCardEntriesTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserCardEntriesTable> {
+  $$UserCardEntriesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get pokemonId => $composableBuilder(
-      column: $table.pokemonId, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get cardId => $composableBuilder(
+      column: $table.cardId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<bool> get caught => $composableBuilder(
-      column: $table.caught, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<bool> get shiny => $composableBuilder(
-      column: $table.shiny, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get owned => $composableBuilder(
+      column: $table.owned, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get quantity => $composableBuilder(
       column: $table.quantity, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get variant => $composableBuilder(
+      column: $table.variant, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get notes => $composableBuilder(
       column: $table.notes, builder: (column) => ColumnOrderings(column));
@@ -1361,26 +1937,26 @@ class $$UserEntriesTableOrderingComposer
       column: $table.dirty, builder: (column) => ColumnOrderings(column));
 }
 
-class $$UserEntriesTableAnnotationComposer
-    extends Composer<_$AppDatabase, $UserEntriesTable> {
-  $$UserEntriesTableAnnotationComposer({
+class $$UserCardEntriesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserCardEntriesTable> {
+  $$UserCardEntriesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get pokemonId =>
-      $composableBuilder(column: $table.pokemonId, builder: (column) => column);
+  GeneratedColumn<String> get cardId =>
+      $composableBuilder(column: $table.cardId, builder: (column) => column);
 
-  GeneratedColumn<bool> get caught =>
-      $composableBuilder(column: $table.caught, builder: (column) => column);
-
-  GeneratedColumn<bool> get shiny =>
-      $composableBuilder(column: $table.shiny, builder: (column) => column);
+  GeneratedColumn<bool> get owned =>
+      $composableBuilder(column: $table.owned, builder: (column) => column);
 
   GeneratedColumn<int> get quantity =>
       $composableBuilder(column: $table.quantity, builder: (column) => column);
+
+  GeneratedColumn<String> get variant =>
+      $composableBuilder(column: $table.variant, builder: (column) => column);
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
@@ -1392,66 +1968,71 @@ class $$UserEntriesTableAnnotationComposer
       $composableBuilder(column: $table.dirty, builder: (column) => column);
 }
 
-class $$UserEntriesTableTableManager extends RootTableManager<
+class $$UserCardEntriesTableTableManager extends RootTableManager<
     _$AppDatabase,
-    $UserEntriesTable,
-    UserEntryRow,
-    $$UserEntriesTableFilterComposer,
-    $$UserEntriesTableOrderingComposer,
-    $$UserEntriesTableAnnotationComposer,
-    $$UserEntriesTableCreateCompanionBuilder,
-    $$UserEntriesTableUpdateCompanionBuilder,
+    $UserCardEntriesTable,
+    UserCardEntryRow,
+    $$UserCardEntriesTableFilterComposer,
+    $$UserCardEntriesTableOrderingComposer,
+    $$UserCardEntriesTableAnnotationComposer,
+    $$UserCardEntriesTableCreateCompanionBuilder,
+    $$UserCardEntriesTableUpdateCompanionBuilder,
     (
-      UserEntryRow,
-      BaseReferences<_$AppDatabase, $UserEntriesTable, UserEntryRow>
+      UserCardEntryRow,
+      BaseReferences<_$AppDatabase, $UserCardEntriesTable, UserCardEntryRow>
     ),
-    UserEntryRow,
+    UserCardEntryRow,
     PrefetchHooks Function()> {
-  $$UserEntriesTableTableManager(_$AppDatabase db, $UserEntriesTable table)
+  $$UserCardEntriesTableTableManager(
+      _$AppDatabase db, $UserCardEntriesTable table)
       : super(TableManagerState(
           db: db,
           table: table,
           createFilteringComposer: () =>
-              $$UserEntriesTableFilterComposer($db: db, $table: table),
+              $$UserCardEntriesTableFilterComposer($db: db, $table: table),
           createOrderingComposer: () =>
-              $$UserEntriesTableOrderingComposer($db: db, $table: table),
+              $$UserCardEntriesTableOrderingComposer($db: db, $table: table),
           createComputedFieldComposer: () =>
-              $$UserEntriesTableAnnotationComposer($db: db, $table: table),
+              $$UserCardEntriesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
-            Value<int> pokemonId = const Value.absent(),
-            Value<bool> caught = const Value.absent(),
-            Value<bool> shiny = const Value.absent(),
+            Value<String> cardId = const Value.absent(),
+            Value<bool> owned = const Value.absent(),
             Value<int> quantity = const Value.absent(),
+            Value<String> variant = const Value.absent(),
             Value<String> notes = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
-              UserEntriesCompanion(
-            pokemonId: pokemonId,
-            caught: caught,
-            shiny: shiny,
+              UserCardEntriesCompanion(
+            cardId: cardId,
+            owned: owned,
             quantity: quantity,
+            variant: variant,
             notes: notes,
             updatedAt: updatedAt,
             dirty: dirty,
+            rowid: rowid,
           ),
           createCompanionCallback: ({
-            Value<int> pokemonId = const Value.absent(),
-            Value<bool> caught = const Value.absent(),
-            Value<bool> shiny = const Value.absent(),
+            required String cardId,
+            Value<bool> owned = const Value.absent(),
             Value<int> quantity = const Value.absent(),
+            Value<String> variant = const Value.absent(),
             Value<String> notes = const Value.absent(),
             required DateTime updatedAt,
             Value<bool> dirty = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
-              UserEntriesCompanion.insert(
-            pokemonId: pokemonId,
-            caught: caught,
-            shiny: shiny,
+              UserCardEntriesCompanion.insert(
+            cardId: cardId,
+            owned: owned,
             quantity: quantity,
+            variant: variant,
             notes: notes,
             updatedAt: updatedAt,
             dirty: dirty,
+            rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
@@ -1460,27 +2041,29 @@ class $$UserEntriesTableTableManager extends RootTableManager<
         ));
 }
 
-typedef $$UserEntriesTableProcessedTableManager = ProcessedTableManager<
+typedef $$UserCardEntriesTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
-    $UserEntriesTable,
-    UserEntryRow,
-    $$UserEntriesTableFilterComposer,
-    $$UserEntriesTableOrderingComposer,
-    $$UserEntriesTableAnnotationComposer,
-    $$UserEntriesTableCreateCompanionBuilder,
-    $$UserEntriesTableUpdateCompanionBuilder,
+    $UserCardEntriesTable,
+    UserCardEntryRow,
+    $$UserCardEntriesTableFilterComposer,
+    $$UserCardEntriesTableOrderingComposer,
+    $$UserCardEntriesTableAnnotationComposer,
+    $$UserCardEntriesTableCreateCompanionBuilder,
+    $$UserCardEntriesTableUpdateCompanionBuilder,
     (
-      UserEntryRow,
-      BaseReferences<_$AppDatabase, $UserEntriesTable, UserEntryRow>
+      UserCardEntryRow,
+      BaseReferences<_$AppDatabase, $UserCardEntriesTable, UserCardEntryRow>
     ),
-    UserEntryRow,
+    UserCardEntryRow,
     PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
-  $$PokemonTableTableTableManager get pokemonTable =>
-      $$PokemonTableTableTableManager(_db, _db.pokemonTable);
-  $$UserEntriesTableTableManager get userEntries =>
-      $$UserEntriesTableTableManager(_db, _db.userEntries);
+  $$CardSetsTableTableManager get cardSets =>
+      $$CardSetsTableTableManager(_db, _db.cardSets);
+  $$TcgCardsTableTableManager get tcgCards =>
+      $$TcgCardsTableTableManager(_db, _db.tcgCards);
+  $$UserCardEntriesTableTableManager get userCardEntries =>
+      $$UserCardEntriesTableTableManager(_db, _db.userCardEntries);
 }

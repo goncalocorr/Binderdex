@@ -1,13 +1,13 @@
-# Pokédex — Caderneta de Coleção
+# Caderneta de Cartas Pokémon (TCG)
 
-App Flutter para gerir a tua coleção pessoal de Pokémon (todas as gerações),
-**local-first / offline-first**, com sincronização opcional na nuvem (a partir da Etapa 2).
+App Flutter para gerir a tua coleção de **cartas Pokémon (TCG)**: navegas pelas
+**coleções (sets oficiais)**, abres um set e marcas quais cartas tens.
+**Local-first / offline-first**, com sincronização opcional na nuvem (a partir da Etapa 2).
 
 - Especificação: [docs/superpowers/specs/2026-06-17-pokedex-app-design.md](docs/superpowers/specs/2026-06-17-pokedex-app-design.md)
-- Plano da Etapa 1: [docs/superpowers/plans/2026-06-17-pokedex-etapa1.md](docs/superpowers/plans/2026-06-17-pokedex-etapa1.md)
 
-Esta entrega corresponde à **Etapa 1**: Pokédex offline (grelha, pesquisa, filtros,
-detalhe, progresso, em falta) com Drift + Riverpod. **Sem Firebase ainda.**
+Fonte de dados: **Pokémon TCG API** (https://pokemontcg.io). A lista de sets é incluída na
+app; as cartas de cada set são buscadas on-demand e cacheadas no Drift. **Sem Firebase ainda.**
 
 ---
 
@@ -65,19 +65,22 @@ flutter gen-l10n
 
 ---
 
-## 4. (Recomendado) Gerar o dataset completo
+## 4. Lista de sets incluída (já gerada)
 
-O repositório inclui um `assets/data/pokedex.json` **placeholder com apenas 4 Pokémon**
-para a app arrancar logo. Para teres todas as gerações (~1025+), corre o gerador
-(precisa de internet; demora alguns minutos):
+O repositório já traz `assets/data/tcg_sets.json` com todos os sets oficiais (~173).
+As **cartas** de cada set são buscadas à Pokémon TCG API quando abres o set (online) e
+ficam em cache no Drift; a partir daí, esse set funciona offline.
 
+Só precisas de regenerar a lista de sets quando saírem novos sets (precisa de internet):
 ```bash
-dart run tool/generate_dataset.dart
+dart run tool/generate_tcg_sets.dart
 ```
 
-Isto reescreve `assets/data/pokedex.json`. **Apaga a base de dados local** se já tinhas
-corrido a app antes, para forçar nova hidratação (no emulador/web basta limpar os dados
-da app; em desenvolvimento, reinstalar).
+**Chave de API (opcional):** a app funciona sem chave (limites mais baixos). Para usar a
+tua chave gratuita do pokemontcg.io:
+```bash
+flutter run -d chrome --dart-define=TCG_API_KEY=a-tua-chave
+```
 
 ---
 
@@ -115,10 +118,12 @@ flutter run
 ```
 
 O que deves ver:
-- Grelha de Pokémon — os **não apanhados em silhueta**, os apanhados a cores.
-- Pesquisa por nome/número e filtros (estado, geração, tipo).
-- Detalhe com tipos, lore, stats e controlos (Tenho / Shiny / Quantidade / Notas).
-- Ecrã de **Progresso** (global e por geração) e lista de **Em falta**.
+- **Coleções (sets)** no ecrã inicial, cada uma com progresso (ex.: *37/102*).
+- Ao abrir um set, as **cartas** desse set (busca on-demand) — não possuídas em
+  **silhueta**, possuídas a cores; badge de variante (holo/reverse).
+- Pesquisa por nome/número e filtros (tenho / em falta / raridade).
+- Detalhe com imagem grande e controlos (Tenho / Variante / Quantidade / Notas).
+- Ecrã de **Progresso** (global e por set) e lista de **Em falta**.
 - Definições: tema (claro/escuro/sistema) e idioma (PT/EN).
 
 > 📸 Tira capturas dos ecrãs para validarmos antes de avançar para a Etapa 2 (Firebase).
@@ -148,7 +153,8 @@ Testes incluídos: filtros/pesquisa no Drift, cálculo de progresso, e estados d
 ## Arquitetura (resumo)
 
 Camadas `data / domain / presentation` com Riverpod:
-- **domain/** — entidades puras (`Pokemon`, `UserEntry`, `ProgressStats`, `PokedexFilter`).
-- **data/** — Drift (catálogo + coleção), carregador do dataset, repositórios.
-- **presentation/** — providers Riverpod, ecrãs e widgets.
-- **core/** — tema M3, cores por tipo, router, utilitários, (futuro) `premium/`.
+- **domain/** — entidades puras (`CardSet`, `TcgCard`, `UserCardEntry`, `ProgressStats`, `CardFilter`).
+- **data/** — Drift (`card_sets`, `tcg_cards`, `user_card_entries`), cliente da TCG API
+  (`remote/tcg_api.dart`), loader de sets, repositórios.
+- **presentation/** — providers Riverpod, ecrãs (sets → cartas → detalhe) e widgets.
+- **core/** — tema M3, router, config da API (`config/tcg_config.dart`), (futuro) `premium/`.

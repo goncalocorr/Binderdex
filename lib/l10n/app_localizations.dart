@@ -101,20 +101,14 @@ abstract class AppLocalizations {
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'Pokédex'**
+  /// **'Card Binder'**
   String get appTitle;
 
-  /// No description provided for @searchHint.
+  /// No description provided for @tabSets.
   ///
   /// In en, this message translates to:
-  /// **'Search by name or number'**
-  String get searchHint;
-
-  /// No description provided for @tabPokedex.
-  ///
-  /// In en, this message translates to:
-  /// **'Pokédex'**
-  String get tabPokedex;
+  /// **'Collections'**
+  String get tabSets;
 
   /// No description provided for @tabProgress.
   ///
@@ -134,17 +128,23 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get tabSettings;
 
-  /// No description provided for @caught.
+  /// No description provided for @searchSetsHint.
   ///
   /// In en, this message translates to:
-  /// **'Caught'**
-  String get caught;
+  /// **'Search collections'**
+  String get searchSetsHint;
 
-  /// No description provided for @shiny.
+  /// No description provided for @searchCardsHint.
   ///
   /// In en, this message translates to:
-  /// **'Shiny'**
-  String get shiny;
+  /// **'Search by name or number'**
+  String get searchCardsHint;
+
+  /// No description provided for @owned.
+  ///
+  /// In en, this message translates to:
+  /// **'Owned'**
+  String get owned;
 
   /// No description provided for @quantity.
   ///
@@ -158,65 +158,35 @@ abstract class AppLocalizations {
   /// **'Notes'**
   String get notes;
 
-  /// No description provided for @baseStats.
+  /// No description provided for @variant.
   ///
   /// In en, this message translates to:
-  /// **'Base stats'**
-  String get baseStats;
+  /// **'Variant'**
+  String get variant;
 
-  /// No description provided for @statHp.
+  /// No description provided for @variantNormal.
   ///
   /// In en, this message translates to:
-  /// **'HP'**
-  String get statHp;
+  /// **'Normal'**
+  String get variantNormal;
 
-  /// No description provided for @statAttack.
+  /// No description provided for @variantHolo.
   ///
   /// In en, this message translates to:
-  /// **'Attack'**
-  String get statAttack;
+  /// **'Holo'**
+  String get variantHolo;
 
-  /// No description provided for @statDefense.
+  /// No description provided for @variantReverse.
   ///
   /// In en, this message translates to:
-  /// **'Defense'**
-  String get statDefense;
+  /// **'Reverse holo'**
+  String get variantReverse;
 
-  /// No description provided for @statSpAttack.
+  /// No description provided for @rarity.
   ///
   /// In en, this message translates to:
-  /// **'Sp. Atk'**
-  String get statSpAttack;
-
-  /// No description provided for @statSpDefense.
-  ///
-  /// In en, this message translates to:
-  /// **'Sp. Def'**
-  String get statSpDefense;
-
-  /// No description provided for @statSpeed.
-  ///
-  /// In en, this message translates to:
-  /// **'Speed'**
-  String get statSpeed;
-
-  /// No description provided for @filterStatus.
-  ///
-  /// In en, this message translates to:
-  /// **'Status'**
-  String get filterStatus;
-
-  /// No description provided for @filterGeneration.
-  ///
-  /// In en, this message translates to:
-  /// **'Generation'**
-  String get filterGeneration;
-
-  /// No description provided for @filterType.
-  ///
-  /// In en, this message translates to:
-  /// **'Type'**
-  String get filterType;
+  /// **'Rarity'**
+  String get rarity;
 
   /// No description provided for @statusAll.
   ///
@@ -224,11 +194,11 @@ abstract class AppLocalizations {
   /// **'All'**
   String get statusAll;
 
-  /// No description provided for @statusCaught.
+  /// No description provided for @statusOwned.
   ///
   /// In en, this message translates to:
-  /// **'Caught'**
-  String get statusCaught;
+  /// **'Owned'**
+  String get statusOwned;
 
   /// No description provided for @statusMissing.
   ///
@@ -236,29 +206,53 @@ abstract class AppLocalizations {
   /// **'Missing'**
   String get statusMissing;
 
-  /// No description provided for @statusShiny.
-  ///
-  /// In en, this message translates to:
-  /// **'Shiny'**
-  String get statusShiny;
-
   /// No description provided for @progressGlobal.
   ///
   /// In en, this message translates to:
   /// **'Global progress'**
   String get progressGlobal;
 
-  /// No description provided for @progressGeneration.
+  /// No description provided for @ownedOfTotal.
   ///
   /// In en, this message translates to:
-  /// **'Generation {n}'**
-  String progressGeneration(int n);
+  /// **'{owned}/{total}'**
+  String ownedOfTotal(int owned, int total);
 
   /// No description provided for @missingCount.
   ///
   /// In en, this message translates to:
   /// **'Missing: {n}'**
   String missingCount(int n);
+
+  /// No description provided for @loadingCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading cards…'**
+  String get loadingCards;
+
+  /// No description provided for @cardsLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load cards. Check your connection.'**
+  String get cardsLoadError;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @noCards.
+  ///
+  /// In en, this message translates to:
+  /// **'No cards'**
+  String get noCards;
+
+  /// No description provided for @noSets.
+  ///
+  /// In en, this message translates to:
+  /// **'No collections'**
+  String get noSets;
 
   /// No description provided for @theme.
   ///

@@ -4,156 +4,208 @@ import 'connection/connection.dart';
 
 part 'database.g.dart';
 
-/// Catálogo estático (preenchido a partir do dataset incluído).
-class PokemonTable extends Table {
-  IntColumn get id => integer()();
+/// Sets/expansões (incluídos via dataset + atualizados da API).
+@DataClassName('CardSetRow')
+class CardSets extends Table {
+  TextColumn get id => text()();
   TextColumn get name => text()();
-  TextColumn get nameEn => text()();
-  TextColumn get type1 => text()();
-  TextColumn get type2 => text().nullable()();
-  IntColumn get generation => integer()();
-  IntColumn get hp => integer()();
-  IntColumn get attack => integer()();
-  IntColumn get defense => integer()();
-  IntColumn get spAttack => integer()();
-  IntColumn get spDefense => integer()();
-  IntColumn get speed => integer()();
-  TextColumn get description => text()();
+  TextColumn get series => text()();
+  IntColumn get printedTotal => integer()();
+  IntColumn get total => integer()();
+  TextColumn get releaseDate => text()();
+  TextColumn get symbolUrl => text()();
+  TextColumn get logoUrl => text()();
+
+  /// True quando as cartas deste set já foram buscadas e cacheadas.
+  BoolColumn get cardsSynced => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};
 }
 
-/// Coleção do utilizador.
-///
-/// O Drift singulariza "UserEntries" para "UserEntry", o que colidiria com a
-/// nossa entidade de domínio. Damos um nome distinto à classe gerada.
-@DataClassName('UserEntryRow')
-class UserEntries extends Table {
-  IntColumn get pokemonId => integer()();
-  BoolColumn get caught => boolean().withDefault(const Constant(false))();
-  BoolColumn get shiny => boolean().withDefault(const Constant(false))();
+/// Cartas (cacheadas por set, à medida que os sets são abertos).
+@DataClassName('TcgCardRow')
+class TcgCards extends Table {
+  TextColumn get id => text()();
+  TextColumn get setId => text()();
+  TextColumn get name => text()();
+  TextColumn get number => text()();
+  IntColumn get numberSort => integer()();
+  TextColumn get rarity => text().nullable()();
+  TextColumn get supertype => text().nullable()();
+  TextColumn get type => text().nullable()();
+  TextColumn get imageSmall => text()();
+  TextColumn get imageLarge => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// Coleção do utilizador (por carta).
+@DataClassName('UserCardEntryRow')
+class UserCardEntries extends Table {
+  TextColumn get cardId => text()();
+  BoolColumn get owned => boolean().withDefault(const Constant(false))();
   IntColumn get quantity => integer().withDefault(const Constant(0))();
+  TextColumn get variant => text().withDefault(const Constant('normal'))();
   TextColumn get notes => text().withDefault(const Constant(''))();
   DateTimeColumn get updatedAt => dateTime()();
-
-  /// Marcado quando há alterações por sincronizar. Usado na Etapa 2.
   BoolColumn get dirty => boolean().withDefault(const Constant(true))();
 
   @override
-  Set<Column> get primaryKey => {pokemonId};
+  Set<Column> get primaryKey => {cardId};
 }
 
-/// Resultado de uma linha da grelha: o Pokémon e (opcionalmente) o seu registo.
-class PokemonRow {
-  final PokemonTableData pokemon;
-  final UserEntryRow? entry;
-  PokemonRow(this.pokemon, this.entry);
+/// Set + nº de cartas possuídas (para a lista de coleções e progresso).
+class SetWithProgress {
+  final CardSetRow set;
+  final int owned;
+  SetWithProgress(this.set, this.owned);
 }
 
-/// Contagem agregada por geração (para o ecrã de progresso).
-class GenCount {
-  final int generation;
-  final int total;
-  final int caught;
-  GenCount(this.generation, this.total, this.caught);
+/// Carta + (opcional) registo de coleção.
+class CardRow {
+  final TcgCardRow card;
+  final UserCardEntryRow? entry;
+  CardRow(this.card, this.entry);
 }
 
-@DriftDatabase(tables: [PokemonTable, UserEntries])
+@DriftDatabase(tables: [CardSets, TcgCards, UserCardEntries])
 class AppDatabase extends _$AppDatabase {
-  /// Construtor de produção (ligação conforme a plataforma). Para testes,
-  /// passar NativeDatabase.memory().
   AppDatabase([QueryExecutor? executor]) : super(executor ?? openConnection());
 
   @override
   int get schemaVersion => 1;
 
-  Future<int> pokemonCount() async {
-    final row = await (selectOnly(pokemonTable)
-          ..addColumns([pokemonTable.id.count()]))
-        .getSingle();
-    return row.read(pokemonTable.id.count()) ?? 0;
+  // --- Sets ---
+
+  Future<int> setCount() async {
+    final row =
+        await (selectOnly(cardSets)..addColumns([cardSets.id.count()]))
+            .getSingle();
+    return row.read(cardSets.id.count()) ?? 0;
   }
 
-  Future<void> bulkInsertPokemon(List<PokemonTableCompanion> rows) async {
-    await batch((b) => b.insertAll(pokemonTable, rows,
-        mode: InsertMode.insertOrReplace));
+  Future<void> bulkInsertSets(List<CardSetsCompanion> rows) async {
+    await batch(
+        (b) => b.insertAll(cardSets, rows, mode: InsertMode.insertOrReplace));
   }
 
-  /// Query reativa com TODOS os filtros aplicados em SQL.
-  Stream<List<PokemonRow>> watchFiltered({
-    required String query,
-    int? generation,
-    String? type,
-    required String status, // 'all' | 'caught' | 'missing' | 'shiny'
-  }) {
-    final q = select(pokemonTable).join([
-      leftOuterJoin(userEntries, userEntries.pokemonId.equalsExp(pokemonTable.id)),
-    ]);
+  Future<CardSetRow?> setById(String id) =>
+      (select(cardSets)..where((t) => t.id.equals(id))).getSingleOrNull();
 
-    if (query.isNotEmpty) {
-      final asNum = int.tryParse(query);
-      if (asNum != null) {
-        q.where(pokemonTable.id.equals(asNum));
-      } else {
-        final like = '%${query.toLowerCase()}%';
-        q.where(pokemonTable.name.lower().like(like) |
-            pokemonTable.nameEn.lower().like(like));
-      }
-    }
-    if (generation != null) {
-      q.where(pokemonTable.generation.equals(generation));
-    }
-    if (type != null) {
-      q.where(pokemonTable.type1.equals(type) | pokemonTable.type2.equals(type));
-    }
-    switch (status) {
-      case 'caught':
-        q.where(userEntries.caught.equals(true));
-        break;
-      case 'shiny':
-        q.where(userEntries.shiny.equals(true));
-        break;
-      case 'missing':
-        // Sem registo (isNull) OU registo com caught = false.
-        q.where(userEntries.caught.isNull() | userEntries.caught.equals(false));
-        break;
-    }
-
-    q.orderBy([OrderingTerm.asc(pokemonTable.id)]);
-
-    return q.watch().map((rows) => rows
-        .map((r) => PokemonRow(
-              r.readTable(pokemonTable),
-              r.readTableOrNull(userEntries),
+  /// Sets com o nº de cartas possuídas, ordenados por data (mais recentes primeiro).
+  /// As datas estão em "YYYY/MM/DD", por isso a ordenação lexical funciona.
+  Stream<List<SetWithProgress>> watchSetsWithProgress() {
+    return customSelect(
+      'SELECT s.*, ('
+      '  SELECT COUNT(*) FROM tcg_cards c '
+      '  JOIN user_card_entries e ON e.card_id = c.id '
+      '  WHERE c.set_id = s.id AND e.owned = 1'
+      ') AS owned_count '
+      'FROM card_sets s ORDER BY s.release_date DESC',
+      readsFrom: {cardSets, tcgCards, userCardEntries},
+    ).watch().map((rows) => rows
+        .map((r) => SetWithProgress(
+              cardSets.map(r.data),
+              r.read<int>('owned_count'),
             ))
         .toList());
   }
 
-  Stream<UserEntryRow?> watchEntry(int pokemonId) =>
-      (select(userEntries)..where((t) => t.pokemonId.equals(pokemonId)))
-          .watchSingleOrNull();
-
-  Future<void> upsertEntry(UserEntriesCompanion entry) async {
-    await into(userEntries).insertOnConflictUpdate(entry);
+  Future<bool> isSetSynced(String setId) async {
+    final s = await setById(setId);
+    return s?.cardsSynced ?? false;
   }
 
-  /// Contagens por geração (total e apanhados), calculadas em SQL.
-  Future<List<GenCount>> caughtByGeneration() async {
-    final rows = await customSelect(
-      'SELECT p.generation AS g, COUNT(*) AS total, '
-      'SUM(CASE WHEN e.caught = 1 THEN 1 ELSE 0 END) AS caught '
-      'FROM pokemon_table p '
-      'LEFT JOIN user_entries e ON e.pokemon_id = p.id '
-      'GROUP BY p.generation ORDER BY p.generation',
-      readsFrom: {pokemonTable, userEntries},
-    ).get();
-    return rows
-        .map((r) => GenCount(
-              r.read<int>('g'),
-              r.read<int>('total'),
-              r.read<int>('caught'),
+  Future<void> markSetSynced(String setId) async {
+    await (update(cardSets)..where((t) => t.id.equals(setId)))
+        .write(const CardSetsCompanion(cardsSynced: Value(true)));
+  }
+
+  // --- Cartas ---
+
+  Future<void> bulkInsertCards(List<TcgCardsCompanion> rows) async {
+    await batch(
+        (b) => b.insertAll(tcgCards, rows, mode: InsertMode.insertOrReplace));
+  }
+
+  Future<TcgCardRow?> cardById(String id) =>
+      (select(tcgCards)..where((t) => t.id.equals(id))).getSingleOrNull();
+
+  /// Raridades distintas presentes num set (para os chips de filtro).
+  Future<List<String>> raritiesInSet(String setId) async {
+    final rows = await (selectOnly(tcgCards, distinct: true)
+          ..addColumns([tcgCards.rarity])
+          ..where(tcgCards.setId.equals(setId) & tcgCards.rarity.isNotNull()))
+        .get();
+    return rows.map((r) => r.read(tcgCards.rarity)).whereType<String>().toList()
+      ..sort();
+  }
+
+  /// Cartas de um set, com filtros aplicados em SQL.
+  Stream<List<CardRow>> watchCardsInSet({
+    required String setId,
+    required String query,
+    String? rarity,
+    required String status, // 'all' | 'owned' | 'missing'
+  }) {
+    final q = select(tcgCards).join([
+      leftOuterJoin(
+          userCardEntries, userCardEntries.cardId.equalsExp(tcgCards.id)),
+    ]);
+    q.where(tcgCards.setId.equals(setId));
+    if (query.isNotEmpty) {
+      final like = '%${query.toLowerCase()}%';
+      q.where(tcgCards.name.lower().like(like) |
+          tcgCards.number.lower().like(like));
+    }
+    if (rarity != null) q.where(tcgCards.rarity.equals(rarity));
+    switch (status) {
+      case 'owned':
+        q.where(userCardEntries.owned.equals(true));
+        break;
+      case 'missing':
+        q.where(
+            userCardEntries.owned.isNull() | userCardEntries.owned.equals(false));
+        break;
+    }
+    q.orderBy([
+      OrderingTerm.asc(tcgCards.numberSort),
+      OrderingTerm.asc(tcgCards.number),
+    ]);
+    return q.watch().map((rows) => rows
+        .map((r) => CardRow(
+              r.readTable(tcgCards),
+              r.readTableOrNull(userCardEntries),
             ))
-        .toList();
+        .toList());
+  }
+
+  // --- Coleção ---
+
+  Stream<UserCardEntryRow?> watchEntry(String cardId) =>
+      (select(userCardEntries)..where((t) => t.cardId.equals(cardId)))
+          .watchSingleOrNull();
+
+  Future<void> upsertEntry(UserCardEntriesCompanion entry) async {
+    await into(userCardEntries).insertOnConflictUpdate(entry);
+  }
+
+  // --- Progresso ---
+
+  Future<int> totalOwned() async {
+    final row = await customSelect(
+      'SELECT COUNT(*) AS c FROM user_card_entries WHERE owned = 1',
+      readsFrom: {userCardEntries},
+    ).getSingle();
+    return row.read<int>('c');
+  }
+
+  Future<int> totalCards() async {
+    final row =
+        await (selectOnly(cardSets)..addColumns([cardSets.total.sum()]))
+            .getSingle();
+    return row.read(cardSets.total.sum()) ?? 0;
   }
 }
