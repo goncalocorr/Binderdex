@@ -27,7 +27,7 @@ class CollectionRepository {
 
   Future<void> save(UserEntry entry) async {
     await db.upsertEntry(UserEntriesCompanion.insert(
-      pokemonId: entry.pokemonId,
+      pokemonId: Value(entry.pokemonId),
       caught: Value(entry.caught),
       shiny: Value(entry.shiny),
       quantity: Value(entry.quantity),

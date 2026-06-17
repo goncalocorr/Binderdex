@@ -23,7 +23,7 @@ class DatasetLoader {
 
     final rows = list
         .map((m) => PokemonTableCompanion.insert(
-              id: m['id'] as int,
+              id: Value(m['id'] as int),
               name: m['name'] as String,
               nameEn: m['nameEn'] as String,
               type1: m['type1'] as String,

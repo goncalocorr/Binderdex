@@ -10,7 +10,7 @@ void main() {
     db = AppDatabase(NativeDatabase.memory());
     await db.bulkInsertPokemon([
       PokemonTableCompanion.insert(
-        id: 1,
+        id: const Value(1),
         name: 'Bulbasaur',
         nameEn: 'Bulbasaur',
         type1: 'grass',
@@ -25,7 +25,7 @@ void main() {
         description: '',
       ),
       PokemonTableCompanion.insert(
-        id: 4,
+        id: const Value(4),
         name: 'Charmander',
         nameEn: 'Charmander',
         type1: 'fire',
@@ -76,7 +76,7 @@ void main() {
 
   test('marcar como apanhado altera os filtros caught/missing', () async {
     await db.upsertEntry(UserEntriesCompanion.insert(
-      pokemonId: 1,
+      pokemonId: const Value(1),
       caught: const Value(true),
       updatedAt: DateTime.now(),
     ));

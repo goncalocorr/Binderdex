@@ -28,6 +28,10 @@ class PokemonTable extends Table {
 }
 
 /// Coleção do utilizador.
+///
+/// O Drift singulariza "UserEntries" para "UserEntry", o que colidiria com a
+/// nossa entidade de domínio. Damos um nome distinto à classe gerada.
+@DataClassName('UserEntryRow')
 class UserEntries extends Table {
   IntColumn get pokemonId => integer()();
   BoolColumn get caught => boolean().withDefault(const Constant(false))();
@@ -46,7 +50,7 @@ class UserEntries extends Table {
 /// Resultado de uma linha da grelha: o Pokémon e (opcionalmente) o seu registo.
 class PokemonRow {
   final PokemonTableData pokemon;
-  final UserEntrie? entry;
+  final UserEntryRow? entry;
   PokemonRow(this.pokemon, this.entry);
 }
 
@@ -128,7 +132,7 @@ class AppDatabase extends _$AppDatabase {
         .toList());
   }
 
-  Stream<UserEntrie?> watchEntry(int pokemonId) =>
+  Stream<UserEntryRow?> watchEntry(int pokemonId) =>
       (select(userEntries)..where((t) => t.pokemonId.equals(pokemonId)))
           .watchSingleOrNull();
 
