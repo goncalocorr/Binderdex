@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
+
+import 'connection/connection.dart';
 
 part 'database.g.dart';
 
@@ -64,8 +61,9 @@ class GenCount {
 
 @DriftDatabase(tables: [PokemonTable, UserEntries])
 class AppDatabase extends _$AppDatabase {
-  /// Construtor de produção (ficheiro). Para testes, passar NativeDatabase.memory().
-  AppDatabase([QueryExecutor? executor]) : super(executor ?? _open());
+  /// Construtor de produção (ligação conforme a plataforma). Para testes,
+  /// passar NativeDatabase.memory().
+  AppDatabase([QueryExecutor? executor]) : super(executor ?? openConnection());
 
   @override
   int get schemaVersion => 1;
@@ -159,9 +157,3 @@ class AppDatabase extends _$AppDatabase {
         .toList();
   }
 }
-
-LazyDatabase _open() => LazyDatabase(() async {
-      final dir = await getApplicationDocumentsDirectory();
-      final file = File(p.join(dir.path, 'pokedex.sqlite'));
-      return NativeDatabase.createInBackground(file);
-    });

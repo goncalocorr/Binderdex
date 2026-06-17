@@ -81,6 +81,27 @@ da app; em desenvolvimento, reinstalar).
 
 ---
 
+## 4b. Suporte web do Drift (já incluído)
+
+Na web, o SQLite corre em **WebAssembly**. O repositório já traz os dois ficheiros
+necessários em `web/`:
+- `web/sqlite3.wasm` (corresponde ao pacote `sqlite3` 3.3.3)
+- `web/drift_worker.dart.js` (corresponde ao pacote `drift` 2.34.0)
+
+Só precisas de os regenerar se atualizares essas dependências:
+```bash
+# sqlite3.wasm — descarregar a versão que corresponde ao teu pubspec.lock:
+#   https://github.com/simolus3/sqlite3.dart/releases (asset sqlite3.wasm)
+
+# drift_worker.dart.js — recompilar a partir do ponto de entrada incluído:
+dart compile js -O4 -o web/drift_worker.dart.js tool/drift_worker_entry.dart
+```
+
+A ligação à base de dados é escolhida automaticamente por plataforma em
+`lib/data/local/connection/` (nativo via FFI vs. WASM na web).
+
+---
+
 ## 5. Correr a app
 
 **Web (verificação rápida — não precisa de Firebase):**
