@@ -1,0 +1,31 @@
+{
+  "datasetVersion": 0,
+  "generatedAt": "1970-01-01T00:00:00.000Z",
+  "_nota": "PLACEHOLDER de demonstração (4 Pokémon). Corre `dart run tool/generate_dataset.dart` para gerar o dataset completo (~1025+).",
+  "pokemon": [
+    {
+      "id": 1, "name": "Bulbasaur", "nameEn": "bulbasaur",
+      "type1": "grass", "type2": "poison", "gen": 1,
+      "hp": 45, "attack": 49, "defense": 49, "spAttack": 65, "spDefense": 65, "speed": 45,
+      "description": "A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon."
+    },
+    {
+      "id": 4, "name": "Charmander", "nameEn": "charmander",
+      "type1": "fire", "type2": null, "gen": 1,
+      "hp": 39, "attack": 52, "defense": 43, "spAttack": 60, "spDefense": 50, "speed": 65,
+      "description": "Obviously prefers hot places. When it rains, steam is said to spout from the tip of its tail."
+    },
+    {
+      "id": 7, "name": "Squirtle", "nameEn": "squirtle",
+      "type1": "water", "type2": null, "gen": 1,
+      "hp": 44, "attack": 48, "defense": 65, "spAttack": 50, "spDefense": 64, "speed": 43,
+      "description": "After birth, its back swells and hardens into a shell. It sprays foam from its mouth."
+    },
+    {
+      "id": 25, "name": "Pikachu", "nameEn": "pikachu",
+      "type1": "electric", "type2": null, "gen": 1,
+      "hp": 35, "attack": 55, "defense": 40, "spAttack": 50, "spDefense": 50, "speed": 90,
+      "description": "When several of these Pokémon gather, their electricity can cause lightning storms."
+    }
+  ]
+}

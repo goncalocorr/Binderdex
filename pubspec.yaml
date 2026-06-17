@@ -1,0 +1,50 @@
+name: pokedex
+description: "Caderneta pessoal de coleção de Pokémon — local-first com sincronização opcional."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Estado / injeção de dependências
+  flutter_riverpod: ^2.5.1
+
+  # Base de dados local (offline-first)
+  drift: ^2.18.0
+  sqlite3_flutter_libs: ^0.5.24
+  path_provider: ^2.1.3
+  path: ^1.9.0
+
+  # Navegação
+  go_router: ^14.2.0
+
+  # Imagens com cache
+  cached_network_image: ^3.3.1
+
+  # Internacionalização
+  intl: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+  # Geração de código Drift
+  drift_dev: ^2.18.0
+  build_runner: ^2.4.11
+
+  # Usado APENAS pelo script tool/generate_dataset.dart (geração do dataset)
+  dio: ^5.4.3+1
+
+flutter:
+  uses-material-design: true
+  # Ativa a geração das localizações a partir dos ficheiros .arb (ver l10n.yaml)
+  generate: true
+  assets:
+    - assets/data/pokedex.json
