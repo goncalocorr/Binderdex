@@ -27,6 +27,9 @@ dependencies:
   # Imagens com cache
   cached_network_image: ^3.3.1
 
+  # Fontes do Dex Design System (Fredoka / Nunito / Space Mono)
+  google_fonts: ^6.2.1
+
   # Internacionalização
   intl: any
 

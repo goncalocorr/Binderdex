@@ -107,9 +107,9 @@ class _SetCardsScreenState extends ConsumerState<SetCardsScreen> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
-                          childAspectRatio: 0.70,
-                          crossAxisSpacing: 6,
-                          mainAxisSpacing: 6,
+                          childAspectRatio: 0.62,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
                         ),
                         itemCount: items.length,
                         itemBuilder: (_, i) => CardTile(

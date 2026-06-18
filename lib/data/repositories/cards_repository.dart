@@ -6,7 +6,7 @@ import '../local/database.dart';
 import '../remote/tcg_api.dart';
 
 /// Item da grelha de cartas: a carta + estado de coleção resumido.
-typedef CardItem = ({TcgCard card, bool owned, CardVariant variant});
+typedef CardItem = ({TcgCard card, bool owned, CardVariant variant, int quantity});
 
 TcgCard _toCard(TcgCardRow r) => TcgCard(
       id: r.id,
@@ -62,6 +62,7 @@ class CardsRepository {
                 variant: r.entry == null
                     ? CardVariant.normal
                     : CardVariant.fromName(r.entry!.variant),
+                quantity: r.entry?.quantity ?? 0,
               ))
           .toList());
 

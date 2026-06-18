@@ -6,38 +6,41 @@ import 'package:pokedex/presentation/widgets/card_tile.dart';
 const _card = TcgCard(
   id: 'base1-4',
   setId: 'base1',
-  name: 'Charizard',
+  name: 'Emberwyrm',
   number: '4',
   numberSort: 4,
   rarity: 'Rare Holo',
+  type: 'Fire',
   imageSmall: 'https://example.com/4.png',
   imageLarge: 'https://example.com/4_hires.png',
 );
 
 void main() {
-  testWidgets('mostra o número da carta e badge de variante holo', (tester) async {
+  testWidgets('carta possuída mostra número e check', (tester) async {
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
         body: CardTile(
-          item: (card: _card, owned: true, variant: CardVariant.holo),
+          item: (card: _card, owned: true, variant: CardVariant.holo, quantity: 2),
           onTap: () {},
         ),
       ),
     ));
     expect(find.text('#4'), findsOneWidget);
-    expect(find.byIcon(Icons.auto_awesome), findsOneWidget);
+    expect(find.text('×2'), findsOneWidget);
+    expect(find.byIcon(Icons.check), findsOneWidget);
   });
 
-  testWidgets('sem badge quando variante normal', (tester) async {
+  testWidgets('carta em falta mostra "???" e ícone de adicionar', (tester) async {
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
         body: CardTile(
-          item: (card: _card, owned: false, variant: CardVariant.normal),
+          item: (card: _card, owned: false, variant: CardVariant.normal, quantity: 0),
           onTap: () {},
         ),
       ),
     ));
-    expect(find.byIcon(Icons.auto_awesome), findsNothing);
-    expect(find.byIcon(Icons.flip), findsNothing);
+    expect(find.text('???'), findsOneWidget);
+    expect(find.byIcon(Icons.add_circle_outline), findsOneWidget);
+    expect(find.byIcon(Icons.check), findsNothing);
   });
 }

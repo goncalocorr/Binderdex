@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/theme/app_theme.dart';
+import '../../core/theme/dex_tokens.dart';
 import '../../domain/entities/tcg_card.dart';
 import '../../domain/entities/user_card_entry.dart';
 import '../../l10n/app_localizations.dart';
@@ -21,6 +23,7 @@ class CardDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = AppLocalizations.of(context)!;
+    final cs = Theme.of(context).colorScheme;
     final cardAsync = ref.watch(cardByIdProvider(id));
     final entryAsync = ref.watch(entryProvider(id));
 
@@ -43,32 +46,71 @@ class CardDetailScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   Center(
-                    child: CachedNetworkImage(
-                      imageUrl: card.imageLarge.isNotEmpty
-                          ? card.imageLarge
-                          : card.imageSmall,
-                      height: 360,
-                      placeholder: (_, __) => const SizedBox(
-                        height: 360,
-                        child: Center(child: CircularProgressIndicator()),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(DexRadii.lg),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(DexRadii.lg),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.18),
+                              blurRadius: 28,
+                              offset: const Offset(0, 12),
+                            ),
+                          ],
+                        ),
+                        child: CachedNetworkImage(
+                          imageUrl: card.imageLarge.isNotEmpty
+                              ? card.imageLarge
+                              : card.imageSmall,
+                          height: 360,
+                          placeholder: (_, __) => const SizedBox(
+                            height: 360,
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                          errorWidget: (_, __, ___) =>
+                              const Icon(Icons.image_not_supported, size: 96),
+                        ),
                       ),
-                      errorWidget: (_, __, ___) =>
-                          const Icon(Icons.image_not_supported, size: 96),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  Text('#${card.number}  ${card.name}',
-                      style: Theme.of(context).textTheme.titleLarge),
-                  if (card.rarity != null || card.supertype != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(
-                        [card.supertype, card.rarity]
-                            .whereType<String>()
-                            .join(' • '),
-                        style: Theme.of(context).textTheme.bodyMedium,
+                  const SizedBox(height: 16),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text('#${card.number}',
+                          style: AppTheme.mono(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: cs.onSurfaceVariant)),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(card.name,
+                            style: Theme.of(context).textTheme.headlineSmall),
                       ),
-                    ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      if (card.type != null)
+                        _Badge(
+                            label: card.type!,
+                            color: colorForCardType(card.type)),
+                      if (card.rarity != null)
+                        _Badge(
+                            label: card.rarity!,
+                            color: colorForRarity(card.rarity)),
+                      if (card.supertype != null)
+                        _Badge(
+                            label: card.supertype!,
+                            color: cs.onSurfaceVariant,
+                            outlined: true),
+                    ],
+                  ),
                   const Divider(height: 32),
 
                   // --- Edição da coleção ---
@@ -134,6 +176,34 @@ class CardDetailScreen extends ConsumerWidget {
             },
           );
         },
+      ),
+    );
+  }
+}
+
+/// Pequeno badge em pílula (tipo / raridade / supertipo).
+class _Badge extends StatelessWidget {
+  final String label;
+  final Color color;
+  final bool outlined;
+  const _Badge({required this.label, required this.color, this.outlined = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: outlined ? Colors.transparent : color,
+        border: outlined ? Border.all(color: color) : null,
+        borderRadius: BorderRadius.circular(DexRadii.pill),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: outlined ? color : Colors.white,
+          fontWeight: FontWeight.w700,
+          fontSize: 12,
+        ),
       ),
     );
   }
