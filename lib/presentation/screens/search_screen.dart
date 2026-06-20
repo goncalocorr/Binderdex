@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/dex_tokens.dart';
+import '../../domain/entities/card_filter.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/card_tile.dart';
@@ -31,7 +32,13 @@ class SearchScreen extends ConsumerWidget {
     final cs = Theme.of(context).colorScheme;
     final results = ref.watch(searchResultsProvider);
     final selTypes = ref.watch(searchTypesProvider);
-    final missingOnly = ref.watch(searchMissingOnlyProvider);
+    final status = ref.watch(searchStatusProvider);
+
+    String statusLabel(CardStatusFilter s) => switch (s) {
+          CardStatusFilter.all => t.statusAll,
+          CardStatusFilter.owned => t.statusOwned,
+          CardStatusFilter.missing => t.statusMissing,
+        };
 
     return Scaffold(
       appBar: AppBar(title: Text(t.tabSearch)),
@@ -55,12 +62,16 @@ class SearchScreen extends ConsumerWidget {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 12),
               children: [
-                FilterChip(
-                  label: Text(t.missingOnly),
-                  selected: missingOnly,
-                  onSelected: (v) =>
-                      ref.read(searchMissingOnlyProvider.notifier).state = v,
-                ),
+                ...CardStatusFilter.values.map((s) => Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        label: Text(statusLabel(s)),
+                        selected: status == s,
+                        onSelected: (_) =>
+                            ref.read(searchStatusProvider.notifier).state = s,
+                      ),
+                    )),
+                Container(width: 1, height: 24, color: cs.outlineVariant),
                 const SizedBox(width: 8),
                 ..._types.map((ty) {
                   final on = selTypes.contains(ty);

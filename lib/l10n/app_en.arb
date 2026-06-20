@@ -71,5 +71,7 @@
   "myCollections": "My collections",
   "missingTotal": "Missing in total",
   "noStartedCollections": "No collections started",
-  "noStartedCollectionsBody": "Open a set and mark a card to start collecting."
+  "noStartedCollectionsBody": "Open a set and mark a card to start collecting.",
+  "allCards": "All cards",
+  "viewMissingCards": "View missing cards"
 }

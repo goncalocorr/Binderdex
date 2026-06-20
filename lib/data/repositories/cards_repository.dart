@@ -91,10 +91,10 @@ class CardsRepository {
   Stream<List<CardItem>> searchAll({
     required String query,
     required List<String> types,
-    required bool onlyMissing,
+    required CardStatusFilter status,
   }) =>
       db
-          .watchAllCards(query: query, types: types, onlyMissing: onlyMissing)
+          .watchAllCards(query: query, types: types, status: status.name)
           .map((rows) => rows.map(_toItem).toList());
 
   Future<List<String>> rarities(String setId) => db.raritiesInSet(setId);

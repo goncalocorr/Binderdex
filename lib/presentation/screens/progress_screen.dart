@@ -1,32 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
+import '../../domain/entities/card_filter.dart';
+import '../../domain/entities/stats_scope.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/completion_ring.dart';
 import '../widgets/dex_ui.dart';
+import '../widgets/scope_bar.dart';
 
-/// Estatísticas: anel global, cartões-resumo e distribuição por tipo.
+/// Estatísticas com âmbito: anel + cartões + por tipo reagem ao âmbito
+/// (as minhas coleções / todas / uma coleção focada).
 class ProgressScreen extends ConsumerWidget {
   const ProgressScreen({super.key});
+
+  void _openCards(BuildContext context, WidgetRef ref, StatsScope scope,
+      CardStatusFilter status) {
+    if (scope.isSet) {
+      context.push('/set/${scope.setId}?status=${status.name}');
+    } else {
+      ref.read(searchQueryProvider.notifier).state = '';
+      ref.read(searchTypesProvider.notifier).state = const [];
+      ref.read(searchStatusProvider.notifier).state = status;
+      context.push('/search');
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
-    final global = ref.watch(globalProgressProvider);
-    final counts = ref.watch(statsCountsProvider);
-    final byType = ref.watch(ownedByTypeProvider);
+    final scope = ref.watch(progressScopeProvider);
+    final progress = ref.watch(progressScopedProvider);
+    final counts = ref.watch(progressStatsScopedProvider);
+    final byType = ref.watch(progressByTypeScopedProvider);
     final sets = ref.watch(setsListProvider);
 
+    final scopeTitle = scope.isSet
+        ? (scope.setName ?? '')
+        : (scope.all ? t.allCards : t.myCollections);
+
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       children: [
-        // Anel global
+        ScopeBar(
+          provider: progressScopeProvider,
+          mineLabel: t.myCollections,
+          allLabel: t.allCards,
+        ),
+        const SizedBox(height: 16),
+        // Anel do âmbito atual
         Center(
-          child: global.when(
+          child: progress.when(
             loading: () => const SizedBox(
                 height: 148, child: Center(child: CircularProgressIndicator())),
             error: (e, _) => Text('$e'),
@@ -38,7 +66,7 @@ class ProgressScreen extends ConsumerWidget {
                     stroke: 14,
                     sublabel: '${p.owned}/${p.total}'),
                 const SizedBox(height: 10),
-                Text(t.progressGlobal,
+                Text(scopeTitle,
                     style: Theme.of(context).textTheme.titleMedium),
                 Text(t.missingCount(p.missing),
                     style: Theme.of(context)
@@ -50,7 +78,7 @@ class ProgressScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 20),
-        // Cartões-resumo
+        // Cartões-resumo (do âmbito)
         counts.when(
           loading: () => const SizedBox.shrink(),
           error: (e, _) => Text('$e'),
@@ -82,30 +110,38 @@ class ProgressScreen extends ConsumerWidget {
             ],
           ),
         ),
+        const SizedBox(height: 14),
+        // Ver as que tenho / em falta (do âmbito)
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.style, size: 18),
+                label: Text(t.statusOwned),
+                onPressed: () =>
+                    _openCards(context, ref, scope, CardStatusFilter.owned),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.search_off, size: 18),
+                label: Text(t.statusMissing),
+                onPressed: () =>
+                    _openCards(context, ref, scope, CardStatusFilter.missing),
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 16),
-        // Coleção por tipo
+        // Coleção por tipo (do âmbito)
         byType.when(
           loading: () => const SizedBox.shrink(),
           error: (e, _) => Text('$e'),
           data: (rows) {
             if (rows.isEmpty) return const SizedBox.shrink();
             final max = rows.first.owned;
-            return Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: cs.surface,
-                borderRadius: BorderRadius.circular(DexRadii.lg),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(
-                        alpha: Theme.of(context).brightness == Brightness.dark
-                            ? 0.35
-                            : 0.06),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
+            return _Card(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -131,30 +167,40 @@ class ProgressScreen extends ConsumerWidget {
           },
         ),
         const SizedBox(height: 24),
-        // As minhas coleções (sets onde já tens cartas)
+        // As minhas coleções — tocar foca o âmbito
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: Text(t.myCollections.toUpperCase(),
+              style: AppTheme.mono(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: cs.onSurfaceVariant)),
+        ),
         sets.when(
           loading: () => const SizedBox.shrink(),
           error: (e, _) => Text('$e'),
           data: (list) {
-            final mine =
-                list.where((s) => s.progress.owned > 0).toList();
-            if (mine.isEmpty) return const SizedBox.shrink();
+            final mine = list.where((s) => s.progress.owned > 0).toList();
+            if (mine.isEmpty) {
+              return Text(t.noStartedCollectionsBody,
+                  style: TextStyle(color: cs.onSurfaceVariant));
+            }
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 4, bottom: 8),
-                  child: Text(t.myCollections.toUpperCase(),
-                      style: AppTheme.mono(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: cs.onSurfaceVariant)),
-                ),
-                ...mine.map((s) {
-                  final done = s.progress.owned >= s.progress.total;
-                  final color = done ? DexColors.gold500 : DexColors.green500;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
+              children: mine.map((s) {
+                final done = s.progress.owned >= s.progress.total;
+                final color = done ? DexColors.gold500 : DexColors.green500;
+                final focused = scope.setId == s.set.id;
+                return InkWell(
+                  borderRadius: BorderRadius.circular(DexRadii.md),
+                  onTap: () => ref.read(progressScopeProvider.notifier).state =
+                      StatsScope(setId: s.set.id, setName: s.set.name),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: focused ? cs.primaryContainer : null,
+                      borderRadius: BorderRadius.circular(DexRadii.md),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -164,9 +210,8 @@ class ProgressScreen extends ConsumerWidget {
                               child: Text(s.set.name,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium),
+                                  style:
+                                      Theme.of(context).textTheme.titleMedium),
                             ),
                             Text('${s.progress.owned}/${s.progress.total}',
                                 style: AppTheme.mono(
@@ -187,13 +232,40 @@ class ProgressScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                  );
-                }),
-              ],
+                  ),
+                );
+              }).toList(),
             );
           },
         ),
       ],
+    );
+  }
+}
+
+class _Card extends StatelessWidget {
+  final Widget child;
+  const _Card({required this.child});
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cs.surface,
+        borderRadius: BorderRadius.circular(DexRadii.lg),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(
+                alpha: Theme.of(context).brightness == Brightness.dark
+                    ? 0.35
+                    : 0.06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: child,
     );
   }
 }

@@ -55,4 +55,14 @@ class CollectionRepository {
       );
 
   Future<List<({String type, int owned})>> ownedByType() => db.ownedByType();
+
+  // --- Com âmbito (set específico / minhas coleções) ---
+  Future<int> startedSetsTotalCards() => db.startedSetsTotalCards();
+  Future<({int total, int owned})> setCounts(String setId) =>
+      db.setCountsOnce(setId);
+  Future<int> holoCountInSet(String setId) => db.holoCountInSet(setId);
+  Future<int> duplicatesCountInSet(String setId) =>
+      db.duplicatesCountInSet(setId);
+  Future<List<({String type, int owned})>> ownedByTypeInSet(String setId) =>
+      db.ownedByTypeInSet(setId);
 }

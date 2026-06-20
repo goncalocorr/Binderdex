@@ -29,10 +29,15 @@ class _SetCardsScreenState extends ConsumerState<SetCardsScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.initialStatus == 'missing') {
+    final st = switch (widget.initialStatus) {
+      'owned' => CardStatusFilter.owned,
+      'missing' => CardStatusFilter.missing,
+      _ => null,
+    };
+    if (st != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(cardFilterProvider(widget.setId).notifier).state =
-            const CardFilter(status: CardStatusFilter.missing);
+            CardFilter(status: st);
       });
     }
   }

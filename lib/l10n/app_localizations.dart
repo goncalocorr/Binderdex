@@ -439,6 +439,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open a set and mark a card to start collecting.'**
   String get noStartedCollectionsBody;
+
+  /// No description provided for @allCards.
+  ///
+  /// In en, this message translates to:
+  /// **'All cards'**
+  String get allCards;
+
+  /// No description provided for @viewMissingCards.
+  ///
+  /// In en, this message translates to:
+  /// **'View missing cards'**
+  String get viewMissingCards;
 }
 
 class _AppLocalizationsDelegate

@@ -189,4 +189,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get noStartedCollectionsBody =>
       'Open a set and mark a card to start collecting.';
+
+  @override
+  String get allCards => 'All cards';
+
+  @override
+  String get viewMissingCards => 'View missing cards';
 }

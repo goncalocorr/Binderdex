@@ -56,5 +56,7 @@
   "myCollections": "As minhas coleções",
   "missingTotal": "Em falta no total",
   "noStartedCollections": "Sem coleções começadas",
-  "noStartedCollectionsBody": "Abre um set e marca uma carta para começares a colecionar."
+  "noStartedCollectionsBody": "Abre um set e marca uma carta para começares a colecionar.",
+  "allCards": "Todas as cartas",
+  "viewMissingCards": "Ver cartas em falta"
 }

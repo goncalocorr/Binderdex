@@ -8,6 +8,7 @@ import '../../data/repositories/sets_repository.dart';
 import '../../domain/entities/card_filter.dart';
 import '../../domain/entities/card_set.dart';
 import '../../domain/entities/progress.dart';
+import '../../domain/entities/stats_scope.dart';
 import '../../domain/entities/tcg_card.dart';
 import '../../domain/entities/user_card_entry.dart';
 
@@ -97,17 +98,72 @@ final setCountsProvider =
 // --- Pesquisa global ---
 final searchQueryProvider = StateProvider<String>((_) => '');
 final searchTypesProvider = StateProvider<List<String>>((_) => const []);
-final searchMissingOnlyProvider = StateProvider<bool>((_) => false);
+final searchStatusProvider =
+    StateProvider<CardStatusFilter>((_) => CardStatusFilter.all);
 
 final searchResultsProvider = StreamProvider<List<CardItem>>((ref) {
   final q = ref.watch(searchQueryProvider);
   final types = ref.watch(searchTypesProvider);
-  final missingOnly = ref.watch(searchMissingOnlyProvider);
+  final status = ref.watch(searchStatusProvider);
   return ref.watch(cardsRepositoryProvider).searchAll(
         query: q,
         types: types,
-        onlyMissing: missingOnly,
+        status: status,
       );
+});
+
+// --- Âmbito de estatísticas (Progresso / Em falta) ---
+Future<ProgressStats> _scopedProgress(Ref ref, StatsScope s) async {
+  final col = ref.watch(collectionRepositoryProvider);
+  if (s.setId != null) {
+    final c = await col.setCounts(s.setId!);
+    return ProgressStats(total: c.total, owned: c.owned);
+  }
+  final g = await col.globalProgress(); // total(todas), owned(global)
+  if (s.all) return g;
+  final mineTotal = await col.startedSetsTotalCards();
+  return ProgressStats(total: mineTotal, owned: g.owned);
+}
+
+/// Estado do âmbito do ecrã de Progresso (default: as minhas coleções).
+final progressScopeProvider = StateProvider<StatsScope>((_) => const StatsScope());
+
+/// Estado do âmbito do ecrã Em falta (default: as minhas coleções).
+final missingScopeProvider = StateProvider<StatsScope>((_) => const StatsScope());
+
+final progressScopedProvider = FutureProvider<ProgressStats>((ref) {
+  ref.watch(setsListProvider);
+  return _scopedProgress(ref, ref.watch(progressScopeProvider));
+});
+
+final missingScopedProvider = FutureProvider<ProgressStats>((ref) {
+  ref.watch(setsListProvider);
+  return _scopedProgress(ref, ref.watch(missingScopeProvider));
+});
+
+final progressStatsScopedProvider =
+    FutureProvider<({int setsDone, int holos, int dupes})>((ref) async {
+  ref.watch(setsListProvider);
+  final s = ref.watch(progressScopeProvider);
+  final col = ref.watch(collectionRepositoryProvider);
+  if (s.setId != null) {
+    final c = await col.setCounts(s.setId!);
+    final done = c.total > 0 && c.owned >= c.total ? 1 : 0;
+    return (
+      setsDone: done,
+      holos: await col.holoCountInSet(s.setId!),
+      dupes: await col.duplicatesCountInSet(s.setId!),
+    );
+  }
+  return col.counts();
+});
+
+final progressByTypeScopedProvider =
+    FutureProvider<List<({String type, int owned})>>((ref) {
+  ref.watch(setsListProvider);
+  final s = ref.watch(progressScopeProvider);
+  final col = ref.watch(collectionRepositoryProvider);
+  return s.setId != null ? col.ownedByTypeInSet(s.setId!) : col.ownedByType();
 });
 
 // --- Preferências de UI ---

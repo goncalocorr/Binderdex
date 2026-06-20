@@ -190,4 +190,10 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get noStartedCollectionsBody =>
       'Abre um set e marca uma carta para começares a colecionar.';
+
+  @override
+  String get allCards => 'Todas as cartas';
+
+  @override
+  String get viewMissingCards => 'Ver cartas em falta';
 }

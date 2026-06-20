@@ -313,10 +313,75 @@ class AppDatabase extends _$AppDatabase {
         .toList();
   }
 
+  /// Soma de cartas dos sets já começados (têm ≥1 carta possuída).
+  /// É o denominador do progresso "As minhas coleções".
+  Future<int> startedSetsTotalCards() async {
+    final r = await customSelect(
+      'SELECT COALESCE(SUM(s.total), 0) AS t FROM card_sets s WHERE '
+      '(SELECT COUNT(*) FROM tcg_cards c JOIN user_card_entries e '
+      ' ON e.card_id = c.id WHERE c.set_id = s.id AND '
+      ' (e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1)) > 0',
+      readsFrom: {cardSets, tcgCards, userCardEntries},
+    ).getSingle();
+    return r.read<int>('t');
+  }
+
+  /// Contagens (total/possuídas) de um set, em Future (para o âmbito focado).
+  Future<({int total, int owned})> setCountsOnce(String setId) async {
+    final r = await customSelect(
+      'SELECT (SELECT total FROM card_sets WHERE id = ?) AS total, '
+      '(SELECT COUNT(*) FROM tcg_cards c JOIN user_card_entries e '
+      ' ON e.card_id = c.id WHERE c.set_id = ? AND '
+      ' (e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1)) AS owned',
+      variables: [Variable<String>(setId), Variable<String>(setId)],
+      readsFrom: {cardSets, tcgCards, userCardEntries},
+    ).getSingle();
+    return (total: r.read<int?>('total') ?? 0, owned: r.read<int>('owned'));
+  }
+
+  Future<int> holoCountInSet(String setId) async {
+    final r = await customSelect(
+      'SELECT COUNT(*) AS c FROM user_card_entries e '
+      'JOIN tcg_cards c ON c.id = e.card_id '
+      'WHERE c.set_id = ? AND (e.owned_holo = 1 OR e.owned_reverse = 1)',
+      variables: [Variable<String>(setId)],
+      readsFrom: {tcgCards, userCardEntries},
+    ).getSingle();
+    return r.read<int>('c');
+  }
+
+  Future<int> duplicatesCountInSet(String setId) async {
+    final r = await customSelect(
+      'SELECT COUNT(*) AS c FROM user_card_entries e '
+      'JOIN tcg_cards c ON c.id = e.card_id '
+      'WHERE c.set_id = ? AND '
+      '(e.qty_normal > 1 OR e.qty_holo > 1 OR e.qty_reverse > 1)',
+      variables: [Variable<String>(setId)],
+      readsFrom: {tcgCards, userCardEntries},
+    ).getSingle();
+    return r.read<int>('c');
+  }
+
+  Future<List<({String type, int owned})>> ownedByTypeInSet(
+      String setId) async {
+    final rows = await customSelect(
+      "SELECT COALESCE(c.type, 'Colorless') AS t, COUNT(*) AS n "
+      'FROM tcg_cards c JOIN user_card_entries e ON e.card_id = c.id '
+      'WHERE c.set_id = ? AND '
+      '(e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1) '
+      'GROUP BY t ORDER BY n DESC',
+      variables: [Variable<String>(setId)],
+      readsFrom: {tcgCards, userCardEntries},
+    ).get();
+    return rows
+        .map((r) => (type: r.read<String>('t'), owned: r.read<int>('n')))
+        .toList();
+  }
+
   Stream<List<CardRow>> watchAllCards({
     required String query,
     required List<String> types,
-    required bool onlyMissing,
+    required String status, // 'all' | 'owned' | 'missing'
     int limit = 60,
   }) {
     final q = select(tcgCards).join([
@@ -331,11 +396,16 @@ class AppDatabase extends _$AppDatabase {
     if (types.isNotEmpty) {
       q.where(tcgCards.type.isIn(types));
     }
-    if (onlyMissing) {
-      q.where(userCardEntries.cardId.isNull() |
-          (userCardEntries.ownedNormal.equals(false) &
-              userCardEntries.ownedHolo.equals(false) &
-              userCardEntries.ownedReverse.equals(false)));
+    switch (status) {
+      case 'owned':
+        q.where(_anyOwned());
+        break;
+      case 'missing':
+        q.where(userCardEntries.cardId.isNull() |
+            (userCardEntries.ownedNormal.equals(false) &
+                userCardEntries.ownedHolo.equals(false) &
+                userCardEntries.ownedReverse.equals(false)));
+        break;
     }
     q.orderBy([OrderingTerm.asc(tcgCards.name)]);
     q.limit(limit);
