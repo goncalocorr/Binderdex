@@ -113,4 +113,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get comingSoon => 'Coming soon';
+
+  @override
+  String get cardsCollected => 'cards collected across all sets';
+
+  @override
+  String get statsSetsDone => 'Sets done';
+
+  @override
+  String get statsHolos => 'Holos';
+
+  @override
+  String get statsDuplicates => 'Duplicates';
+
+  @override
+  String get statsByType => 'Collection by type';
+
+  @override
+  String percentComplete(int n) {
+    return '$n% complete';
+  }
+
+  @override
+  String get allCollected => 'All collected!';
+
+  @override
+  String get emptyOwned => 'No cards owned yet';
+
+  @override
+  String get emptyOwnedBody => 'Add a card to start this set.';
+
+  @override
+  String get noMatch => 'Nothing here';
+
+  @override
+  String get quickAddTitle => 'Add a card';
+
+  @override
+  String addedToBinder(String name) {
+    return 'Added $name';
+  }
+
+  @override
+  String get undo => 'Undo';
+
+  @override
+  String get tabSearch => 'Search';
+
+  @override
+  String get searchAllHint => 'Search all cards…';
+
+  @override
+  String get missingOnly => 'Missing only';
+
+  @override
+  String get searchEmptyBody => 'Try a different name or type filter.';
+
+  @override
+  String cardsCountLabel(int n) {
+    return '$n cards';
+  }
 }

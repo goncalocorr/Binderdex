@@ -48,7 +48,7 @@ class TcgApi {
         'q': 'set.id:$setId',
         'page': page,
         'pageSize': 250,
-        'select': 'id,name,number,rarity,supertype,types,images,set',
+        'select': 'id,name,number,rarity,supertype,types,images,set,hp,attacks',
         'orderBy': 'number',
       });
       final data = (res.data['data'] as List).cast<Map<String, dynamic>>();
@@ -73,6 +73,13 @@ class TcgApi {
   static TcgCard cardFromJson(Map<String, dynamic> j) {
     final number = (j['number'] ?? '').toString();
     final types = (j['types'] as List?)?.cast<String>();
+    final attacks = (j['attacks'] as List?)?.cast<Map<String, dynamic>>();
+    int? atk;
+    if (attacks != null && attacks.isNotEmpty) {
+      final dmg = (attacks.first['damage'] ?? '').toString();
+      final m = RegExp(r'\d+').firstMatch(dmg);
+      if (m != null) atk = int.parse(m.group(0)!);
+    }
     return TcgCard(
       id: j['id'] as String,
       setId: (j['set']?['id'] as String?) ?? '',
@@ -84,6 +91,8 @@ class TcgApi {
       type: (types != null && types.isNotEmpty) ? types.first : null,
       imageSmall: (j['images']?['small'] as String?) ?? '',
       imageLarge: (j['images']?['large'] as String?) ?? '',
+      hp: int.tryParse((j['hp'] ?? '').toString()),
+      atk: atk,
     );
   }
 }

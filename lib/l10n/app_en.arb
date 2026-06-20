@@ -39,5 +39,32 @@
   "language": "Language",
   "languageSystem": "System",
   "premium": "Premium",
-  "comingSoon": "Coming soon"
+  "comingSoon": "Coming soon",
+  "cardsCollected": "cards collected across all sets",
+  "statsSetsDone": "Sets done",
+  "statsHolos": "Holos",
+  "statsDuplicates": "Duplicates",
+  "statsByType": "Collection by type",
+  "percentComplete": "{n}% complete",
+  "@percentComplete": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "allCollected": "All collected!",
+  "emptyOwned": "No cards owned yet",
+  "emptyOwnedBody": "Add a card to start this set.",
+  "noMatch": "Nothing here",
+  "quickAddTitle": "Add a card",
+  "addedToBinder": "Added {name}",
+  "@addedToBinder": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "undo": "Undo",
+  "tabSearch": "Search",
+  "searchAllHint": "Search all cards…",
+  "missingOnly": "Missing only",
+  "searchEmptyBody": "Try a different name or type filter.",
+  "cardsCountLabel": "{n} cards",
+  "@cardsCountLabel": {
+    "placeholders": { "n": { "type": "int" } }
+  }
 }

@@ -5,6 +5,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
 import '../../data/repositories/cards_repository.dart';
 import '../../domain/entities/tcg_card.dart';
+import 'dex_ui.dart';
 
 const ColorFilter _grayscale = ColorFilter.matrix(<double>[
   0.2126, 0.7152, 0.0722, 0, 0, //
@@ -44,7 +45,8 @@ class CardTile extends StatelessWidget {
       art = Opacity(opacity: 0.28, child: ColorFiltered(colorFilter: _grayscale, child: art));
     }
 
-    return Material(
+    return Pressable(
+      child: Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
@@ -201,6 +203,7 @@ class CardTile extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }

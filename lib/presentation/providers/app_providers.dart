@@ -55,6 +55,15 @@ final cardsListProvider =
 final raritiesProvider = FutureProvider.family<List<String>, String>(
     (ref, setId) => ref.watch(cardsRepositoryProvider).rarities(setId));
 
+/// Cartas em falta de um set (para a folha de adição rápida).
+final missingCardsProvider =
+    StreamProvider.family<List<CardItem>, String>((ref, setId) {
+  return ref.watch(cardsRepositoryProvider).watchCards(
+        setId,
+        const CardFilter(status: CardStatusFilter.missing),
+      );
+});
+
 // --- Carta individual / coleção ---
 final cardByIdProvider = FutureProvider.family<TcgCard?, String>(
     (ref, id) => ref.watch(cardsRepositoryProvider).byId(id));
@@ -62,10 +71,43 @@ final cardByIdProvider = FutureProvider.family<TcgCard?, String>(
 final entryProvider = StreamProvider.family<UserCardEntry, String>(
     (ref, id) => ref.watch(collectionRepositoryProvider).watchEntry(id));
 
-// --- Progresso ---
+// --- Progresso / Estatísticas ---
 final globalProgressProvider = FutureProvider<ProgressStats>((ref) {
   ref.watch(setsListProvider); // recalcula quando a coleção muda
   return ref.watch(collectionRepositoryProvider).globalProgress();
+});
+
+final statsCountsProvider =
+    FutureProvider<({int setsDone, int holos, int dupes})>((ref) {
+  ref.watch(setsListProvider);
+  return ref.watch(collectionRepositoryProvider).counts();
+});
+
+final ownedByTypeProvider =
+    FutureProvider<List<({String type, int owned})>>((ref) {
+  ref.watch(setsListProvider);
+  return ref.watch(collectionRepositoryProvider).ownedByType();
+});
+
+/// Contagens (total/possuídas) de um set — para as abas.
+final setCountsProvider =
+    StreamProvider.family<({int total, int owned}), String>(
+        (ref, setId) => ref.watch(cardsRepositoryProvider).setCounts(setId));
+
+// --- Pesquisa global ---
+final searchQueryProvider = StateProvider<String>((_) => '');
+final searchTypesProvider = StateProvider<List<String>>((_) => const []);
+final searchMissingOnlyProvider = StateProvider<bool>((_) => false);
+
+final searchResultsProvider = StreamProvider<List<CardItem>>((ref) {
+  final q = ref.watch(searchQueryProvider);
+  final types = ref.watch(searchTypesProvider);
+  final missingOnly = ref.watch(searchMissingOnlyProvider);
+  return ref.watch(cardsRepositoryProvider).searchAll(
+        query: q,
+        types: types,
+        onlyMissing: missingOnly,
+      );
 });
 
 // --- Preferências de UI ---

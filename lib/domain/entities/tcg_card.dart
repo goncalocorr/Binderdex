@@ -21,6 +21,8 @@ class TcgCard {
   final String? type; // primeiro tipo de energia (ex.: "Fire")
   final String imageSmall;
   final String imageLarge;
+  final int? hp; // pontos de vida (cartas de Pokémon)
+  final int? atk; // dano do primeiro ataque
 
   const TcgCard({
     required this.id,
@@ -33,5 +35,7 @@ class TcgCard {
     this.type,
     required this.imageSmall,
     required this.imageLarge,
+    this.hp,
+    this.atk,
   });
 }

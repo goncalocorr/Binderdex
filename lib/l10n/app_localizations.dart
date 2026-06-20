@@ -301,6 +301,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Coming soon'**
   String get comingSoon;
+
+  /// No description provided for @cardsCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'cards collected across all sets'**
+  String get cardsCollected;
+
+  /// No description provided for @statsSetsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets done'**
+  String get statsSetsDone;
+
+  /// No description provided for @statsHolos.
+  ///
+  /// In en, this message translates to:
+  /// **'Holos'**
+  String get statsHolos;
+
+  /// No description provided for @statsDuplicates.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicates'**
+  String get statsDuplicates;
+
+  /// No description provided for @statsByType.
+  ///
+  /// In en, this message translates to:
+  /// **'Collection by type'**
+  String get statsByType;
+
+  /// No description provided for @percentComplete.
+  ///
+  /// In en, this message translates to:
+  /// **'{n}% complete'**
+  String percentComplete(int n);
+
+  /// No description provided for @allCollected.
+  ///
+  /// In en, this message translates to:
+  /// **'All collected!'**
+  String get allCollected;
+
+  /// No description provided for @emptyOwned.
+  ///
+  /// In en, this message translates to:
+  /// **'No cards owned yet'**
+  String get emptyOwned;
+
+  /// No description provided for @emptyOwnedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a card to start this set.'**
+  String get emptyOwnedBody;
+
+  /// No description provided for @noMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing here'**
+  String get noMatch;
+
+  /// No description provided for @quickAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a card'**
+  String get quickAddTitle;
+
+  /// No description provided for @addedToBinder.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {name}'**
+  String addedToBinder(String name);
+
+  /// No description provided for @undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undo;
+
+  /// No description provided for @tabSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get tabSearch;
+
+  /// No description provided for @searchAllHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search all cards…'**
+  String get searchAllHint;
+
+  /// No description provided for @missingOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing only'**
+  String get missingOnly;
+
+  /// No description provided for @searchEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a different name or type filter.'**
+  String get searchEmptyBody;
+
+  /// No description provided for @cardsCountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} cards'**
+  String cardsCountLabel(int n);
 }
 
 class _AppLocalizationsDelegate

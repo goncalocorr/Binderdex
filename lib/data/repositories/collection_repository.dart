@@ -43,4 +43,14 @@ class CollectionRepository {
     final owned = await db.totalOwned();
     return ProgressStats(total: total, owned: owned);
   }
+
+  /// Contadores para o ecrã de estatísticas.
+  Future<({int setsDone, int holos, int dupes})> counts() async => (
+        setsDone: await db.setsDoneCount(),
+        holos: await db.holoCount(),
+        dupes: await db.duplicatesCount(),
+      );
+
+  /// Distribuição de cartas possuídas por tipo.
+  Future<List<({String type, int owned})>> ownedByType() => db.ownedByType();
 }

@@ -114,4 +114,64 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get comingSoon => 'Em breve';
+
+  @override
+  String get cardsCollected => 'cartas reunidas em todas as coleções';
+
+  @override
+  String get statsSetsDone => 'Sets feitos';
+
+  @override
+  String get statsHolos => 'Holos';
+
+  @override
+  String get statsDuplicates => 'Duplicados';
+
+  @override
+  String get statsByType => 'Coleção por tipo';
+
+  @override
+  String percentComplete(int n) {
+    return '$n% completo';
+  }
+
+  @override
+  String get allCollected => 'Tudo apanhado!';
+
+  @override
+  String get emptyOwned => 'Ainda não tens cartas';
+
+  @override
+  String get emptyOwnedBody => 'Adiciona uma carta para começar este set.';
+
+  @override
+  String get noMatch => 'Nada por aqui';
+
+  @override
+  String get quickAddTitle => 'Adicionar carta';
+
+  @override
+  String addedToBinder(String name) {
+    return 'Adicionada $name';
+  }
+
+  @override
+  String get undo => 'Anular';
+
+  @override
+  String get tabSearch => 'Pesquisa';
+
+  @override
+  String get searchAllHint => 'Pesquisar todas as cartas…';
+
+  @override
+  String get missingOnly => 'Só em falta';
+
+  @override
+  String get searchEmptyBody => 'Tenta outro nome ou filtro de tipo.';
+
+  @override
+  String cardsCountLabel(int n) {
+    return '$n cartas';
+  }
 }

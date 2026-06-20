@@ -8,6 +8,7 @@ import '../../domain/entities/tcg_card.dart';
 import '../../domain/entities/user_card_entry.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import '../widgets/dex_ui.dart';
 
 /// Detalhe de uma carta + edição do registo de coleção.
 class CardDetailScreen extends ConsumerWidget {
@@ -59,17 +60,25 @@ class CardDetailScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        child: CachedNetworkImage(
-                          imageUrl: card.imageLarge.isNotEmpty
-                              ? card.imageLarge
-                              : card.imageSmall,
-                          height: 360,
-                          placeholder: (_, __) => const SizedBox(
-                            height: 360,
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                          errorWidget: (_, __, ___) =>
-                              const Icon(Icons.image_not_supported, size: 96),
+                        child: Stack(
+                          children: [
+                            CachedNetworkImage(
+                              imageUrl: card.imageLarge.isNotEmpty
+                                  ? card.imageLarge
+                                  : card.imageSmall,
+                              height: 360,
+                              placeholder: (_, __) => const SizedBox(
+                                height: 360,
+                                child:
+                                    Center(child: CircularProgressIndicator()),
+                              ),
+                              errorWidget: (_, __, ___) => const Icon(
+                                  Icons.image_not_supported, size: 96),
+                            ),
+                            if (entry.owned &&
+                                entry.variant != CardVariant.normal)
+                              const Positioned.fill(child: HoloSheen()),
+                          ],
                         ),
                       ),
                     ),
@@ -111,6 +120,45 @@ class CardDetailScreen extends ConsumerWidget {
                             outlined: true),
                     ],
                   ),
+                  if (card.hp != null || card.atk != null) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: cs.surface,
+                        borderRadius: BorderRadius.circular(DexRadii.lg),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(
+                                alpha: Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? 0.35
+                                    : 0.06),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          if (card.hp != null)
+                            StatBar(
+                                label: 'HP',
+                                value: card.hp!,
+                                color: DexColors.green500,
+                                max: 340),
+                          if (card.hp != null && card.atk != null)
+                            const SizedBox(height: 10),
+                          if (card.atk != null)
+                            StatBar(
+                                label: 'ATK',
+                                value: card.atk!,
+                                color: colorForCardType(card.type),
+                                max: 300),
+                        ],
+                      ),
+                    ),
+                  ],
                   const Divider(height: 32),
 
                   // --- Edição da coleção ---

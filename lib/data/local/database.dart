@@ -36,6 +36,8 @@ class TcgCards extends Table {
   TextColumn get type => text().nullable()();
   TextColumn get imageSmall => text()();
   TextColumn get imageLarge => text()();
+  IntColumn get hp => integer().nullable()();
+  IntColumn get atk => integer().nullable()();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -75,7 +77,21 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            // Novas colunas de estatísticas das cartas.
+            await m.addColumn(tcgCards, tcgCards.hp);
+            await m.addColumn(tcgCards, tcgCards.atk);
+            // Força re-sincronização dos sets para preencher HP/ATK.
+            await (update(cardSets))
+                .write(const CardSetsCompanion(cardsSynced: Value(false)));
+          }
+        },
+      );
 
   // --- Sets ---
 
@@ -207,5 +223,95 @@ class AppDatabase extends _$AppDatabase {
         await (selectOnly(cardSets)..addColumns([cardSets.total.sum()]))
             .getSingle();
     return row.read(cardSets.total.sum()) ?? 0;
+  }
+
+  /// Contagens (total em cache, possuídas) de um set — para as abas.
+  Stream<({int total, int owned})> watchSetCounts(String setId) {
+    return customSelect(
+      'SELECT COUNT(*) AS total, '
+      'SUM(CASE WHEN e.owned = 1 THEN 1 ELSE 0 END) AS owned '
+      'FROM tcg_cards c LEFT JOIN user_card_entries e ON e.card_id = c.id '
+      'WHERE c.set_id = ?',
+      variables: [Variable<String>(setId)],
+      readsFrom: {tcgCards, userCardEntries},
+    ).watchSingle().map((r) =>
+        (total: r.read<int>('total'), owned: r.read<int?>('owned') ?? 0));
+  }
+
+  /// Nº de cartas possuídas com variante não-normal (holos/reverse).
+  Future<int> holoCount() async {
+    final r = await customSelect(
+      "SELECT COUNT(*) AS c FROM user_card_entries "
+      "WHERE owned = 1 AND variant != 'normal'",
+      readsFrom: {userCardEntries},
+    ).getSingle();
+    return r.read<int>('c');
+  }
+
+  /// Nº de cartas possuídas com mais de uma cópia.
+  Future<int> duplicatesCount() async {
+    final r = await customSelect(
+      'SELECT COUNT(*) AS c FROM user_card_entries '
+      'WHERE owned = 1 AND quantity > 1',
+      readsFrom: {userCardEntries},
+    ).getSingle();
+    return r.read<int>('c');
+  }
+
+  /// Nº de sets completos (possuídas >= total).
+  Future<int> setsDoneCount() async {
+    final r = await customSelect(
+      'SELECT COUNT(*) AS c FROM card_sets s WHERE s.total > 0 AND '
+      '(SELECT COUNT(*) FROM tcg_cards c JOIN user_card_entries e '
+      ' ON e.card_id = c.id WHERE c.set_id = s.id AND e.owned = 1) >= s.total',
+      readsFrom: {cardSets, tcgCards, userCardEntries},
+    ).getSingle();
+    return r.read<int>('c');
+  }
+
+  /// Distribuição de cartas possuídas por tipo (ordenada desc).
+  Future<List<({String type, int owned})>> ownedByType() async {
+    final rows = await customSelect(
+      "SELECT COALESCE(c.type, 'Colorless') AS t, COUNT(*) AS n "
+      'FROM tcg_cards c JOIN user_card_entries e ON e.card_id = c.id '
+      'WHERE e.owned = 1 GROUP BY t ORDER BY n DESC',
+      readsFrom: {tcgCards, userCardEntries},
+    ).get();
+    return rows
+        .map((r) => (type: r.read<String>('t'), owned: r.read<int>('n')))
+        .toList();
+  }
+
+  /// Pesquisa global de cartas (em todas as cartas em cache).
+  Stream<List<CardRow>> watchAllCards({
+    required String query,
+    required List<String> types,
+    required bool onlyMissing,
+    int limit = 60,
+  }) {
+    final q = select(tcgCards).join([
+      leftOuterJoin(
+          userCardEntries, userCardEntries.cardId.equalsExp(tcgCards.id)),
+    ]);
+    if (query.isNotEmpty) {
+      final like = '%${query.toLowerCase()}%';
+      q.where(tcgCards.name.lower().like(like) |
+          tcgCards.number.lower().like(like));
+    }
+    if (types.isNotEmpty) {
+      q.where(tcgCards.type.isIn(types));
+    }
+    if (onlyMissing) {
+      q.where(userCardEntries.owned.isNull() |
+          userCardEntries.owned.equals(false));
+    }
+    q.orderBy([OrderingTerm.asc(tcgCards.name)]);
+    q.limit(limit);
+    return q.watch().map((rows) => rows
+        .map((r) => CardRow(
+              r.readTable(tcgCards),
+              r.readTableOrNull(userCardEntries),
+            ))
+        .toList());
   }
 }

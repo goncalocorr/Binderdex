@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../presentation/screens/card_detail_screen.dart';
 import '../../presentation/screens/missing_screen.dart';
 import '../../presentation/screens/progress_screen.dart';
+import '../../presentation/screens/search_screen.dart';
 import '../../presentation/screens/set_cards_screen.dart';
 import '../../presentation/screens/sets_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
@@ -32,7 +34,21 @@ class _ShellState extends State<_Shell> {
     final titles = [t.tabSets, t.tabProgress, t.tabMissing, t.tabSettings];
 
     return Scaffold(
-      appBar: AppBar(title: Text(titles[_index])),
+      appBar: AppBar(
+        leadingWidth: 52,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: SvgPicture.asset('assets/logo-mark.svg', width: 30, height: 30),
+        ),
+        title: Text(titles[_index]),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            tooltip: t.tabSearch,
+            onPressed: () => context.push('/search'),
+          ),
+        ],
+      ),
       body: _tabs[_index],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
@@ -65,5 +81,6 @@ final appRouter = GoRouter(
       path: '/card/:id',
       builder: (_, s) => CardDetailScreen(id: s.pathParameters['id']!),
     ),
+    GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
   ],
 );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
 import '../../data/repositories/sets_repository.dart';
+import 'dex_ui.dart';
 
 /// Linha de uma coleção (set) — estilo "CollectionCard" do Dex Design System:
 /// logo num quadrado arredondado tintado, nome em Fredoka, percentagem colorida,
@@ -26,7 +27,8 @@ class SetTile extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-      child: Material(
+      child: Pressable(
+        child: Material(
         color: cs.surface,
         borderRadius: BorderRadius.circular(DexRadii.lg),
         elevation: 0,
@@ -126,6 +128,7 @@ class SetTile extends StatelessWidget {
             ),
           ),
         ),
+      ),
       ),
     );
   }
