@@ -205,4 +205,18 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get editName => 'Editar nome';
+
+  @override
+  String get onboardingTagline =>
+      'Segue todas as cartas que tens, vê o que falta e completa cada coleção.';
+
+  @override
+  String get startCollection => 'Começar a minha coleção';
+
+  @override
+  String get haveAccount => 'Já tenho conta';
+
+  @override
+  String get fanMadeDisclaimer =>
+      'Registo de coleção feito por fãs · sem afiliação a qualquer editora de cartas.';
 }

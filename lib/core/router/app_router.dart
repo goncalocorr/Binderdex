@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../l10n/app_localizations.dart';
 import '../../presentation/screens/card_detail_screen.dart';
 import '../../presentation/screens/missing_screen.dart';
+import '../../presentation/screens/onboarding_screen.dart';
 import '../../presentation/screens/progress_screen.dart';
 import '../../presentation/screens/search_screen.dart';
 import '../../presentation/screens/set_cards_screen.dart';
@@ -72,6 +73,8 @@ final appRouter = GoRouter(
   initialLocation: '/splash',
   routes: [
     GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
+    GoRoute(
+        path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
     GoRoute(path: '/', builder: (_, __) => const _Shell()),
     GoRoute(
       path: '/set/:id',

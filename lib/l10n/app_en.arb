@@ -76,5 +76,9 @@
   "viewMissingCards": "View missing cards",
   "guest": "Collector",
   "localCollection": "Local collection",
-  "editName": "Edit name"
+  "editName": "Edit name",
+  "onboardingTagline": "Track every card you own, see what's missing, and complete every set.",
+  "startCollection": "Start my collection",
+  "haveAccount": "I already have an account",
+  "fanMadeDisclaimer": "A fan-made collection tracker · not affiliated with any card publisher."
 }

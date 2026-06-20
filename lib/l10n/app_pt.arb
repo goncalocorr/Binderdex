@@ -61,5 +61,9 @@
   "viewMissingCards": "Ver cartas em falta",
   "guest": "Colecionador",
   "localCollection": "Coleção local",
-  "editName": "Editar nome"
+  "editName": "Editar nome",
+  "onboardingTagline": "Segue todas as cartas que tens, vê o que falta e completa cada coleção.",
+  "startCollection": "Começar a minha coleção",
+  "haveAccount": "Já tenho conta",
+  "fanMadeDisclaimer": "Registo de coleção feito por fãs · sem afiliação a qualquer editora de cartas."
 }

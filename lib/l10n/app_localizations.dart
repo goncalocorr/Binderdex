@@ -469,6 +469,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit name'**
   String get editName;
+
+  /// No description provided for @onboardingTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Track every card you own, see what\'s missing, and complete every set.'**
+  String get onboardingTagline;
+
+  /// No description provided for @startCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Start my collection'**
+  String get startCollection;
+
+  /// No description provided for @haveAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'I already have an account'**
+  String get haveAccount;
+
+  /// No description provided for @fanMadeDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'A fan-made collection tracker · not affiliated with any card publisher.'**
+  String get fanMadeDisclaimer;
 }
 
 class _AppLocalizationsDelegate

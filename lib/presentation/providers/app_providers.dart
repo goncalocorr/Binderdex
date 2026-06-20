@@ -177,3 +177,6 @@ final localeProvider = StateProvider<String?>((_) => null);
 
 /// Nome de apresentação local (perfil). Vazio = convidado.
 final displayNameProvider = StateProvider<String>((_) => '');
+
+/// Se o ecrã de boas-vindas já foi visto (mostra-se só uma vez).
+final onboardingDoneProvider = StateProvider<bool>((_) => false);

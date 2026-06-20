@@ -204,4 +204,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editName => 'Edit name';
+
+  @override
+  String get onboardingTagline =>
+      'Track every card you own, see what\'s missing, and complete every set.';
+
+  @override
+  String get startCollection => 'Start my collection';
+
+  @override
+  String get haveAccount => 'I already have an account';
+
+  @override
+  String get fanMadeDisclaimer =>
+      'A fan-made collection tracker · not affiliated with any card publisher.';
 }
