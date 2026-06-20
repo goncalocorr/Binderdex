@@ -15,7 +15,7 @@ class PokedexApp extends ConsumerWidget {
     final localeCode = ref.watch(localeProvider);
 
     return MaterialApp.router(
-      title: 'Caderneta de Cartas',
+      title: 'Binderdex',
       onGenerateTitle: (ctx) => AppLocalizations.of(ctx)!.appTitle,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),

@@ -9,7 +9,7 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
-  String get appTitle => 'Caderneta de Cartas';
+  String get appTitle => 'Binderdex';
 
   @override
   String get tabSets => 'Coleções';
