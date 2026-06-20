@@ -317,6 +317,125 @@ class _VariantToggleState extends State<VariantToggle>
   }
 }
 
+/// Badge de tipo elemental (pílula colorida + ícone + nome).
+class TypeBadge extends StatelessWidget {
+  final String? type;
+  final bool soft;
+  final bool large;
+  const TypeBadge(this.type, {super.key, this.soft = false, this.large = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = colorForCardType(type);
+    final fg = soft ? color : Colors.white;
+    return Container(
+      padding: EdgeInsets.symmetric(
+          horizontal: large ? 14 : 10, vertical: large ? 6 : 4),
+      decoration: BoxDecoration(
+        color: soft ? color.withValues(alpha: 0.16) : color,
+        borderRadius: BorderRadius.circular(DexRadii.pill),
+        border: soft ? Border.all(color: color.withValues(alpha: 0.4)) : null,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(iconForCardType(type), size: large ? 18 : 14, color: fg),
+          const SizedBox(width: 5),
+          Text(
+            (type ?? 'Colorless').toUpperCase(),
+            style: TextStyle(
+              fontFamily: AppTheme.displayFont,
+              fontWeight: FontWeight.w600,
+              fontSize: large ? 13 : 11,
+              letterSpacing: 0.8,
+              color: fg,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Badge de raridade (sólido para baixas; foil/arco-íris animado para holo/
+/// ultra/secret), com ícone.
+class RarityBadge extends StatefulWidget {
+  final String? rarity;
+  const RarityBadge(this.rarity, {super.key});
+
+  @override
+  State<RarityBadge> createState() => _RarityBadgeState();
+}
+
+class _RarityBadgeState extends State<RarityBadge>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 4000),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  Widget _content(Color textColor) => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(iconForRarity(widget.rarity), size: 14, color: textColor),
+          const SizedBox(width: 5),
+          Text(
+            (widget.rarity ?? 'Common').toUpperCase(),
+            style: TextStyle(
+              fontFamily: AppTheme.displayFont,
+              fontWeight: FontWeight.w600,
+              fontSize: 11,
+              letterSpacing: 0.8,
+              color: textColor,
+            ),
+          ),
+        ],
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final sheen = raritySheen(widget.rarity);
+    if (sheen != null) {
+      final rainbow = identical(sheen, DexSheens.rainbow);
+      return AnimatedBuilder(
+        animation: _c,
+        builder: (_, __) {
+          final shift = _c.value * 2;
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(DexRadii.pill),
+              gradient: LinearGradient(
+                begin: Alignment(-2 + shift, 0),
+                end: Alignment(shift, 0),
+                colors: sheen,
+                tileMode: TileMode.mirror,
+              ),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.55)),
+            ),
+            child: _content(
+                rainbow ? Colors.white : const Color(0xFF3A2A14)),
+          );
+        },
+      );
+    }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: colorForRarity(widget.rarity),
+        borderRadius: BorderRadius.circular(DexRadii.pill),
+      ),
+      child: _content(Colors.white),
+    );
+  }
+}
+
 /// Brilho holográfico animado (holo / foil / arco-íris).
 /// Sobrepõe um gradiente multicolor translúcido que "varre" a carta, mais
 /// uma faixa branca de shimmer por cima.

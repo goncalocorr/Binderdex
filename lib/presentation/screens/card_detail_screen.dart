@@ -118,15 +118,10 @@ class CardDetailScreen extends ConsumerWidget {
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
-                      if (card.type != null)
-                        _Badge(
-                            label: card.type!,
-                            color: colorForCardType(card.type)),
-                      if (card.rarity != null)
-                        _Badge(
-                            label: card.rarity!,
-                            color: colorForRarity(card.rarity)),
+                      if (card.type != null) TypeBadge(card.type, large: true),
+                      if (card.rarity != null) RarityBadge(card.rarity),
                       if (card.supertype != null)
                         _Badge(
                             label: card.supertype!,

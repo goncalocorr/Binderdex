@@ -159,6 +159,73 @@ Color colorForCardType(String? type) {
   }
 }
 
+/// Ícone (Material) por tipo de energia do TCG — equivalente ao TYPE_META do
+/// design (Material Symbols), usando ícones nativos do Flutter.
+IconData iconForCardType(String? type) {
+  switch ((type ?? 'normal').toLowerCase()) {
+    case 'fire':
+      return Icons.local_fire_department;
+    case 'water':
+      return Icons.water_drop;
+    case 'grass':
+      return Icons.eco;
+    case 'lightning':
+    case 'electric':
+      return Icons.bolt;
+    case 'psychic':
+      return Icons.psychology;
+    case 'fighting':
+      return Icons.sports_mma;
+    case 'darkness':
+    case 'dark':
+      return Icons.dark_mode;
+    case 'metal':
+    case 'steel':
+      return Icons.shield;
+    case 'dragon':
+      return Icons.cyclone;
+    case 'fairy':
+      return Icons.auto_awesome;
+    case 'colorless':
+    case 'normal':
+    default:
+      return Icons.blur_circular;
+  }
+}
+
+/// Ícone (Material) por raridade — escala common → secret.
+IconData iconForRarity(String? rarity) {
+  final s = (rarity ?? '').toLowerCase();
+  if (s.contains('secret') || s.contains('rainbow') || s.contains('gold')) {
+    return Icons.workspace_premium;
+  }
+  if (s.contains('ultra') || s.contains('full art') || s.contains('illustration')) {
+    return Icons.diamond;
+  }
+  if (s.contains('holo') || s.contains('ex') || s.contains('gx') || s.contains('v')) {
+    return Icons.auto_awesome;
+  }
+  if (s.contains('rare')) return Icons.star;
+  if (s.contains('uncommon')) return Icons.change_history;
+  return Icons.circle;
+}
+
+/// Tipo de brilho da raridade (para o RarityBadge): nenhum / foil / arco-íris.
+List<Color>? raritySheen(String? rarity) {
+  final s = (rarity ?? '').toLowerCase();
+  if (s.contains('secret') || s.contains('rainbow')) return DexSheens.rainbow;
+  if (s.contains('ultra') ||
+      s.contains('holo') ||
+      s.contains('full art') ||
+      s.contains('illustration') ||
+      s.contains('ex') ||
+      s.contains('gx') ||
+      s.contains('v')) {
+    return DexSheens.foil;
+  }
+  return null;
+}
+
 /// Cor da raridade (escala common → secret) a partir do texto da raridade do TCG.
 Color colorForRarity(String? rarity) {
   final s = (rarity ?? '').toLowerCase();

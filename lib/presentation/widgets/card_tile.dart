@@ -110,20 +110,23 @@ class CardTile extends StatelessWidget {
                                 top: 6,
                                 right: 6,
                                 child: Container(
-                                  width: 18,
-                                  height: 18,
+                                  width: 22,
+                                  height: 22,
+                                  alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                     color: typeColor,
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black
-                                            .withValues(alpha: 0.18),
-                                        blurRadius: 0,
+                                            .withValues(alpha: 0.2),
+                                        blurRadius: 2,
                                         offset: const Offset(0, 1),
                                       ),
                                     ],
                                   ),
+                                  child: Icon(iconForCardType(c.type),
+                                      size: 13, color: Colors.white),
                                 ),
                               ),
                             // "Em falta" — ícone "+"

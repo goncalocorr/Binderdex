@@ -153,12 +153,38 @@ class ProgressScreen extends ConsumerWidget {
                   const SizedBox(height: 14),
                   ...rows.take(8).map((r) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: StatBar(
-                          label: r.type,
-                          value: r.owned,
-                          max: max,
-                          color: colorForCardType(r.type),
-                          labelWidth: 76,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                                width: 120,
+                                child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: TypeBadge(r.type, soft: true))),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius:
+                                    BorderRadius.circular(DexRadii.pill),
+                                child: LinearProgressIndicator(
+                                  value: max <= 0
+                                      ? 0
+                                      : (r.owned / max).clamp(0.0, 1.0),
+                                  minHeight: 10,
+                                  color: colorForCardType(r.type),
+                                  backgroundColor: cs.surfaceContainerHigh,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 34,
+                              child: Text(' ${r.owned}',
+                                  textAlign: TextAlign.right,
+                                  style: AppTheme.mono(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: cs.onSurface)),
+                            ),
+                          ],
                         ),
                       )),
                 ],
