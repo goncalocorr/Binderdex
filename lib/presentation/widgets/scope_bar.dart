@@ -21,28 +21,20 @@ class ScopeBar extends ConsumerWidget {
     final scope = ref.watch(provider);
     final notifier = ref.read(provider.notifier);
 
-    if (scope.isSet) {
-      return Align(
-        alignment: Alignment.centerLeft,
-        child: InputChip(
-          avatar: const Icon(Icons.folder_open, size: 18),
-          label: Text(scope.setName ?? ''),
-          onDeleted: () => notifier.state = const StatsScope(),
-          deleteIcon: const Icon(Icons.close, size: 18),
-        ),
-      );
-    }
+    // Sempre o toggle [As minhas coleções | Todas]. Quando uma coleção está
+    // focada, nenhum fica selecionado (a coleção vê-se pela linha realçada e
+    // pelo título); tocar num deles sai do foco.
     return Wrap(
       spacing: 8,
       children: [
         ChoiceChip(
           label: Text(mineLabel),
-          selected: !scope.all,
+          selected: !scope.isSet && !scope.all,
           onSelected: (_) => notifier.state = const StatsScope(all: false),
         ),
         ChoiceChip(
           label: Text(allLabel),
-          selected: scope.all,
+          selected: !scope.isSet && scope.all,
           onSelected: (_) => notifier.state = const StatsScope(all: true),
         ),
       ],
