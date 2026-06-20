@@ -196,4 +196,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get viewMissingCards => 'Ver cartas em falta';
+
+  @override
+  String get guest => 'Colecionador';
+
+  @override
+  String get localCollection => 'Coleção local';
+
+  @override
+  String get editName => 'Editar nome';
 }

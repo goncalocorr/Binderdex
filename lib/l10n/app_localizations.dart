@@ -451,6 +451,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'View missing cards'**
   String get viewMissingCards;
+
+  /// No description provided for @guest.
+  ///
+  /// In en, this message translates to:
+  /// **'Collector'**
+  String get guest;
+
+  /// No description provided for @localCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'Local collection'**
+  String get localCollection;
+
+  /// No description provided for @editName.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit name'**
+  String get editName;
 }
 
 class _AppLocalizationsDelegate

@@ -58,5 +58,8 @@
   "noStartedCollections": "Sem coleções começadas",
   "noStartedCollectionsBody": "Abre um set e marca uma carta para começares a colecionar.",
   "allCards": "Todas as cartas",
-  "viewMissingCards": "Ver cartas em falta"
+  "viewMissingCards": "Ver cartas em falta",
+  "guest": "Colecionador",
+  "localCollection": "Coleção local",
+  "editName": "Editar nome"
 }

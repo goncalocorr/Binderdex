@@ -10,6 +10,7 @@ import '../../presentation/screens/search_screen.dart';
 import '../../presentation/screens/set_cards_screen.dart';
 import '../../presentation/screens/sets_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
+import '../../presentation/screens/splash_screen.dart';
 
 /// Casca com navegação inferior (Coleções, Progresso, Em falta, Definições).
 class _Shell extends StatefulWidget {
@@ -68,7 +69,9 @@ class _ShellState extends State<_Shell> {
 }
 
 final appRouter = GoRouter(
+  initialLocation: '/splash',
   routes: [
+    GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
     GoRoute(path: '/', builder: (_, __) => const _Shell()),
     GoRoute(
       path: '/set/:id',

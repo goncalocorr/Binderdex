@@ -195,4 +195,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get viewMissingCards => 'View missing cards';
+
+  @override
+  String get guest => 'Collector';
+
+  @override
+  String get localCollection => 'Local collection';
+
+  @override
+  String get editName => 'Edit name';
 }

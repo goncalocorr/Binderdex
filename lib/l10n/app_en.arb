@@ -73,5 +73,8 @@
   "noStartedCollections": "No collections started",
   "noStartedCollectionsBody": "Open a set and mark a card to start collecting.",
   "allCards": "All cards",
-  "viewMissingCards": "View missing cards"
+  "viewMissingCards": "View missing cards",
+  "guest": "Collector",
+  "localCollection": "Local collection",
+  "editName": "Edit name"
 }

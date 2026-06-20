@@ -33,6 +33,9 @@ dependencies:
   # Logo (SVG)
   flutter_svg: ^2.0.10+1
 
+  # Persistência de preferências (tema, idioma, perfil)
+  shared_preferences: ^2.2.3
+
   # Internacionalização
   intl: any
 

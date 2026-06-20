@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/local/database.dart';
 import '../../data/remote/tcg_api.dart';
@@ -166,6 +167,13 @@ final progressByTypeScopedProvider =
   return s.setId != null ? col.ownedByTypeInSet(s.setId!) : col.ownedByType();
 });
 
-// --- Preferências de UI ---
+// --- Preferências de UI (persistidas em shared_preferences) ---
+/// Instância de SharedPreferences (substituída no main com a real).
+final prefsProvider = Provider<SharedPreferences>(
+    (ref) => throw UnimplementedError('prefsProvider definido no main'));
+
 final themeModeProvider = StateProvider<int>((_) => 0); // 0=sistema,1=claro,2=escuro
 final localeProvider = StateProvider<String?>((_) => null);
+
+/// Nome de apresentação local (perfil). Vazio = convidado.
+final displayNameProvider = StateProvider<String>((_) => '');
