@@ -68,6 +68,50 @@ abstract class DexColors {
   };
 }
 
+/// Gradientes de brilho para cartas raras (tokens/colors.css).
+abstract class DexSheens {
+  static const holo = [
+    Color(0xFFC8F9FF),
+    Color(0xFFD3C7FF),
+    Color(0xFFFFD0EC),
+    Color(0xFFFFF3C4),
+    Color(0xFFC6FFD9),
+    Color(0xFFC8F9FF),
+  ];
+  static const foil = [
+    Color(0xFFF6D365),
+    Color(0xFFFDA085),
+    Color(0xFFF093FB),
+    Color(0xFF5EE7DF),
+    Color(0xFFF6D365),
+  ];
+  static const rainbow = [
+    Color(0xFFFF5C5C),
+    Color(0xFFFFB84C),
+    Color(0xFFFFE14C),
+    Color(0xFF57D97A),
+    Color(0xFF4CC3FF),
+    Color(0xFF9B6CFF),
+    Color(0xFFFF6CD0),
+  ];
+}
+
+/// Escolhe o brilho a aplicar a uma carta possuída:
+/// secret/rainbow → arco-íris; holo → holo; reverse → foil; senão nenhum.
+List<Color>? sheenColorsForCard({
+  String? rarity,
+  required bool ownedHolo,
+  required bool ownedReverse,
+  required bool ownedAny,
+}) {
+  if (!ownedAny) return null;
+  final r = (rarity ?? '').toLowerCase();
+  if (r.contains('secret') || r.contains('rainbow')) return DexSheens.rainbow;
+  if (ownedHolo) return DexSheens.holo;
+  if (ownedReverse) return DexSheens.foil;
+  return null;
+}
+
 /// Raios — "chunky & friendly" (tokens/spacing.css).
 abstract class DexRadii {
   static const sm = 10.0;

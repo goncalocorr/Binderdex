@@ -197,18 +197,23 @@ class _PressableState extends State<Pressable> {
   }
 }
 
-/// Brilho holo animado (faixa diagonal que percorre o cartão).
-class HoloSheen extends StatefulWidget {
-  const HoloSheen({super.key});
+/// Brilho holográfico animado (holo / foil / arco-íris).
+/// Sobrepõe um gradiente multicolor translúcido que "varre" a carta, mais
+/// uma faixa branca de shimmer por cima.
+class AnimatedSheen extends StatefulWidget {
+  final List<Color> colors;
+  final double opacity;
+  const AnimatedSheen({super.key, required this.colors, this.opacity = 0.5});
+
   @override
-  State<HoloSheen> createState() => _HoloSheenState();
+  State<AnimatedSheen> createState() => _AnimatedSheenState();
 }
 
-class _HoloSheenState extends State<HoloSheen>
+class _AnimatedSheenState extends State<AnimatedSheen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _c = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 3500),
+    duration: const Duration(milliseconds: 4200),
   )..repeat();
 
   @override
@@ -223,20 +228,39 @@ class _HoloSheenState extends State<HoloSheen>
       child: AnimatedBuilder(
         animation: _c,
         builder: (_, __) {
-          final t = _c.value * 2 - 1; // -1..1
-          return DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment(t - 0.3, -1),
-                end: Alignment(t + 0.3, 1),
-                colors: [
-                  Colors.white.withValues(alpha: 0.0),
-                  Colors.white.withValues(alpha: 0.45),
-                  Colors.white.withValues(alpha: 0.0),
-                ],
-                stops: const [0.4, 0.5, 0.6],
+          final shift = _c.value * 2 - 1; // -1..1
+          final band = _c.value * 2 - 1;
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              // Gradiente multicolor translúcido (o "holo").
+              ShaderMask(
+                blendMode: BlendMode.srcATop,
+                shaderCallback: (rect) => LinearGradient(
+                  begin: Alignment(-1 + shift, -1),
+                  end: Alignment(1 + shift, 1),
+                  colors: widget.colors,
+                  tileMode: TileMode.mirror,
+                ).createShader(rect),
+                child: Container(
+                    color: Colors.white.withValues(alpha: widget.opacity)),
               ),
-            ),
+              // Faixa branca de brilho que percorre na diagonal.
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment(band - 0.3, -1),
+                    end: Alignment(band + 0.3, 1),
+                    colors: [
+                      Colors.white.withValues(alpha: 0.0),
+                      Colors.white.withValues(alpha: 0.35),
+                      Colors.white.withValues(alpha: 0.0),
+                    ],
+                    stops: const [0.4, 0.5, 0.6],
+                  ),
+                ),
+              ),
+            ],
           );
         },
       ),

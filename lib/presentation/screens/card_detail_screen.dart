@@ -42,6 +42,12 @@ class CardDetailScreen extends ConsumerWidget {
               final repo = ref.read(collectionRepositoryProvider);
               void save(UserCardEntry e) =>
                   repo.save(e.copyWith(updatedAt: DateTime.now()));
+              final sheen = sheenColorsForCard(
+                rarity: card.rarity,
+                ownedHolo: entry.ownedHolo,
+                ownedReverse: entry.ownedReverse,
+                ownedAny: entry.anyOwned,
+              );
 
               return ListView(
                 padding: const EdgeInsets.all(16),
@@ -75,9 +81,10 @@ class CardDetailScreen extends ConsumerWidget {
                               errorWidget: (_, __, ___) => const Icon(
                                   Icons.image_not_supported, size: 96),
                             ),
-                            if (entry.owned &&
-                                entry.variant != CardVariant.normal)
-                              const Positioned.fill(child: HoloSheen()),
+                            if (sheen != null)
+                              Positioned.fill(
+                                  child: AnimatedSheen(
+                                      colors: sheen, opacity: 0.5)),
                           ],
                         ),
                       ),
@@ -161,50 +168,24 @@ class CardDetailScreen extends ConsumerWidget {
                   ],
                   const Divider(height: 32),
 
-                  // --- Edição da coleção ---
-                  SwitchListTile(
-                    title: Text(t.owned),
-                    value: entry.owned,
-                    onChanged: (v) => save(entry.copyWith(owned: v)),
+                  // --- A minha coleção (uma linha por variante) ---
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4, bottom: 4),
+                    child: Text(t.myCollection.toUpperCase(),
+                        style: AppTheme.mono(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            color: cs.onSurfaceVariant)),
                   ),
-                  ListTile(
-                    title: Text(t.variant),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: SegmentedButton<CardVariant>(
-                        segments: CardVariant.values
-                            .map((v) => ButtonSegment(
-                                  value: v,
-                                  label: Text(_variantLabel(t, v)),
-                                ))
-                            .toList(),
-                        selected: {entry.variant},
-                        onSelectionChanged: (s) =>
-                            save(entry.copyWith(variant: s.first)),
-                      ),
+                  for (final v in CardVariant.values)
+                    _VariantRow(
+                      label: _variantLabel(t, v),
+                      owned: entry.ownedOf(v),
+                      qty: entry.qtyOf(v),
+                      onOwned: (val) => save(entry.setOwned(v, val)),
+                      onQty: (q) => save(entry.setQty(v, q)),
                     ),
-                  ),
-                  ListTile(
-                    title: Text(t.quantity),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.remove),
-                          onPressed: entry.quantity > 0
-                              ? () => save(entry.copyWith(
-                                  quantity: entry.quantity - 1))
-                              : null,
-                        ),
-                        Text('${entry.quantity}'),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () => save(
-                              entry.copyWith(quantity: entry.quantity + 1)),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextFormField(
@@ -252,6 +233,68 @@ class _Badge extends StatelessWidget {
           fontWeight: FontWeight.w700,
           fontSize: 12,
         ),
+      ),
+    );
+  }
+}
+
+/// Linha de edição de uma variante: toggle "tenho" + contador de cópias.
+class _VariantRow extends StatelessWidget {
+  final String label;
+  final bool owned;
+  final int qty;
+  final ValueChanged<bool> onOwned;
+  final ValueChanged<int> onQty;
+  const _VariantRow({
+    required this.label,
+    required this.owned,
+    required this.qty,
+    required this.onOwned,
+    required this.onQty,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Switch(value: owned, onChanged: onOwned),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(label,
+                style: Theme.of(context).textTheme.titleMedium),
+          ),
+          if (owned)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.remove_circle_outline),
+                  visualDensity: VisualDensity.compact,
+                  onPressed: qty > 0 ? () => onQty(qty - 1) : null,
+                ),
+                SizedBox(
+                  width: 22,
+                  child: Text('$qty',
+                      textAlign: TextAlign.center,
+                      style: AppTheme.mono(
+                          fontSize: 14, fontWeight: FontWeight.w700)),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.add_circle_outline),
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () => onQty(qty + 1),
+                ),
+              ],
+            )
+          else
+            Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: Text('—', style: TextStyle(color: cs.onSurfaceVariant)),
+            ),
+        ],
       ),
     );
   }

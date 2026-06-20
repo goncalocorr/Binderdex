@@ -20,7 +20,13 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
         body: CardTile(
-          item: (card: _card, owned: true, variant: CardVariant.holo, quantity: 2),
+          item: (
+            card: _card,
+            owned: true,
+            ownedHolo: true,
+            ownedReverse: false,
+            dupCount: 2
+          ),
           onTap: () {},
         ),
       ),
@@ -34,7 +40,13 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: Scaffold(
         body: CardTile(
-          item: (card: _card, owned: false, variant: CardVariant.normal, quantity: 0),
+          item: (
+            card: _card,
+            owned: false,
+            ownedHolo: false,
+            ownedReverse: false,
+            dupCount: 0
+          ),
           onTap: () {},
         ),
       ),

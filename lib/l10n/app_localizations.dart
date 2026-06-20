@@ -409,6 +409,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{n} cards'**
   String cardsCountLabel(int n);
+
+  /// No description provided for @myCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'My collection'**
+  String get myCollection;
+
+  /// No description provided for @myCollections.
+  ///
+  /// In en, this message translates to:
+  /// **'My collections'**
+  String get myCollections;
+
+  /// No description provided for @missingTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Missing in total'**
+  String get missingTotal;
+
+  /// No description provided for @noStartedCollections.
+  ///
+  /// In en, this message translates to:
+  /// **'No collections started'**
+  String get noStartedCollections;
+
+  /// No description provided for @noStartedCollectionsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a set and mark a card to start collecting.'**
+  String get noStartedCollectionsBody;
 }
 
 class _AppLocalizationsDelegate

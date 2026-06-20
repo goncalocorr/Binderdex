@@ -6,16 +6,29 @@ import '../local/database.dart';
 import '../remote/tcg_api.dart';
 
 /// Item da grelha de cartas: a carta + estado de coleção resumido.
-typedef CardItem = ({TcgCard card, bool owned, CardVariant variant, int quantity});
+/// [dupCount] = maior nº de cópias numa única variante (duplicados reais).
+typedef CardItem = ({
+  TcgCard card,
+  bool owned,
+  bool ownedHolo,
+  bool ownedReverse,
+  int dupCount,
+});
 
-CardItem _toItem(CardRow r) => (
-      card: _toCard(r.card),
-      owned: r.entry?.owned ?? false,
-      variant: r.entry == null
-          ? CardVariant.normal
-          : CardVariant.fromName(r.entry!.variant),
-      quantity: r.entry?.quantity ?? 0,
-    );
+CardItem _toItem(CardRow r) {
+  final e = r.entry;
+  final owned =
+      (e?.ownedNormal ?? false) || (e?.ownedHolo ?? false) || (e?.ownedReverse ?? false);
+  final dup = [e?.qtyNormal ?? 0, e?.qtyHolo ?? 0, e?.qtyReverse ?? 0]
+      .reduce((a, b) => a > b ? a : b);
+  return (
+    card: _toCard(r.card),
+    owned: owned,
+    ownedHolo: e?.ownedHolo ?? false,
+    ownedReverse: e?.ownedReverse ?? false,
+    dupCount: dup,
+  );
+}
 
 TcgCard _toCard(TcgCardRow r) => TcgCard(
       id: r.id,

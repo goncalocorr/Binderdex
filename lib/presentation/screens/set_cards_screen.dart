@@ -278,14 +278,17 @@ class _QuickAddSheet extends ConsumerWidget {
     final repo = ref.read(collectionRepositoryProvider);
     final t = AppLocalizations.of(context)!;
     await repo.save(UserCardEntry(
-        cardId: card.id, owned: true, quantity: 1, updatedAt: DateTime.now()));
+        cardId: card.id,
+        ownedNormal: true,
+        qtyNormal: 1,
+        updatedAt: DateTime.now()));
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(t.addedToBinder(card.name)),
       action: SnackBarAction(
         label: t.undo,
-        onPressed: () => repo.save(UserCardEntry(
-            cardId: card.id, owned: false, updatedAt: DateTime.now())),
+        onPressed: () => repo
+            .save(UserCardEntry(cardId: card.id, updatedAt: DateTime.now())),
       ),
     ));
   }

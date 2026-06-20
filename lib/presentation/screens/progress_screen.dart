@@ -19,6 +19,7 @@ class ProgressScreen extends ConsumerWidget {
     final global = ref.watch(globalProgressProvider);
     final counts = ref.watch(statsCountsProvider);
     final byType = ref.watch(ownedByTypeProvider);
+    final sets = ref.watch(setsListProvider);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -126,6 +127,69 @@ class ProgressScreen extends ConsumerWidget {
                       )),
                 ],
               ),
+            );
+          },
+        ),
+        const SizedBox(height: 24),
+        // As minhas coleções (sets onde já tens cartas)
+        sets.when(
+          loading: () => const SizedBox.shrink(),
+          error: (e, _) => Text('$e'),
+          data: (list) {
+            final mine =
+                list.where((s) => s.progress.owned > 0).toList();
+            if (mine.isEmpty) return const SizedBox.shrink();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 4, bottom: 8),
+                  child: Text(t.myCollections.toUpperCase(),
+                      style: AppTheme.mono(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: cs.onSurfaceVariant)),
+                ),
+                ...mine.map((s) {
+                  final done = s.progress.owned >= s.progress.total;
+                  final color = done ? DexColors.gold500 : DexColors.green500;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(s.set.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium),
+                            ),
+                            Text('${s.progress.owned}/${s.progress.total}',
+                                style: AppTheme.mono(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: color)),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(DexRadii.pill),
+                          child: LinearProgressIndicator(
+                            value: s.progress.percent,
+                            minHeight: 6,
+                            color: color,
+                            backgroundColor: cs.surfaceContainerHigh,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ],
             );
           },
         ),

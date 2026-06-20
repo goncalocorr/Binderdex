@@ -173,4 +173,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String cardsCountLabel(int n) {
     return '$n cards';
   }
+
+  @override
+  String get myCollection => 'My collection';
+
+  @override
+  String get myCollections => 'My collections';
+
+  @override
+  String get missingTotal => 'Missing in total';
+
+  @override
+  String get noStartedCollections => 'No collections started';
+
+  @override
+  String get noStartedCollectionsBody =>
+      'Open a set and mark a card to start collecting.';
 }

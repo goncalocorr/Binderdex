@@ -174,4 +174,20 @@ class AppLocalizationsPt extends AppLocalizations {
   String cardsCountLabel(int n) {
     return '$n cartas';
   }
+
+  @override
+  String get myCollection => 'A minha coleção';
+
+  @override
+  String get myCollections => 'As minhas coleções';
+
+  @override
+  String get missingTotal => 'Em falta no total';
+
+  @override
+  String get noStartedCollections => 'Sem coleções começadas';
+
+  @override
+  String get noStartedCollectionsBody =>
+      'Abre um set e marca uma carta para começares a colecionar.';
 }

@@ -83,7 +83,7 @@ void main() {
       () async {
     await db.upsertEntry(UserCardEntriesCompanion.insert(
       cardId: 'base1-4',
-      owned: const Value(true),
+      ownedNormal: const Value(true),
       updatedAt: DateTime.now(),
     ));
 
@@ -106,7 +106,7 @@ void main() {
   test('sets com progresso refletem cartas possuídas', () async {
     await db.upsertEntry(UserCardEntriesCompanion.insert(
       cardId: 'base1-4',
-      owned: const Value(true),
+      ownedNormal: const Value(true),
       updatedAt: DateTime.now(),
     ));
     final sets = await db.watchSetsWithProgress().first;

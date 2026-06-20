@@ -187,8 +187,6 @@ class CardSetRow extends DataClass implements Insertable<CardSetRow> {
   final String releaseDate;
   final String symbolUrl;
   final String logoUrl;
-
-  /// True quando as cartas deste set já foram buscadas e cacheadas.
   final bool cardsSynced;
   const CardSetRow(
       {required this.id,
@@ -1071,31 +1069,60 @@ class $UserCardEntriesTable extends UserCardEntries
   late final GeneratedColumn<String> cardId = GeneratedColumn<String>(
       'card_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _ownedMeta = const VerificationMeta('owned');
+  static const VerificationMeta _ownedNormalMeta =
+      const VerificationMeta('ownedNormal');
   @override
-  late final GeneratedColumn<bool> owned = GeneratedColumn<bool>(
-      'owned', aliasedName, false,
+  late final GeneratedColumn<bool> ownedNormal = GeneratedColumn<bool>(
+      'owned_normal', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("owned_normal" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _ownedHoloMeta =
+      const VerificationMeta('ownedHolo');
+  @override
+  late final GeneratedColumn<bool> ownedHolo = GeneratedColumn<bool>(
+      'owned_holo', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
       defaultConstraints:
-          GeneratedColumn.constraintIsAlways('CHECK ("owned" IN (0, 1))'),
+          GeneratedColumn.constraintIsAlways('CHECK ("owned_holo" IN (0, 1))'),
       defaultValue: const Constant(false));
-  static const VerificationMeta _quantityMeta =
-      const VerificationMeta('quantity');
+  static const VerificationMeta _ownedReverseMeta =
+      const VerificationMeta('ownedReverse');
   @override
-  late final GeneratedColumn<int> quantity = GeneratedColumn<int>(
-      'quantity', aliasedName, false,
+  late final GeneratedColumn<bool> ownedReverse = GeneratedColumn<bool>(
+      'owned_reverse', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("owned_reverse" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _qtyNormalMeta =
+      const VerificationMeta('qtyNormal');
+  @override
+  late final GeneratedColumn<int> qtyNormal = GeneratedColumn<int>(
+      'qty_normal', aliasedName, false,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultValue: const Constant(0));
-  static const VerificationMeta _variantMeta =
-      const VerificationMeta('variant');
+  static const VerificationMeta _qtyHoloMeta =
+      const VerificationMeta('qtyHolo');
   @override
-  late final GeneratedColumn<String> variant = GeneratedColumn<String>(
-      'variant', aliasedName, false,
-      type: DriftSqlType.string,
+  late final GeneratedColumn<int> qtyHolo = GeneratedColumn<int>(
+      'qty_holo', aliasedName, false,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultValue: const Constant('normal'));
+      defaultValue: const Constant(0));
+  static const VerificationMeta _qtyReverseMeta =
+      const VerificationMeta('qtyReverse');
+  @override
+  late final GeneratedColumn<int> qtyReverse = GeneratedColumn<int>(
+      'qty_reverse', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   static const VerificationMeta _notesMeta = const VerificationMeta('notes');
   @override
   late final GeneratedColumn<String> notes = GeneratedColumn<String>(
@@ -1119,8 +1146,18 @@ class $UserCardEntriesTable extends UserCardEntries
           GeneratedColumn.constraintIsAlways('CHECK ("dirty" IN (0, 1))'),
       defaultValue: const Constant(true));
   @override
-  List<GeneratedColumn> get $columns =>
-      [cardId, owned, quantity, variant, notes, updatedAt, dirty];
+  List<GeneratedColumn> get $columns => [
+        cardId,
+        ownedNormal,
+        ownedHolo,
+        ownedReverse,
+        qtyNormal,
+        qtyHolo,
+        qtyReverse,
+        notes,
+        updatedAt,
+        dirty
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1137,17 +1174,35 @@ class $UserCardEntriesTable extends UserCardEntries
     } else if (isInserting) {
       context.missing(_cardIdMeta);
     }
-    if (data.containsKey('owned')) {
+    if (data.containsKey('owned_normal')) {
       context.handle(
-          _ownedMeta, owned.isAcceptableOrUnknown(data['owned']!, _ownedMeta));
+          _ownedNormalMeta,
+          ownedNormal.isAcceptableOrUnknown(
+              data['owned_normal']!, _ownedNormalMeta));
     }
-    if (data.containsKey('quantity')) {
-      context.handle(_quantityMeta,
-          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    if (data.containsKey('owned_holo')) {
+      context.handle(_ownedHoloMeta,
+          ownedHolo.isAcceptableOrUnknown(data['owned_holo']!, _ownedHoloMeta));
     }
-    if (data.containsKey('variant')) {
-      context.handle(_variantMeta,
-          variant.isAcceptableOrUnknown(data['variant']!, _variantMeta));
+    if (data.containsKey('owned_reverse')) {
+      context.handle(
+          _ownedReverseMeta,
+          ownedReverse.isAcceptableOrUnknown(
+              data['owned_reverse']!, _ownedReverseMeta));
+    }
+    if (data.containsKey('qty_normal')) {
+      context.handle(_qtyNormalMeta,
+          qtyNormal.isAcceptableOrUnknown(data['qty_normal']!, _qtyNormalMeta));
+    }
+    if (data.containsKey('qty_holo')) {
+      context.handle(_qtyHoloMeta,
+          qtyHolo.isAcceptableOrUnknown(data['qty_holo']!, _qtyHoloMeta));
+    }
+    if (data.containsKey('qty_reverse')) {
+      context.handle(
+          _qtyReverseMeta,
+          qtyReverse.isAcceptableOrUnknown(
+              data['qty_reverse']!, _qtyReverseMeta));
     }
     if (data.containsKey('notes')) {
       context.handle(
@@ -1174,12 +1229,18 @@ class $UserCardEntriesTable extends UserCardEntries
     return UserCardEntryRow(
       cardId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}card_id'])!,
-      owned: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}owned'])!,
-      quantity: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}quantity'])!,
-      variant: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}variant'])!,
+      ownedNormal: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}owned_normal'])!,
+      ownedHolo: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}owned_holo'])!,
+      ownedReverse: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}owned_reverse'])!,
+      qtyNormal: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}qty_normal'])!,
+      qtyHolo: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}qty_holo'])!,
+      qtyReverse: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}qty_reverse'])!,
       notes: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}notes'])!,
       updatedAt: attachedDatabase.typeMapping
@@ -1198,17 +1259,23 @@ class $UserCardEntriesTable extends UserCardEntries
 class UserCardEntryRow extends DataClass
     implements Insertable<UserCardEntryRow> {
   final String cardId;
-  final bool owned;
-  final int quantity;
-  final String variant;
+  final bool ownedNormal;
+  final bool ownedHolo;
+  final bool ownedReverse;
+  final int qtyNormal;
+  final int qtyHolo;
+  final int qtyReverse;
   final String notes;
   final DateTime updatedAt;
   final bool dirty;
   const UserCardEntryRow(
       {required this.cardId,
-      required this.owned,
-      required this.quantity,
-      required this.variant,
+      required this.ownedNormal,
+      required this.ownedHolo,
+      required this.ownedReverse,
+      required this.qtyNormal,
+      required this.qtyHolo,
+      required this.qtyReverse,
       required this.notes,
       required this.updatedAt,
       required this.dirty});
@@ -1216,9 +1283,12 @@ class UserCardEntryRow extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['card_id'] = Variable<String>(cardId);
-    map['owned'] = Variable<bool>(owned);
-    map['quantity'] = Variable<int>(quantity);
-    map['variant'] = Variable<String>(variant);
+    map['owned_normal'] = Variable<bool>(ownedNormal);
+    map['owned_holo'] = Variable<bool>(ownedHolo);
+    map['owned_reverse'] = Variable<bool>(ownedReverse);
+    map['qty_normal'] = Variable<int>(qtyNormal);
+    map['qty_holo'] = Variable<int>(qtyHolo);
+    map['qty_reverse'] = Variable<int>(qtyReverse);
     map['notes'] = Variable<String>(notes);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['dirty'] = Variable<bool>(dirty);
@@ -1228,9 +1298,12 @@ class UserCardEntryRow extends DataClass
   UserCardEntriesCompanion toCompanion(bool nullToAbsent) {
     return UserCardEntriesCompanion(
       cardId: Value(cardId),
-      owned: Value(owned),
-      quantity: Value(quantity),
-      variant: Value(variant),
+      ownedNormal: Value(ownedNormal),
+      ownedHolo: Value(ownedHolo),
+      ownedReverse: Value(ownedReverse),
+      qtyNormal: Value(qtyNormal),
+      qtyHolo: Value(qtyHolo),
+      qtyReverse: Value(qtyReverse),
       notes: Value(notes),
       updatedAt: Value(updatedAt),
       dirty: Value(dirty),
@@ -1242,9 +1315,12 @@ class UserCardEntryRow extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return UserCardEntryRow(
       cardId: serializer.fromJson<String>(json['cardId']),
-      owned: serializer.fromJson<bool>(json['owned']),
-      quantity: serializer.fromJson<int>(json['quantity']),
-      variant: serializer.fromJson<String>(json['variant']),
+      ownedNormal: serializer.fromJson<bool>(json['ownedNormal']),
+      ownedHolo: serializer.fromJson<bool>(json['ownedHolo']),
+      ownedReverse: serializer.fromJson<bool>(json['ownedReverse']),
+      qtyNormal: serializer.fromJson<int>(json['qtyNormal']),
+      qtyHolo: serializer.fromJson<int>(json['qtyHolo']),
+      qtyReverse: serializer.fromJson<int>(json['qtyReverse']),
       notes: serializer.fromJson<String>(json['notes']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       dirty: serializer.fromJson<bool>(json['dirty']),
@@ -1255,9 +1331,12 @@ class UserCardEntryRow extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'cardId': serializer.toJson<String>(cardId),
-      'owned': serializer.toJson<bool>(owned),
-      'quantity': serializer.toJson<int>(quantity),
-      'variant': serializer.toJson<String>(variant),
+      'ownedNormal': serializer.toJson<bool>(ownedNormal),
+      'ownedHolo': serializer.toJson<bool>(ownedHolo),
+      'ownedReverse': serializer.toJson<bool>(ownedReverse),
+      'qtyNormal': serializer.toJson<int>(qtyNormal),
+      'qtyHolo': serializer.toJson<int>(qtyHolo),
+      'qtyReverse': serializer.toJson<int>(qtyReverse),
       'notes': serializer.toJson<String>(notes),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'dirty': serializer.toJson<bool>(dirty),
@@ -1266,17 +1345,23 @@ class UserCardEntryRow extends DataClass
 
   UserCardEntryRow copyWith(
           {String? cardId,
-          bool? owned,
-          int? quantity,
-          String? variant,
+          bool? ownedNormal,
+          bool? ownedHolo,
+          bool? ownedReverse,
+          int? qtyNormal,
+          int? qtyHolo,
+          int? qtyReverse,
           String? notes,
           DateTime? updatedAt,
           bool? dirty}) =>
       UserCardEntryRow(
         cardId: cardId ?? this.cardId,
-        owned: owned ?? this.owned,
-        quantity: quantity ?? this.quantity,
-        variant: variant ?? this.variant,
+        ownedNormal: ownedNormal ?? this.ownedNormal,
+        ownedHolo: ownedHolo ?? this.ownedHolo,
+        ownedReverse: ownedReverse ?? this.ownedReverse,
+        qtyNormal: qtyNormal ?? this.qtyNormal,
+        qtyHolo: qtyHolo ?? this.qtyHolo,
+        qtyReverse: qtyReverse ?? this.qtyReverse,
         notes: notes ?? this.notes,
         updatedAt: updatedAt ?? this.updatedAt,
         dirty: dirty ?? this.dirty,
@@ -1284,9 +1369,16 @@ class UserCardEntryRow extends DataClass
   UserCardEntryRow copyWithCompanion(UserCardEntriesCompanion data) {
     return UserCardEntryRow(
       cardId: data.cardId.present ? data.cardId.value : this.cardId,
-      owned: data.owned.present ? data.owned.value : this.owned,
-      quantity: data.quantity.present ? data.quantity.value : this.quantity,
-      variant: data.variant.present ? data.variant.value : this.variant,
+      ownedNormal:
+          data.ownedNormal.present ? data.ownedNormal.value : this.ownedNormal,
+      ownedHolo: data.ownedHolo.present ? data.ownedHolo.value : this.ownedHolo,
+      ownedReverse: data.ownedReverse.present
+          ? data.ownedReverse.value
+          : this.ownedReverse,
+      qtyNormal: data.qtyNormal.present ? data.qtyNormal.value : this.qtyNormal,
+      qtyHolo: data.qtyHolo.present ? data.qtyHolo.value : this.qtyHolo,
+      qtyReverse:
+          data.qtyReverse.present ? data.qtyReverse.value : this.qtyReverse,
       notes: data.notes.present ? data.notes.value : this.notes,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       dirty: data.dirty.present ? data.dirty.value : this.dirty,
@@ -1297,9 +1389,12 @@ class UserCardEntryRow extends DataClass
   String toString() {
     return (StringBuffer('UserCardEntryRow(')
           ..write('cardId: $cardId, ')
-          ..write('owned: $owned, ')
-          ..write('quantity: $quantity, ')
-          ..write('variant: $variant, ')
+          ..write('ownedNormal: $ownedNormal, ')
+          ..write('ownedHolo: $ownedHolo, ')
+          ..write('ownedReverse: $ownedReverse, ')
+          ..write('qtyNormal: $qtyNormal, ')
+          ..write('qtyHolo: $qtyHolo, ')
+          ..write('qtyReverse: $qtyReverse, ')
           ..write('notes: $notes, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('dirty: $dirty')
@@ -1308,16 +1403,19 @@ class UserCardEntryRow extends DataClass
   }
 
   @override
-  int get hashCode =>
-      Object.hash(cardId, owned, quantity, variant, notes, updatedAt, dirty);
+  int get hashCode => Object.hash(cardId, ownedNormal, ownedHolo, ownedReverse,
+      qtyNormal, qtyHolo, qtyReverse, notes, updatedAt, dirty);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is UserCardEntryRow &&
           other.cardId == this.cardId &&
-          other.owned == this.owned &&
-          other.quantity == this.quantity &&
-          other.variant == this.variant &&
+          other.ownedNormal == this.ownedNormal &&
+          other.ownedHolo == this.ownedHolo &&
+          other.ownedReverse == this.ownedReverse &&
+          other.qtyNormal == this.qtyNormal &&
+          other.qtyHolo == this.qtyHolo &&
+          other.qtyReverse == this.qtyReverse &&
           other.notes == this.notes &&
           other.updatedAt == this.updatedAt &&
           other.dirty == this.dirty);
@@ -1325,18 +1423,24 @@ class UserCardEntryRow extends DataClass
 
 class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
   final Value<String> cardId;
-  final Value<bool> owned;
-  final Value<int> quantity;
-  final Value<String> variant;
+  final Value<bool> ownedNormal;
+  final Value<bool> ownedHolo;
+  final Value<bool> ownedReverse;
+  final Value<int> qtyNormal;
+  final Value<int> qtyHolo;
+  final Value<int> qtyReverse;
   final Value<String> notes;
   final Value<DateTime> updatedAt;
   final Value<bool> dirty;
   final Value<int> rowid;
   const UserCardEntriesCompanion({
     this.cardId = const Value.absent(),
-    this.owned = const Value.absent(),
-    this.quantity = const Value.absent(),
-    this.variant = const Value.absent(),
+    this.ownedNormal = const Value.absent(),
+    this.ownedHolo = const Value.absent(),
+    this.ownedReverse = const Value.absent(),
+    this.qtyNormal = const Value.absent(),
+    this.qtyHolo = const Value.absent(),
+    this.qtyReverse = const Value.absent(),
     this.notes = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.dirty = const Value.absent(),
@@ -1344,9 +1448,12 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
   });
   UserCardEntriesCompanion.insert({
     required String cardId,
-    this.owned = const Value.absent(),
-    this.quantity = const Value.absent(),
-    this.variant = const Value.absent(),
+    this.ownedNormal = const Value.absent(),
+    this.ownedHolo = const Value.absent(),
+    this.ownedReverse = const Value.absent(),
+    this.qtyNormal = const Value.absent(),
+    this.qtyHolo = const Value.absent(),
+    this.qtyReverse = const Value.absent(),
     this.notes = const Value.absent(),
     required DateTime updatedAt,
     this.dirty = const Value.absent(),
@@ -1355,9 +1462,12 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
         updatedAt = Value(updatedAt);
   static Insertable<UserCardEntryRow> custom({
     Expression<String>? cardId,
-    Expression<bool>? owned,
-    Expression<int>? quantity,
-    Expression<String>? variant,
+    Expression<bool>? ownedNormal,
+    Expression<bool>? ownedHolo,
+    Expression<bool>? ownedReverse,
+    Expression<int>? qtyNormal,
+    Expression<int>? qtyHolo,
+    Expression<int>? qtyReverse,
     Expression<String>? notes,
     Expression<DateTime>? updatedAt,
     Expression<bool>? dirty,
@@ -1365,9 +1475,12 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
   }) {
     return RawValuesInsertable({
       if (cardId != null) 'card_id': cardId,
-      if (owned != null) 'owned': owned,
-      if (quantity != null) 'quantity': quantity,
-      if (variant != null) 'variant': variant,
+      if (ownedNormal != null) 'owned_normal': ownedNormal,
+      if (ownedHolo != null) 'owned_holo': ownedHolo,
+      if (ownedReverse != null) 'owned_reverse': ownedReverse,
+      if (qtyNormal != null) 'qty_normal': qtyNormal,
+      if (qtyHolo != null) 'qty_holo': qtyHolo,
+      if (qtyReverse != null) 'qty_reverse': qtyReverse,
       if (notes != null) 'notes': notes,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (dirty != null) 'dirty': dirty,
@@ -1377,18 +1490,24 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
 
   UserCardEntriesCompanion copyWith(
       {Value<String>? cardId,
-      Value<bool>? owned,
-      Value<int>? quantity,
-      Value<String>? variant,
+      Value<bool>? ownedNormal,
+      Value<bool>? ownedHolo,
+      Value<bool>? ownedReverse,
+      Value<int>? qtyNormal,
+      Value<int>? qtyHolo,
+      Value<int>? qtyReverse,
       Value<String>? notes,
       Value<DateTime>? updatedAt,
       Value<bool>? dirty,
       Value<int>? rowid}) {
     return UserCardEntriesCompanion(
       cardId: cardId ?? this.cardId,
-      owned: owned ?? this.owned,
-      quantity: quantity ?? this.quantity,
-      variant: variant ?? this.variant,
+      ownedNormal: ownedNormal ?? this.ownedNormal,
+      ownedHolo: ownedHolo ?? this.ownedHolo,
+      ownedReverse: ownedReverse ?? this.ownedReverse,
+      qtyNormal: qtyNormal ?? this.qtyNormal,
+      qtyHolo: qtyHolo ?? this.qtyHolo,
+      qtyReverse: qtyReverse ?? this.qtyReverse,
       notes: notes ?? this.notes,
       updatedAt: updatedAt ?? this.updatedAt,
       dirty: dirty ?? this.dirty,
@@ -1402,14 +1521,23 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
     if (cardId.present) {
       map['card_id'] = Variable<String>(cardId.value);
     }
-    if (owned.present) {
-      map['owned'] = Variable<bool>(owned.value);
+    if (ownedNormal.present) {
+      map['owned_normal'] = Variable<bool>(ownedNormal.value);
     }
-    if (quantity.present) {
-      map['quantity'] = Variable<int>(quantity.value);
+    if (ownedHolo.present) {
+      map['owned_holo'] = Variable<bool>(ownedHolo.value);
     }
-    if (variant.present) {
-      map['variant'] = Variable<String>(variant.value);
+    if (ownedReverse.present) {
+      map['owned_reverse'] = Variable<bool>(ownedReverse.value);
+    }
+    if (qtyNormal.present) {
+      map['qty_normal'] = Variable<int>(qtyNormal.value);
+    }
+    if (qtyHolo.present) {
+      map['qty_holo'] = Variable<int>(qtyHolo.value);
+    }
+    if (qtyReverse.present) {
+      map['qty_reverse'] = Variable<int>(qtyReverse.value);
     }
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
@@ -1430,9 +1558,12 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
   String toString() {
     return (StringBuffer('UserCardEntriesCompanion(')
           ..write('cardId: $cardId, ')
-          ..write('owned: $owned, ')
-          ..write('quantity: $quantity, ')
-          ..write('variant: $variant, ')
+          ..write('ownedNormal: $ownedNormal, ')
+          ..write('ownedHolo: $ownedHolo, ')
+          ..write('ownedReverse: $ownedReverse, ')
+          ..write('qtyNormal: $qtyNormal, ')
+          ..write('qtyHolo: $qtyHolo, ')
+          ..write('qtyReverse: $qtyReverse, ')
           ..write('notes: $notes, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('dirty: $dirty, ')
@@ -1956,9 +2087,12 @@ typedef $$TcgCardsTableProcessedTableManager = ProcessedTableManager<
 typedef $$UserCardEntriesTableCreateCompanionBuilder = UserCardEntriesCompanion
     Function({
   required String cardId,
-  Value<bool> owned,
-  Value<int> quantity,
-  Value<String> variant,
+  Value<bool> ownedNormal,
+  Value<bool> ownedHolo,
+  Value<bool> ownedReverse,
+  Value<int> qtyNormal,
+  Value<int> qtyHolo,
+  Value<int> qtyReverse,
   Value<String> notes,
   required DateTime updatedAt,
   Value<bool> dirty,
@@ -1967,9 +2101,12 @@ typedef $$UserCardEntriesTableCreateCompanionBuilder = UserCardEntriesCompanion
 typedef $$UserCardEntriesTableUpdateCompanionBuilder = UserCardEntriesCompanion
     Function({
   Value<String> cardId,
-  Value<bool> owned,
-  Value<int> quantity,
-  Value<String> variant,
+  Value<bool> ownedNormal,
+  Value<bool> ownedHolo,
+  Value<bool> ownedReverse,
+  Value<int> qtyNormal,
+  Value<int> qtyHolo,
+  Value<int> qtyReverse,
   Value<String> notes,
   Value<DateTime> updatedAt,
   Value<bool> dirty,
@@ -1988,14 +2125,23 @@ class $$UserCardEntriesTableFilterComposer
   ColumnFilters<String> get cardId => $composableBuilder(
       column: $table.cardId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<bool> get owned => $composableBuilder(
-      column: $table.owned, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get ownedNormal => $composableBuilder(
+      column: $table.ownedNormal, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get quantity => $composableBuilder(
-      column: $table.quantity, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get ownedHolo => $composableBuilder(
+      column: $table.ownedHolo, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get variant => $composableBuilder(
-      column: $table.variant, builder: (column) => ColumnFilters(column));
+  ColumnFilters<bool> get ownedReverse => $composableBuilder(
+      column: $table.ownedReverse, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get qtyNormal => $composableBuilder(
+      column: $table.qtyNormal, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get qtyHolo => $composableBuilder(
+      column: $table.qtyHolo, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get qtyReverse => $composableBuilder(
+      column: $table.qtyReverse, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get notes => $composableBuilder(
       column: $table.notes, builder: (column) => ColumnFilters(column));
@@ -2019,14 +2165,24 @@ class $$UserCardEntriesTableOrderingComposer
   ColumnOrderings<String> get cardId => $composableBuilder(
       column: $table.cardId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<bool> get owned => $composableBuilder(
-      column: $table.owned, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get ownedNormal => $composableBuilder(
+      column: $table.ownedNormal, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get quantity => $composableBuilder(
-      column: $table.quantity, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get ownedHolo => $composableBuilder(
+      column: $table.ownedHolo, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get variant => $composableBuilder(
-      column: $table.variant, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<bool> get ownedReverse => $composableBuilder(
+      column: $table.ownedReverse,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get qtyNormal => $composableBuilder(
+      column: $table.qtyNormal, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get qtyHolo => $composableBuilder(
+      column: $table.qtyHolo, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get qtyReverse => $composableBuilder(
+      column: $table.qtyReverse, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get notes => $composableBuilder(
       column: $table.notes, builder: (column) => ColumnOrderings(column));
@@ -2050,14 +2206,23 @@ class $$UserCardEntriesTableAnnotationComposer
   GeneratedColumn<String> get cardId =>
       $composableBuilder(column: $table.cardId, builder: (column) => column);
 
-  GeneratedColumn<bool> get owned =>
-      $composableBuilder(column: $table.owned, builder: (column) => column);
+  GeneratedColumn<bool> get ownedNormal => $composableBuilder(
+      column: $table.ownedNormal, builder: (column) => column);
 
-  GeneratedColumn<int> get quantity =>
-      $composableBuilder(column: $table.quantity, builder: (column) => column);
+  GeneratedColumn<bool> get ownedHolo =>
+      $composableBuilder(column: $table.ownedHolo, builder: (column) => column);
 
-  GeneratedColumn<String> get variant =>
-      $composableBuilder(column: $table.variant, builder: (column) => column);
+  GeneratedColumn<bool> get ownedReverse => $composableBuilder(
+      column: $table.ownedReverse, builder: (column) => column);
+
+  GeneratedColumn<int> get qtyNormal =>
+      $composableBuilder(column: $table.qtyNormal, builder: (column) => column);
+
+  GeneratedColumn<int> get qtyHolo =>
+      $composableBuilder(column: $table.qtyHolo, builder: (column) => column);
+
+  GeneratedColumn<int> get qtyReverse => $composableBuilder(
+      column: $table.qtyReverse, builder: (column) => column);
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
@@ -2097,9 +2262,12 @@ class $$UserCardEntriesTableTableManager extends RootTableManager<
               $$UserCardEntriesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> cardId = const Value.absent(),
-            Value<bool> owned = const Value.absent(),
-            Value<int> quantity = const Value.absent(),
-            Value<String> variant = const Value.absent(),
+            Value<bool> ownedNormal = const Value.absent(),
+            Value<bool> ownedHolo = const Value.absent(),
+            Value<bool> ownedReverse = const Value.absent(),
+            Value<int> qtyNormal = const Value.absent(),
+            Value<int> qtyHolo = const Value.absent(),
+            Value<int> qtyReverse = const Value.absent(),
             Value<String> notes = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
@@ -2107,9 +2275,12 @@ class $$UserCardEntriesTableTableManager extends RootTableManager<
           }) =>
               UserCardEntriesCompanion(
             cardId: cardId,
-            owned: owned,
-            quantity: quantity,
-            variant: variant,
+            ownedNormal: ownedNormal,
+            ownedHolo: ownedHolo,
+            ownedReverse: ownedReverse,
+            qtyNormal: qtyNormal,
+            qtyHolo: qtyHolo,
+            qtyReverse: qtyReverse,
             notes: notes,
             updatedAt: updatedAt,
             dirty: dirty,
@@ -2117,9 +2288,12 @@ class $$UserCardEntriesTableTableManager extends RootTableManager<
           ),
           createCompanionCallback: ({
             required String cardId,
-            Value<bool> owned = const Value.absent(),
-            Value<int> quantity = const Value.absent(),
-            Value<String> variant = const Value.absent(),
+            Value<bool> ownedNormal = const Value.absent(),
+            Value<bool> ownedHolo = const Value.absent(),
+            Value<bool> ownedReverse = const Value.absent(),
+            Value<int> qtyNormal = const Value.absent(),
+            Value<int> qtyHolo = const Value.absent(),
+            Value<int> qtyReverse = const Value.absent(),
             Value<String> notes = const Value.absent(),
             required DateTime updatedAt,
             Value<bool> dirty = const Value.absent(),
@@ -2127,9 +2301,12 @@ class $$UserCardEntriesTableTableManager extends RootTableManager<
           }) =>
               UserCardEntriesCompanion.insert(
             cardId: cardId,
-            owned: owned,
-            quantity: quantity,
-            variant: variant,
+            ownedNormal: ownedNormal,
+            ownedHolo: ownedHolo,
+            ownedReverse: ownedReverse,
+            qtyNormal: qtyNormal,
+            qtyHolo: qtyHolo,
+            qtyReverse: qtyReverse,
             notes: notes,
             updatedAt: updatedAt,
             dirty: dirty,

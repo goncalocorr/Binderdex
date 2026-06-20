@@ -15,8 +15,6 @@ class CardSets extends Table {
   TextColumn get releaseDate => text()();
   TextColumn get symbolUrl => text()();
   TextColumn get logoUrl => text()();
-
-  /// True quando as cartas deste set já foram buscadas e cacheadas.
   BoolColumn get cardsSynced => boolean().withDefault(const Constant(false))();
 
   @override
@@ -43,13 +41,18 @@ class TcgCards extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-/// Coleção do utilizador (por carta).
+/// Coleção do utilizador (por carta), com posse independente por variante.
+/// Ter a mesma carta em normal, holo e reverse NÃO conta como duplicado;
+/// duplicado = 2+ cópias da MESMA variante.
 @DataClassName('UserCardEntryRow')
 class UserCardEntries extends Table {
   TextColumn get cardId => text()();
-  BoolColumn get owned => boolean().withDefault(const Constant(false))();
-  IntColumn get quantity => integer().withDefault(const Constant(0))();
-  TextColumn get variant => text().withDefault(const Constant('normal'))();
+  BoolColumn get ownedNormal => boolean().withDefault(const Constant(false))();
+  BoolColumn get ownedHolo => boolean().withDefault(const Constant(false))();
+  BoolColumn get ownedReverse => boolean().withDefault(const Constant(false))();
+  IntColumn get qtyNormal => integer().withDefault(const Constant(0))();
+  IntColumn get qtyHolo => integer().withDefault(const Constant(0))();
+  IntColumn get qtyReverse => integer().withDefault(const Constant(0))();
   TextColumn get notes => text().withDefault(const Constant(''))();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get dirty => boolean().withDefault(const Constant(true))();
@@ -77,28 +80,55 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? openConnection());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onUpgrade: (m, from, to) async {
           if (from < 2) {
-            // Novas colunas de estatísticas das cartas.
             await m.addColumn(tcgCards, tcgCards.hp);
             await m.addColumn(tcgCards, tcgCards.atk);
-            // Força re-sincronização dos sets para preencher HP/ATK.
             await (update(cardSets))
                 .write(const CardSetsCompanion(cardsSynced: Value(false)));
+          }
+          if (from < 3) {
+            // Posse por variante (substitui owned/variant/quantity).
+            await m.addColumn(userCardEntries, userCardEntries.ownedNormal);
+            await m.addColumn(userCardEntries, userCardEntries.ownedHolo);
+            await m.addColumn(userCardEntries, userCardEntries.ownedReverse);
+            await m.addColumn(userCardEntries, userCardEntries.qtyNormal);
+            await m.addColumn(userCardEntries, userCardEntries.qtyHolo);
+            await m.addColumn(userCardEntries, userCardEntries.qtyReverse);
+            await customStatement(
+              "UPDATE user_card_entries SET "
+              "owned_normal = (owned = 1 AND variant = 'normal'), "
+              "owned_holo = (owned = 1 AND variant = 'holo'), "
+              "owned_reverse = (owned = 1 AND variant = 'reverseHolo'), "
+              "qty_normal = CASE WHEN variant = 'normal' THEN quantity ELSE 0 END, "
+              "qty_holo = CASE WHEN variant = 'holo' THEN quantity ELSE 0 END, "
+              "qty_reverse = CASE WHEN variant = 'reverseHolo' THEN quantity ELSE 0 END",
+            );
+            // Remove as colunas antigas (SQLite recente suporta DROP COLUMN).
+            for (final col in ['owned', 'variant', 'quantity']) {
+              await customStatement(
+                  'ALTER TABLE user_card_entries DROP COLUMN $col');
+            }
           }
         },
       );
 
+  // Expressão "possui pelo menos uma variante" (para joins).
+  Expression<bool> _anyOwned() =>
+      userCardEntries.ownedNormal.equals(true) |
+      userCardEntries.ownedHolo.equals(true) |
+      userCardEntries.ownedReverse.equals(true);
+
   // --- Sets ---
 
   Future<int> setCount() async {
-    final row =
-        await (selectOnly(cardSets)..addColumns([cardSets.id.count()]))
-            .getSingle();
+    final row = await (selectOnly(cardSets)
+          ..addColumns([cardSets.id.count()]))
+        .getSingle();
     return row.read(cardSets.id.count()) ?? 0;
   }
 
@@ -110,14 +140,13 @@ class AppDatabase extends _$AppDatabase {
   Future<CardSetRow?> setById(String id) =>
       (select(cardSets)..where((t) => t.id.equals(id))).getSingleOrNull();
 
-  /// Sets com o nº de cartas possuídas, ordenados por data (mais recentes primeiro).
-  /// As datas estão em "YYYY/MM/DD", por isso a ordenação lexical funciona.
   Stream<List<SetWithProgress>> watchSetsWithProgress() {
     return customSelect(
       'SELECT s.*, ('
       '  SELECT COUNT(*) FROM tcg_cards c '
       '  JOIN user_card_entries e ON e.card_id = c.id '
-      '  WHERE c.set_id = s.id AND e.owned = 1'
+      '  WHERE c.set_id = s.id AND '
+      '  (e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1)'
       ') AS owned_count '
       'FROM card_sets s ORDER BY s.release_date DESC',
       readsFrom: {cardSets, tcgCards, userCardEntries},
@@ -149,7 +178,6 @@ class AppDatabase extends _$AppDatabase {
   Future<TcgCardRow?> cardById(String id) =>
       (select(tcgCards)..where((t) => t.id.equals(id))).getSingleOrNull();
 
-  /// Raridades distintas presentes num set (para os chips de filtro).
   Future<List<String>> raritiesInSet(String setId) async {
     final rows = await (selectOnly(tcgCards, distinct: true)
           ..addColumns([tcgCards.rarity])
@@ -159,7 +187,6 @@ class AppDatabase extends _$AppDatabase {
       ..sort();
   }
 
-  /// Cartas de um set, com filtros aplicados em SQL.
   Stream<List<CardRow>> watchCardsInSet({
     required String setId,
     required String query,
@@ -179,11 +206,13 @@ class AppDatabase extends _$AppDatabase {
     if (rarity != null) q.where(tcgCards.rarity.equals(rarity));
     switch (status) {
       case 'owned':
-        q.where(userCardEntries.owned.equals(true));
+        q.where(_anyOwned());
         break;
       case 'missing':
-        q.where(
-            userCardEntries.owned.isNull() | userCardEntries.owned.equals(false));
+        q.where(userCardEntries.cardId.isNull() |
+            (userCardEntries.ownedNormal.equals(false) &
+                userCardEntries.ownedHolo.equals(false) &
+                userCardEntries.ownedReverse.equals(false)));
         break;
     }
     q.orderBy([
@@ -208,11 +237,12 @@ class AppDatabase extends _$AppDatabase {
     await into(userCardEntries).insertOnConflictUpdate(entry);
   }
 
-  // --- Progresso ---
+  // --- Progresso / estatísticas ---
 
   Future<int> totalOwned() async {
     final row = await customSelect(
-      'SELECT COUNT(*) AS c FROM user_card_entries WHERE owned = 1',
+      'SELECT COUNT(*) AS c FROM user_card_entries '
+      'WHERE owned_normal = 1 OR owned_holo = 1 OR owned_reverse = 1',
       readsFrom: {userCardEntries},
     ).getSingle();
     return row.read<int>('c');
@@ -225,11 +255,11 @@ class AppDatabase extends _$AppDatabase {
     return row.read(cardSets.total.sum()) ?? 0;
   }
 
-  /// Contagens (total em cache, possuídas) de um set — para as abas.
   Stream<({int total, int owned})> watchSetCounts(String setId) {
     return customSelect(
       'SELECT COUNT(*) AS total, '
-      'SUM(CASE WHEN e.owned = 1 THEN 1 ELSE 0 END) AS owned '
+      'SUM(CASE WHEN (e.owned_normal = 1 OR e.owned_holo = 1 '
+      '  OR e.owned_reverse = 1) THEN 1 ELSE 0 END) AS owned '
       'FROM tcg_cards c LEFT JOIN user_card_entries e ON e.card_id = c.id '
       'WHERE c.set_id = ?',
       variables: [Variable<String>(setId)],
@@ -238,43 +268,44 @@ class AppDatabase extends _$AppDatabase {
         (total: r.read<int>('total'), owned: r.read<int?>('owned') ?? 0));
   }
 
-  /// Nº de cartas possuídas com variante não-normal (holos/reverse).
+  /// Cartas possuídas em variante holo ou reverse.
   Future<int> holoCount() async {
     final r = await customSelect(
-      "SELECT COUNT(*) AS c FROM user_card_entries "
-      "WHERE owned = 1 AND variant != 'normal'",
+      'SELECT COUNT(*) AS c FROM user_card_entries '
+      'WHERE owned_holo = 1 OR owned_reverse = 1',
       readsFrom: {userCardEntries},
     ).getSingle();
     return r.read<int>('c');
   }
 
-  /// Nº de cartas possuídas com mais de uma cópia.
+  /// Cartas com 2+ cópias da MESMA variante (duplicados reais).
   Future<int> duplicatesCount() async {
     final r = await customSelect(
       'SELECT COUNT(*) AS c FROM user_card_entries '
-      'WHERE owned = 1 AND quantity > 1',
+      'WHERE qty_normal > 1 OR qty_holo > 1 OR qty_reverse > 1',
       readsFrom: {userCardEntries},
     ).getSingle();
     return r.read<int>('c');
   }
 
-  /// Nº de sets completos (possuídas >= total).
   Future<int> setsDoneCount() async {
     final r = await customSelect(
       'SELECT COUNT(*) AS c FROM card_sets s WHERE s.total > 0 AND '
       '(SELECT COUNT(*) FROM tcg_cards c JOIN user_card_entries e '
-      ' ON e.card_id = c.id WHERE c.set_id = s.id AND e.owned = 1) >= s.total',
+      ' ON e.card_id = c.id WHERE c.set_id = s.id AND '
+      ' (e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1)'
+      ') >= s.total',
       readsFrom: {cardSets, tcgCards, userCardEntries},
     ).getSingle();
     return r.read<int>('c');
   }
 
-  /// Distribuição de cartas possuídas por tipo (ordenada desc).
   Future<List<({String type, int owned})>> ownedByType() async {
     final rows = await customSelect(
       "SELECT COALESCE(c.type, 'Colorless') AS t, COUNT(*) AS n "
       'FROM tcg_cards c JOIN user_card_entries e ON e.card_id = c.id '
-      'WHERE e.owned = 1 GROUP BY t ORDER BY n DESC',
+      'WHERE (e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1) '
+      'GROUP BY t ORDER BY n DESC',
       readsFrom: {tcgCards, userCardEntries},
     ).get();
     return rows
@@ -282,7 +313,6 @@ class AppDatabase extends _$AppDatabase {
         .toList();
   }
 
-  /// Pesquisa global de cartas (em todas as cartas em cache).
   Stream<List<CardRow>> watchAllCards({
     required String query,
     required List<String> types,
@@ -302,8 +332,10 @@ class AppDatabase extends _$AppDatabase {
       q.where(tcgCards.type.isIn(types));
     }
     if (onlyMissing) {
-      q.where(userCardEntries.owned.isNull() |
-          userCardEntries.owned.equals(false));
+      q.where(userCardEntries.cardId.isNull() |
+          (userCardEntries.ownedNormal.equals(false) &
+              userCardEntries.ownedHolo.equals(false) &
+              userCardEntries.ownedReverse.equals(false)));
     }
     q.orderBy([OrderingTerm.asc(tcgCards.name)]);
     q.limit(limit);

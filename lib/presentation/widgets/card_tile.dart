@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
 import '../../data/repositories/cards_repository.dart';
-import '../../domain/entities/tcg_card.dart';
 import 'dex_ui.dart';
 
 const ColorFilter _grayscale = ColorFilter.matrix(<double>[
@@ -31,7 +30,12 @@ class CardTile extends StatelessWidget {
     final typeColor = colorForCardType(c.type);
     final tint = Color.alphaBlend(
         typeColor.withValues(alpha: 0.14), cs.surfaceContainerHigh);
-    final holo = owned && item.variant != CardVariant.normal;
+    final sheen = sheenColorsForCard(
+      rarity: c.rarity,
+      ownedHolo: item.ownedHolo,
+      ownedReverse: item.ownedReverse,
+      ownedAny: owned,
+    );
 
     Widget art = CachedNetworkImage(
       imageUrl: c.imageSmall,
@@ -85,23 +89,8 @@ class CardTile extends StatelessWidget {
                               padding: const EdgeInsets.all(6),
                               child: art,
                             ),
-                            if (holo)
-                              IgnorePointer(
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [
-                                        Colors.white.withValues(alpha: 0.0),
-                                        Colors.white.withValues(alpha: 0.35),
-                                        Colors.white.withValues(alpha: 0.0),
-                                      ],
-                                      stops: const [0.35, 0.5, 0.65],
-                                    ),
-                                  ),
-                                ),
-                              ),
+                            if (sheen != null)
+                              AnimatedSheen(colors: sheen, opacity: 0.4),
                             // Número (mono) — canto superior esquerdo
                             Positioned(
                               top: 6,
@@ -144,13 +133,13 @@ class CardTile extends StatelessWidget {
                                     size: 32, color: cs.onSurfaceVariant),
                               ),
                             // Duplicados — ×N
-                            if (owned && item.quantity > 1)
+                            if (owned && item.dupCount > 1)
                               Positioned(
                                 bottom: 6,
                                 right: 6,
                                 child: _Pill(
                                   color: DexColors.gold500,
-                                  child: Text('×${item.quantity}',
+                                  child: Text('×${item.dupCount}',
                                       style: AppTheme.mono(
                                           fontSize: 10,
                                           fontWeight: FontWeight.w700,
