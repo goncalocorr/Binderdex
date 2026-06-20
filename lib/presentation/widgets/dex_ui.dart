@@ -197,6 +197,126 @@ class _PressableState extends State<Pressable> {
   }
 }
 
+/// Botão-pílula de variante (estilo "RarityBadge" do Dex Design System).
+/// Quando possuída e com [sheen], mostra o gradiente animado (holo/foil/arco-íris);
+/// possuída sem sheen → cor sólida; não possuída → contorno.
+class VariantToggle extends StatefulWidget {
+  final String label;
+  final IconData icon;
+  final bool owned;
+  final List<Color>? sheen;
+  final Color solid;
+  final VoidCallback onTap;
+  const VariantToggle({
+    super.key,
+    required this.label,
+    required this.icon,
+    required this.owned,
+    required this.onTap,
+    this.sheen,
+    this.solid = const Color(0xFF2FB344),
+  });
+
+  @override
+  State<VariantToggle> createState() => _VariantToggleState();
+}
+
+class _VariantToggleState extends State<VariantToggle>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 4000),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  Widget _content(Color textColor) => Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(widget.icon, size: 16, color: textColor),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              widget.label.toUpperCase(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: AppTheme.displayFont,
+                fontWeight: FontWeight.w600,
+                fontSize: 12.5,
+                letterSpacing: 0.6,
+                color: textColor,
+              ),
+            ),
+          ),
+          if (widget.owned) ...[
+            const SizedBox(width: 5),
+            Icon(Icons.check_circle, size: 15, color: textColor),
+          ],
+        ],
+      );
+
+  Widget _pill(BoxDecoration deco, Color textColor) => GestureDetector(
+        onTap: widget.onTap,
+        child: Container(
+          height: 36,
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          alignment: Alignment.center,
+          decoration: deco,
+          child: _content(textColor),
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final owned = widget.owned;
+
+    if (owned && widget.sheen != null) {
+      return AnimatedBuilder(
+        animation: _c,
+        builder: (_, __) {
+          final shift = _c.value * 2;
+          return _pill(
+            BoxDecoration(
+              borderRadius: BorderRadius.circular(DexRadii.pill),
+              gradient: LinearGradient(
+                begin: Alignment(-2 + shift, 0),
+                end: Alignment(shift, 0),
+                colors: widget.sheen!,
+                tileMode: TileMode.mirror,
+              ),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.55)),
+            ),
+            const Color(0xFF3A2A14),
+          );
+        },
+      );
+    }
+    if (owned) {
+      return _pill(
+        BoxDecoration(
+          color: widget.solid,
+          borderRadius: BorderRadius.circular(DexRadii.pill),
+        ),
+        Colors.white,
+      );
+    }
+    return _pill(
+      BoxDecoration(
+        borderRadius: BorderRadius.circular(DexRadii.pill),
+        border: Border.all(color: cs.outline),
+      ),
+      cs.onSurfaceVariant,
+    );
+  }
+}
+
 /// Brilho holográfico animado (holo / foil / arco-íris).
 /// Sobrepõe um gradiente multicolor translúcido que "varre" a carta, mais
 /// uma faixa branca de shimmer por cima.

@@ -21,6 +21,13 @@ class CardDetailScreen extends ConsumerWidget {
         CardVariant.reverseHolo => t.variantReverse,
       };
 
+  /// Ícone + brilho (sheen) por variante. Normal não anima.
+  (IconData, List<Color>?) _variantStyle(CardVariant v) => switch (v) {
+        CardVariant.normal => (Icons.circle, null),
+        CardVariant.holo => (Icons.auto_awesome, DexSheens.holo),
+        CardVariant.reverseHolo => (Icons.flip, DexSheens.foil),
+      };
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = AppLocalizations.of(context)!;
@@ -177,14 +184,18 @@ class CardDetailScreen extends ConsumerWidget {
                             fontWeight: FontWeight.w700,
                             color: cs.onSurfaceVariant)),
                   ),
-                  for (final v in CardVariant.values)
-                    _VariantRow(
+                  ...CardVariant.values.map((v) {
+                    final style = _variantStyle(v);
+                    return _VariantRow(
                       label: _variantLabel(t, v),
+                      icon: style.$1,
+                      sheen: style.$2,
                       owned: entry.ownedOf(v),
                       qty: entry.qtyOf(v),
                       onOwned: (val) => save(entry.setOwned(v, val)),
                       onQty: (q) => save(entry.setQty(v, q)),
-                    ),
+                    );
+                  }),
                   const SizedBox(height: 8),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -238,15 +249,19 @@ class _Badge extends StatelessWidget {
   }
 }
 
-/// Linha de edição de uma variante: toggle "tenho" + contador de cópias.
+/// Linha de edição de uma variante: botão-badge "tenho" + contador de cópias.
 class _VariantRow extends StatelessWidget {
   final String label;
+  final IconData icon;
+  final List<Color>? sheen;
   final bool owned;
   final int qty;
   final ValueChanged<bool> onOwned;
   final ValueChanged<int> onQty;
   const _VariantRow({
     required this.label,
+    required this.icon,
+    required this.sheen,
     required this.owned,
     required this.qty,
     required this.onOwned,
@@ -255,25 +270,31 @@ class _VariantRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Switch(value: owned, onChanged: onOwned),
-          const SizedBox(width: 8),
           Expanded(
-            child: Text(label,
-                style: Theme.of(context).textTheme.titleMedium),
+            child: VariantToggle(
+              label: label,
+              icon: icon,
+              owned: owned,
+              sheen: sheen,
+              onTap: () => onOwned(!owned),
+            ),
           ),
-          if (owned)
-            Row(
+          const SizedBox(width: 10),
+          // Contador de cópias (só quando possuída).
+          AnimatedOpacity(
+            opacity: owned ? 1 : 0.0,
+            duration: const Duration(milliseconds: 150),
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
                   icon: const Icon(Icons.remove_circle_outline),
                   visualDensity: VisualDensity.compact,
-                  onPressed: qty > 0 ? () => onQty(qty - 1) : null,
+                  onPressed: owned && qty > 0 ? () => onQty(qty - 1) : null,
                 ),
                 SizedBox(
                   width: 22,
@@ -285,15 +306,11 @@ class _VariantRow extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.add_circle_outline),
                   visualDensity: VisualDensity.compact,
-                  onPressed: () => onQty(qty + 1),
+                  onPressed: owned ? () => onQty(qty + 1) : null,
                 ),
               ],
-            )
-          else
-            Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: Text('—', style: TextStyle(color: cs.onSurfaceVariant)),
             ),
+          ),
         ],
       ),
     );
