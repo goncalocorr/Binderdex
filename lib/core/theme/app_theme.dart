@@ -129,16 +129,29 @@ class AppTheme {
 
       chipTheme: ChipThemeData(
         shape: pill,
-        side: BorderSide(color: scheme.outline),
+        side: WidgetStateBorderSide.resolveWith((states) =>
+            states.contains(WidgetState.selected)
+                ? BorderSide(color: scheme.primary, width: 1.5)
+                : BorderSide(color: scheme.outline)),
         backgroundColor: scheme.surface,
         selectedColor: isDark
-            ? DexColors.red500.withValues(alpha: 0.18)
-            : DexColors.red50,
-        labelStyle:
-            GoogleFonts.nunito(fontWeight: FontWeight.w700, fontSize: 13),
-        secondaryLabelStyle: GoogleFonts.nunito(fontWeight: FontWeight.w700),
+            ? DexColors.red500.withValues(alpha: 0.22)
+            : DexColors.red100,
+        // Cor do texto resolvida por estado (evita texto branco invisível).
+        labelStyle: GoogleFonts.nunito(
+          fontWeight: FontWeight.w700,
+          fontSize: 13,
+          color: WidgetStateColor.resolveWith((states) =>
+              states.contains(WidgetState.selected)
+                  ? scheme.primary
+                  : scheme.onSurface),
+        ),
+        secondaryLabelStyle: GoogleFonts.nunito(
+          fontWeight: FontWeight.w700,
+          color: scheme.onSurface,
+        ),
         showCheckmark: false,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
       ),
 
       inputDecorationTheme: InputDecorationTheme(
