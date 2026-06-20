@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -40,7 +39,7 @@ class _ShellState extends State<_Shell> {
         leadingWidth: 52,
         leading: Padding(
           padding: const EdgeInsets.only(left: 12),
-          child: SvgPicture.asset('assets/logo-mark.svg', width: 30, height: 30),
+          child: Image.asset('assets/logo.png', width: 32, height: 32),
         ),
         title: Text(titles[_index]),
         actions: [

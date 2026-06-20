@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
@@ -82,8 +81,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     scale: _logoScale,
                     child: FadeTransition(
                       opacity: _logoFade,
-                      child: SvgPicture.asset('assets/logo-mark.svg',
-                          width: 116, height: 116),
+                      child: Image.asset('assets/logo.png',
+                          width: 124, height: 124),
                     ),
                   ),
                   const SizedBox(height: 20),

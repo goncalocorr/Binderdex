@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
@@ -45,8 +44,7 @@ class OnboardingScreen extends ConsumerWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset('assets/logo-mark.svg',
-                          width: 96, height: 96),
+                      Image.asset('assets/logo.png', width: 104, height: 104),
                       const SizedBox(height: 14),
                       Text.rich(
                         TextSpan(children: [

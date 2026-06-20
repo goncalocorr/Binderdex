@@ -30,9 +30,6 @@ dependencies:
   # Fontes do Dex Design System (Fredoka / Nunito / Space Mono)
   google_fonts: ^6.2.1
 
-  # Logo (SVG)
-  flutter_svg: ^2.0.10+1
-
   # Persistência de preferências (tema, idioma, perfil)
   shared_preferences: ^2.2.3
 
@@ -57,4 +54,4 @@ flutter:
   generate: true
   assets:
     - assets/data/tcg_sets.json
-    - assets/logo-mark.svg
+    - assets/logo.png
