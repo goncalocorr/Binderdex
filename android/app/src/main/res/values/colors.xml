@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Vermelho da marca Binderdex (Flare Red) — fundo do splash. -->
+    <color name="splash_red">#F0263C</color>
+</resources>

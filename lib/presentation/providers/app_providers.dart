@@ -96,6 +96,15 @@ final setCountsProvider =
     StreamProvider.family<({int total, int owned}), String>(
         (ref, setId) => ref.watch(cardsRepositoryProvider).setCounts(setId));
 
+/// Cartas possuídas por tipo numa coleção — para os detalhes do set.
+/// Recalcula quando a coleção do set muda (via [setCountsProvider]).
+final setByTypeProvider =
+    FutureProvider.family<List<({String type, int owned})>, String>(
+        (ref, setId) {
+  ref.watch(setCountsProvider(setId));
+  return ref.watch(collectionRepositoryProvider).ownedByTypeInSet(setId);
+});
+
 // --- Pesquisa global ---
 final searchQueryProvider = StateProvider<String>((_) => '');
 final searchTypesProvider = StateProvider<List<String>>((_) => const []);

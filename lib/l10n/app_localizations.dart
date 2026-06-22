@@ -128,6 +128,24 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get tabSettings;
 
+  /// No description provided for @tabBinder.
+  ///
+  /// In en, this message translates to:
+  /// **'My Binder'**
+  String get tabBinder;
+
+  /// No description provided for @setsFollowed.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} sets followed'**
+  String setsFollowed(int n);
+
+  /// No description provided for @keepCompleting.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep completing your sets'**
+  String get keepCompleting;
+
   /// No description provided for @searchSetsHint.
   ///
   /// In en, this message translates to:

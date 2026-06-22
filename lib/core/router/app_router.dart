@@ -3,16 +3,14 @@ import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../presentation/screens/card_detail_screen.dart';
-import '../../presentation/screens/missing_screen.dart';
+import '../../presentation/screens/my_binder_screen.dart';
 import '../../presentation/screens/onboarding_screen.dart';
-import '../../presentation/screens/progress_screen.dart';
 import '../../presentation/screens/search_screen.dart';
 import '../../presentation/screens/set_cards_screen.dart';
 import '../../presentation/screens/sets_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
-import '../../presentation/screens/splash_screen.dart';
 
-/// Casca com navegação inferior (Coleções, Progresso, Em falta, Definições).
+/// Casca com navegação inferior (Coleções, O meu binder, Definições).
 class _Shell extends StatefulWidget {
   const _Shell();
   @override
@@ -24,15 +22,14 @@ class _ShellState extends State<_Shell> {
 
   static const _tabs = [
     SetsScreen(),
-    ProgressScreen(),
-    MissingScreen(),
+    MyBinderScreen(),
     SettingsScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    final titles = [t.tabSets, t.tabProgress, t.tabMissing, t.tabSettings];
+    final titles = [t.tabSets, t.tabBinder, t.tabSettings];
 
     return Scaffold(
       appBar: AppBar(
@@ -57,9 +54,8 @@ class _ShellState extends State<_Shell> {
         destinations: [
           NavigationDestination(icon: const Icon(Icons.style), label: t.tabSets),
           NavigationDestination(
-              icon: const Icon(Icons.donut_large), label: t.tabProgress),
-          NavigationDestination(
-              icon: const Icon(Icons.search_off), label: t.tabMissing),
+              icon: const Icon(Icons.collections_bookmark),
+              label: t.tabBinder),
           NavigationDestination(
               icon: const Icon(Icons.settings), label: t.tabSettings),
         ],
@@ -68,10 +64,14 @@ class _ShellState extends State<_Shell> {
   }
 }
 
-final appRouter = GoRouter(
-  initialLocation: '/splash',
+/// Cria o router com a rota inicial decidida no arranque.
+///
+/// O splash deixou de ser em Dart — passou a ser o splash nativo Android
+/// (Lottie). Por isso a app entra já diretamente no onboarding (1º arranque)
+/// ou no início (arranques seguintes), conforme [initialLocation].
+GoRouter createAppRouter(String initialLocation) => GoRouter(
+  initialLocation: initialLocation,
   routes: [
-    GoRoute(path: '/splash', builder: (_, __) => const SplashScreen()),
     GoRoute(
         path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
     GoRoute(path: '/', builder: (_, __) => const _Shell()),

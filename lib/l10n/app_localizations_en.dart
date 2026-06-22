@@ -24,6 +24,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabSettings => 'Settings';
 
   @override
+  String get tabBinder => 'My Binder';
+
+  @override
+  String setsFollowed(int n) {
+    return '$n sets followed';
+  }
+
+  @override
+  String get keepCompleting => 'Keep completing your sets';
+
+  @override
   String get searchSetsHint => 'Search collections';
 
   @override

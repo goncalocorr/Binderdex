@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
+import 'core/router/app_router.dart';
 import 'data/seed/sets_loader.dart';
 import 'presentation/providers/app_providers.dart';
 
@@ -23,13 +24,16 @@ Future<void> main() async {
   container.read(localeProvider.notifier).state = prefs.getString('locale');
   container.read(displayNameProvider.notifier).state =
       prefs.getString('displayName') ?? '';
-  container.read(onboardingDoneProvider.notifier).state =
-      prefs.getBool('onboardingDone') ?? false;
+  final onboardingDone = prefs.getBool('onboardingDone') ?? false;
+  container.read(onboardingDoneProvider.notifier).state = onboardingDone;
+
+  // O splash é agora nativo (Android); a app entra direto no destino certo.
+  final router = createAppRouter(onboardingDone ? '/' : '/onboarding');
 
   runApp(
     UncontrolledProviderScope(
       container: container,
-      child: const PokedexApp(),
+      child: PokedexApp(router: router),
     ),
   );
 }

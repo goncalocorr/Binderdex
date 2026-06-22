@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Halo suave por trás do logo (centro claro → transparente). Dá profundidade
+     ao splash sem emendas nem "caixa". -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="220dp"
+        android:startColor="#3DFFFFFF"
+        android:centerColor="#1FFFFFFF"
+        android:endColor="#00FFFFFF" />
+</shape>

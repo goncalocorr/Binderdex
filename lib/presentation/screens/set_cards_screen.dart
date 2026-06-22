@@ -109,6 +109,8 @@ class _SetCardsScreenState extends ConsumerState<SetCardsScreen> {
             },
             orElse: () => const SizedBox.shrink(),
           ),
+          // Coleção por tipo (recolhível, para não ocupar a grelha)
+          _TypeBreakdown(setId: widget.setId),
           // Pesquisa
           Padding(
             padding: const EdgeInsets.fromLTRB(12, 10, 12, 6),
@@ -353,6 +355,91 @@ class _QuickAddSheet extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Secção recolhível "Coleção por tipo" para os detalhes de um set:
+/// mostra as cartas possuídas por tipo (ex.: grass, fire…) nessa coleção.
+class _TypeBreakdown extends ConsumerWidget {
+  final String setId;
+  const _TypeBreakdown({required this.setId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = AppLocalizations.of(context)!;
+    final cs = Theme.of(context).colorScheme;
+    final byType = ref.watch(setByTypeProvider(setId));
+
+    return byType.maybeWhen(
+      orElse: () => const SizedBox.shrink(),
+      data: (rows) {
+        if (rows.isEmpty) return const SizedBox.shrink();
+        final max = rows.first.owned;
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+          child: Theme(
+            // Remove os divisores nativos do ExpansionTile.
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: Material(
+              color: cs.surface,
+              borderRadius: BorderRadius.circular(DexRadii.lg),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(DexRadii.lg),
+                child: ExpansionTile(
+                  tilePadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                  childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+                  leading: Icon(Icons.donut_small, color: cs.primary),
+                  title: Text(t.statsByType,
+                      style: AppTheme.mono(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: cs.onSurface)),
+                  children: rows
+                      .map((r) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                    width: 120,
+                                    child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: TypeBadge(r.type, soft: true))),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius:
+                                        BorderRadius.circular(DexRadii.pill),
+                                    child: LinearProgressIndicator(
+                                      value: max <= 0
+                                          ? 0
+                                          : (r.owned / max).clamp(0.0, 1.0),
+                                      minHeight: 10,
+                                      color: colorForCardType(r.type),
+                                      backgroundColor: cs.surfaceContainerHigh,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 34,
+                                  child: Text(' ${r.owned}',
+                                      textAlign: TextAlign.right,
+                                      style: AppTheme.mono(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w700,
+                                          color: cs.onSurface)),
+                                ),
+                              ],
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

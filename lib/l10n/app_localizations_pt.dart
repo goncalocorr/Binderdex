@@ -24,6 +24,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get tabSettings => 'Definições';
 
   @override
+  String get tabBinder => 'O meu binder';
+
+  @override
+  String setsFollowed(int n) {
+    return '$n sets seguidos';
+  }
+
+  @override
+  String get keepCompleting => 'Continua a completar os teus sets';
+
+  @override
   String get searchSetsHint => 'Pesquisar coleções';
 
   @override

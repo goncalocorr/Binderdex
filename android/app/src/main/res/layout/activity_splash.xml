@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Splash nativo: fundo vermelho da marca a ecrã inteiro, logo real (PNG com
+     brilho) ao centro com um halo suave por trás, e o wordmark "Binderdex"
+     (Fredoka) agrupado logo por baixo. As animações são feitas em código. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/splash_red">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Logo + halo sobrepostos. -->
+        <FrameLayout
+            android:id="@+id/logoGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/glow"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:layout_gravity="center"
+                android:background="@drawable/splash_glow" />
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="156dp"
+                android:layout_height="156dp"
+                android:layout_gravity="center"
+                android:src="@drawable/splash_icon"
+                android:contentDescription="Binderdex" />
+        </FrameLayout>
+
+        <!-- Nome da app como texto nativo (Fredoka Bold em res/font). -->
+        <TextView
+            android:id="@+id/wordmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:text="Binderdex"
+            android:textColor="#FFFFFF"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.01"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/fredoka_bold" />
+    </LinearLayout>
+
+    <!-- Crédito discreto no fundo. "hivecode" leva o gradiente azul→rosa
+         (aplicado em código), a condizer com o logo do hivecode. -->
+    <LinearLayout
+        android:id="@+id/credit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="44dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="produced by "
+            android:textColor="#99FFFFFF"
+            android:textSize="12sp"
+            android:letterSpacing="0.12"
+            android:fontFamily="@font/fredoka_bold" />
+
+        <TextView
+            android:id="@+id/creditBrand"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hivecode"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:letterSpacing="0.12"
+            android:fontFamily="@font/fredoka_bold" />
+    </LinearLayout>
+</FrameLayout>

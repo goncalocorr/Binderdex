@@ -41,3 +41,8 @@ kotlin {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // Splash do sistema (Android 12+) com retrocompatibilidade.
+    implementation("androidx.core:core-splashscreen:1.0.1")
+}

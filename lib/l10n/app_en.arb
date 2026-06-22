@@ -5,6 +5,12 @@
   "tabProgress": "Progress",
   "tabMissing": "Missing",
   "tabSettings": "Settings",
+  "tabBinder": "My Binder",
+  "setsFollowed": "{n} sets followed",
+  "@setsFollowed": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "keepCompleting": "Keep completing your sets",
   "searchSetsHint": "Search collections",
   "searchCardsHint": "Search by name or number",
   "owned": "Owned",
