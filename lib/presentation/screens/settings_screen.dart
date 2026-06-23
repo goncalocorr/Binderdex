@@ -51,18 +51,20 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   /// Limpa o estado local da sessão (coleção, nome, modo convidado).
+  /// As mutações de estado vêm PRIMEIRO; deve ser chamado ANTES do signOut/
+  /// delete, senão o redirect do gate desmonta o ecrã a meio.
   Future<void> _clearLocalProfile(WidgetRef ref) async {
-    await ref.read(databaseProvider).clearCollection();
     ref.read(displayNameProvider.notifier).state = '';
-    await ref.read(prefsProvider).remove('displayName');
     ref.read(guestModeProvider.notifier).state = false;
+    await ref.read(prefsProvider).remove('displayName');
+    await ref.read(databaseProvider).clearCollection();
   }
 
   Future<void> _signOut(WidgetRef ref) async {
-    // Limpa a coleção e o nome ao sair (ficam seguros na nuvem na conta).
+    // Limpa a coleção e o nome ANTES de sair (enquanto o ecrã está montado).
     ref.read(syncServiceProvider).stop();
-    await ref.read(authServiceProvider).signOut();
     await _clearLocalProfile(ref);
+    await ref.read(authServiceProvider).signOut();
   }
 
   Future<void> _deleteAccount(BuildContext context, WidgetRef ref) async {
@@ -97,8 +99,8 @@ class SettingsScreen extends ConsumerWidget {
     try {
       sync.stop(); // pára os listeners antes de apagar
       await sync.deleteRemoteData(user.uid); // ainda autenticado (regras)
+      await _clearLocalProfile(ref); // limpa local ANTES de sair (ecrã montado)
       await auth.deleteAccount();
-      await _clearLocalProfile(ref); // limpa coleção + nome locais
       messenger.showSnackBar(SnackBar(content: Text(t.accountDeleted)));
     } on FirebaseAuthException catch (e) {
       messenger.showSnackBar(SnackBar(
