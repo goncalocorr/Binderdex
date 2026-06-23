@@ -42,6 +42,7 @@ dependencies:
   firebase_auth: ^6.5.4
   cloud_firestore: ^6.6.0
   google_sign_in: ^7.2.0
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -71,4 +72,5 @@ flutter:
   assets:
     - assets/data/tcg_sets.json
     - assets/logo.png
+    - assets/google_g.svg
     - assets/avatars/

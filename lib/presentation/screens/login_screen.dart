@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
@@ -105,7 +106,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 22),
 
               _SocialButton(
-                icon: Icons.g_mobiledata,
+                icon: SvgPicture.asset('assets/google_g.svg',
+                    width: 20, height: 20),
                 label: t.continueGoogle,
                 onTap: () =>
                     _run(() => ref.read(authServiceProvider).signInWithGoogle()),
@@ -190,7 +192,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 }
 
 class _SocialButton extends StatelessWidget {
-  final IconData icon;
+  final Widget icon;
   final String label;
   final VoidCallback onTap;
   const _SocialButton(
@@ -201,7 +203,7 @@ class _SocialButton extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     return OutlinedButton.icon(
       onPressed: onTap,
-      icon: Icon(icon, size: 22),
+      icon: icon,
       label: Text(label),
       style: OutlinedButton.styleFrom(
         minimumSize: const Size.fromHeight(52),
