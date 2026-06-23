@@ -95,6 +95,23 @@ class SyncService {
     db.markPushed(e.cardId);
   }
 
+  /// Apaga todos os dados remotos do utilizador (ao eliminar a conta).
+  /// Sem `recursiveDelete` no SDK cliente — apaga em lotes.
+  Future<void> deleteRemoteData(String uid) async {
+    final col = _cards(uid);
+    final snap = await col.get();
+    final docs = snap.docs;
+    for (var i = 0; i < docs.length; i += 400) {
+      final batch = fs.batch();
+      for (final d in docs.skip(i).take(400)) {
+        batch.delete(d.reference);
+      }
+      await batch.commit();
+    }
+    // Remove também o documento-pai (caso tenha campos).
+    await fs.collection('users').doc(uid).delete();
+  }
+
   void stop() {
     _remoteSub?.cancel();
     _localSub?.cancel();

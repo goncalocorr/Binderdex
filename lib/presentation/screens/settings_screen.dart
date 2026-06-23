@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -47,6 +48,51 @@ class SettingsScreen extends ConsumerWidget {
   void _setTheme(WidgetRef ref, int i) {
     ref.read(themeModeProvider.notifier).state = i;
     ref.read(prefsProvider).setInt('themeMode', i);
+  }
+
+  Future<void> _deleteAccount(BuildContext context, WidgetRef ref) async {
+    final t = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+    final user = ref.read(authStateProvider).valueOrNull;
+    if (user == null) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(t.deleteAccountConfirm),
+        content: Text(t.deleteAccountBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(ctx).colorScheme.error),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(t.delete),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    final sync = ref.read(syncServiceProvider);
+    final db = ref.read(databaseProvider);
+    final auth = ref.read(authServiceProvider);
+    try {
+      sync.stop(); // pára os listeners antes de apagar
+      await sync.deleteRemoteData(user.uid); // ainda autenticado (regras)
+      await db.clearCollection();
+      await auth.deleteAccount();
+      messenger.showSnackBar(SnackBar(content: Text(t.accountDeleted)));
+    } on FirebaseAuthException catch (e) {
+      messenger.showSnackBar(SnackBar(
+          content: Text(
+              e.code == 'requires-recent-login' ? t.reauthNeeded : (e.message ?? t.authFailed))));
+    } catch (_) {
+      messenger.showSnackBar(SnackBar(content: Text(t.authFailed)));
+    }
   }
 
   void _setLocale(WidgetRef ref, String? code) {
@@ -206,6 +252,16 @@ class SettingsScreen extends ConsumerWidget {
           subtitle: Text(t.comingSoon),
           enabled: false,
         ),
+
+        // Zona de perigo — só com sessão iniciada (RGPD: direito ao esquecimento).
+        if (signedIn) ...[
+          const Divider(),
+          ListTile(
+            leading: Icon(Icons.delete_forever, color: cs.error),
+            title: Text(t.deleteAccount, style: TextStyle(color: cs.error)),
+            onTap: () => _deleteAccount(context, ref),
+          ),
+        ],
       ],
     );
   }

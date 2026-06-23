@@ -332,4 +332,24 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get signOut => 'Terminar sessão';
+
+  @override
+  String get deleteAccount => 'Eliminar conta';
+
+  @override
+  String get deleteAccountConfirm => 'Eliminar conta?';
+
+  @override
+  String get deleteAccountBody =>
+      'Isto elimina permanentemente a tua conta e a tua coleção — na nuvem e neste dispositivo. Não pode ser anulado.';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String get reauthNeeded =>
+      'Por segurança, inicia sessão de novo e tenta eliminar a conta outra vez.';
+
+  @override
+  String get accountDeleted => 'Conta eliminada.';
 }

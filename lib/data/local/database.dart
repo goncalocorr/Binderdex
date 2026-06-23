@@ -264,6 +264,9 @@ class AppDatabase extends _$AppDatabase {
         .write(const UserCardEntriesCompanion(dirty: Value(false)));
   }
 
+  /// Apaga toda a coleção local (ex.: ao eliminar a conta).
+  Future<void> clearCollection() => delete(userCardEntries).go();
+
   // --- Wishlist (lista de desejos) ---
 
   /// Marca/desmarca uma carta na wishlist sem tocar na posse.

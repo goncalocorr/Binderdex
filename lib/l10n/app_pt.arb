@@ -98,5 +98,11 @@
   "switchToLogin": "Já tens conta? Inicia sessão",
   "authFailed": "Não foi possível iniciar sessão. Verifica os dados e tenta de novo.",
   "signedInAs": "Sessão iniciada como {email}",
-  "signOut": "Terminar sessão"
+  "signOut": "Terminar sessão",
+  "deleteAccount": "Eliminar conta",
+  "deleteAccountConfirm": "Eliminar conta?",
+  "deleteAccountBody": "Isto elimina permanentemente a tua conta e a tua coleção — na nuvem e neste dispositivo. Não pode ser anulado.",
+  "delete": "Eliminar",
+  "reauthNeeded": "Por segurança, inicia sessão de novo e tenta eliminar a conta outra vez.",
+  "accountDeleted": "Conta eliminada."
 }

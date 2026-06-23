@@ -329,4 +329,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signOut => 'Sign out';
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteAccountConfirm => 'Delete account?';
+
+  @override
+  String get deleteAccountBody =>
+      'This permanently deletes your account and your collection — from the cloud and this device. This can\'t be undone.';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get reauthNeeded =>
+      'For security, sign in again and then retry deleting your account.';
+
+  @override
+  String get accountDeleted => 'Account deleted.';
 }

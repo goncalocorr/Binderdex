@@ -128,5 +128,11 @@
   "@signedInAs": {
     "placeholders": { "email": { "type": "String" } }
   },
-  "signOut": "Sign out"
+  "signOut": "Sign out",
+  "deleteAccount": "Delete account",
+  "deleteAccountConfirm": "Delete account?",
+  "deleteAccountBody": "This permanently deletes your account and your collection — from the cloud and this device. This can't be undone.",
+  "delete": "Delete",
+  "reauthNeeded": "For security, sign in again and then retry deleting your account.",
+  "accountDeleted": "Account deleted."
 }
