@@ -15,10 +15,17 @@ import '../../presentation/screens/set_cards_screen.dart';
 import '../../presentation/screens/sets_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
 import '../../presentation/screens/wishlist_screen.dart';
+import '../../presentation/widgets/auth_guard.dart';
 
 /// Casca com navegação inferior (Início, Coleções, O meu binder, Perfil).
-class _Shell extends ConsumerWidget {
+class _Shell extends ConsumerStatefulWidget {
   const _Shell();
+  @override
+  ConsumerState<_Shell> createState() => _ShellState();
+}
+
+class _ShellState extends ConsumerState<_Shell> {
+  bool _prompting = false;
 
   static const _tabs = [
     HomeScreen(),
@@ -28,10 +35,33 @@ class _Shell extends ConsumerWidget {
   ];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    // Cobre o caso de já estar autenticado ao montar (sessão restaurada).
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeAskName());
+  }
+
+  /// Pede o nome (uma vez) se há sessão e ainda não há nome. É aqui, e não no
+  /// login, porque o gate desmonta o ecrã de login ao autenticar.
+  Future<void> _maybeAskName() async {
+    if (_prompting || !mounted) return;
+    if (!isSignedIn(ref)) return;
+    if (ref.read(displayNameProvider).trim().isNotEmpty) return;
+    _prompting = true;
+    await ensureDisplayName(context, ref);
+    _prompting = false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final index = ref.watch(navIndexProvider);
     final titles = [t.tabHome, t.tabSets, t.tabBinder, t.tabProfile];
+
+    // Após login (mudança de sessão), pede o nome se faltar.
+    ref.listen(authStateProvider, (_, __) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _maybeAskName());
+    });
 
     return Scaffold(
       appBar: AppBar(

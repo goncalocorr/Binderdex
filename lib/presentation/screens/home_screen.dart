@@ -299,7 +299,7 @@ class _AlmostCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Symbol(url: s.symbolUrl),
+          _Logo(logo: s.logoUrl, symbol: s.symbolUrl),
           const Spacer(),
           Text(s.name,
               maxLines: 1,
@@ -344,7 +344,7 @@ class _DiscoverCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Symbol(url: s.symbolUrl),
+          _Logo(logo: s.logoUrl, symbol: s.symbolUrl),
           const Spacer(),
           Text(s.name,
               maxLines: 1,
@@ -367,33 +367,35 @@ class _DiscoverCard extends StatelessWidget {
   }
 }
 
-class _Symbol extends StatelessWidget {
-  final String url;
-  const _Symbol({required this.url});
+class _Logo extends StatelessWidget {
+  final String logo;
+  final String symbol;
+  const _Logo({required this.logo, required this.symbol});
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final tint = Color.alphaBlend(
         cs.primary.withValues(alpha: 0.14), cs.surfaceContainerHigh);
+    final url = logo.isNotEmpty ? logo : symbol;
     return Container(
-      width: 44,
-      height: 44,
+      width: double.infinity,
+      height: 46,
       decoration: BoxDecoration(
         color: tint,
         borderRadius: BorderRadius.circular(DexRadii.md),
       ),
       clipBehavior: Clip.antiAlias,
+      alignment: Alignment.centerLeft,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
       child: url.isEmpty
           ? Icon(Icons.style, color: cs.primary, size: 22)
-          : Padding(
-              padding: const EdgeInsets.all(7),
-              child: CachedNetworkImage(
-                imageUrl: url,
-                fit: BoxFit.contain,
-                placeholder: (_, __) => const SizedBox.shrink(),
-                errorWidget: (_, __, ___) =>
-                    Icon(Icons.style, color: cs.primary, size: 22),
-              ),
+          : CachedNetworkImage(
+              imageUrl: url,
+              fit: BoxFit.contain,
+              alignment: Alignment.centerLeft,
+              placeholder: (_, __) => const SizedBox.shrink(),
+              errorWidget: (_, __, ___) =>
+                  Icon(Icons.style, color: cs.primary, size: 22),
             ),
     );
   }
