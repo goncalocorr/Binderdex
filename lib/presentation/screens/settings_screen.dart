@@ -68,30 +68,34 @@ class SettingsScreen extends ConsumerWidget {
     final t = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final current = ref.read(avatarProvider);
-    final ids = List.generate(
-        16, (i) => 'avatar_${(i + 1).toString().padLeft(2, '0')}');
+    final ids = kAvatarIds;
 
     showModalBottomSheet<void>(
       context: context,
       showDragHandle: true,
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12, left: 4),
-              child: Text(t.chooseAvatar,
-                  style: Theme.of(ctx).textTheme.titleMedium),
-            ),
-            GridView.count(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 4,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              children: ids.map((id) {
+      isScrollControlled: true,
+      builder: (ctx) => DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.6,
+        maxChildSize: 0.9,
+        builder: (ctx, scroll) => Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12, left: 4),
+                child: Text(t.chooseAvatar,
+                    style: Theme.of(ctx).textTheme.titleMedium),
+              ),
+              Expanded(
+                child: GridView.count(
+                  controller: scroll,
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  children: ids.map((id) {
                 final selected = id == current;
                 return GestureDetector(
                   onTap: () async {
@@ -99,9 +103,11 @@ class SettingsScreen extends ConsumerWidget {
                     await ref.read(prefsProvider).setString('avatar', id);
                     final uid = ref.read(authStateProvider).valueOrNull?.uid;
                     if (uid != null) {
-                      await ref
-                          .read(profileServiceProvider)
-                          .save(uid, avatar: id);
+                      try {
+                        await ref
+                            .read(profileServiceProvider)
+                            .save(uid, avatar: id);
+                      } catch (_) {/* offline/regras — fica local */}
                     }
                     if (ctx.mounted) Navigator.pop(ctx);
                   },
@@ -118,9 +124,11 @@ class SettingsScreen extends ConsumerWidget {
                     ),
                   ),
                 );
-              }).toList(),
-            ),
-          ],
+                }).toList(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -165,7 +173,9 @@ class SettingsScreen extends ConsumerWidget {
     try {
       sync.stop(); // pára os listeners antes de apagar
       await sync.deleteRemoteData(user.uid); // ainda autenticado (regras)
-      await ref.read(profileServiceProvider).delete(user.uid); // perfil
+      try {
+        await ref.read(profileServiceProvider).delete(user.uid); // perfil
+      } catch (_) {/* sem doc de perfil ou regras por publicar */}
       await _clearLocalProfile(ref); // limpa local ANTES de sair (ecrã montado)
       await auth.deleteAccount();
       messenger.showSnackBar(SnackBar(content: Text(t.accountDeleted)));

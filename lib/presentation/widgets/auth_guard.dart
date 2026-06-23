@@ -74,7 +74,9 @@ Future<void> ensureDisplayName(BuildContext context, WidgetRef ref) async {
     // Guarda também na conta (nuvem) para restaurar noutro login/dispositivo.
     final uid = ref.read(authStateProvider).valueOrNull?.uid;
     if (uid != null) {
-      await ref.read(profileServiceProvider).save(uid, name: name);
+      try {
+        await ref.read(profileServiceProvider).save(uid, name: name);
+      } catch (_) {/* offline ou regras por publicar — fica local */}
     }
   }
 }

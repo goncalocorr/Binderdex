@@ -410,4 +410,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get chooseAvatar => 'Escolhe o teu avatar';
+
+  @override
+  String get fillFields => 'Escreve o email e a palavra-passe.';
 }

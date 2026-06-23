@@ -406,4 +406,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chooseAvatar => 'Choose your avatar';
+
+  @override
+  String get fillFields => 'Enter your email and password.';
 }

@@ -829,6 +829,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose your avatar'**
   String get chooseAvatar;
+
+  /// No description provided for @fillFields.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email and password.'**
+  String get fillFields;
 }
 
 class _AppLocalizationsDelegate

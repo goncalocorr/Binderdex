@@ -56,11 +56,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ..showSnackBar(SnackBar(content: Text(message ?? t.authFailed)));
   }
 
-  Future<void> _emailAuth() {
-    final auth = ref.read(authServiceProvider);
-    final email = _email.text;
+  Future<void> _emailAuth() async {
+    final email = _email.text.trim();
     final pass = _password.text;
-    return _run(() => _register
+    // Valida campos vazios para não disparar um erro técnico do Firebase.
+    if (email.isEmpty || pass.isEmpty) {
+      _error(AppLocalizations.of(context)!.fillFields);
+      return;
+    }
+    final auth = ref.read(authServiceProvider);
+    await _run(() => _register
         ? auth.registerWithEmail(email, pass)
         : auth.signInWithEmail(email, pass));
   }

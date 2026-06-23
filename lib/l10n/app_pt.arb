@@ -121,5 +121,6 @@
   "askNameTitle": "Como te queres chamar?",
   "askNameBody": "Escolhe um nome de colecionador — aparece no início e no perfil.",
   "continueLabel": "Continuar",
-  "chooseAvatar": "Escolhe o teu avatar"
+  "chooseAvatar": "Escolhe o teu avatar",
+  "fillFields": "Escreve o email e a palavra-passe."
 }

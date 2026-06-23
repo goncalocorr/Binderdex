@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
 
+/// Todos os avatares incluídos (assets/avatars/<id>.png).
+final List<String> kAvatarIds = [
+  for (var i = 1; i <= 16; i++) 'avatar_${i.toString().padLeft(2, '0')}',
+  for (var i = 1; i <= 16; i++)
+    'person_avatar_${i.toString().padLeft(2, '0')}',
+];
+
 /// Avatar circular: imagem escolhida (assets/avatars/<id>.png) ou, em reserva,
 /// a inicial do nome / um ícone para convidado.
 class Avatar extends StatelessWidget {

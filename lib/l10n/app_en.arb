@@ -157,5 +157,6 @@
   "askNameTitle": "What should we call you?",
   "askNameBody": "Pick a collector name — it shows on your home and profile.",
   "continueLabel": "Continue",
-  "chooseAvatar": "Choose your avatar"
+  "chooseAvatar": "Choose your avatar",
+  "fillFields": "Enter your email and password."
 }
