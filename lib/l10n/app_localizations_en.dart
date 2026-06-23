@@ -403,4 +403,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get continueLabel => 'Continue';
+
+  @override
+  String get chooseAvatar => 'Choose your avatar';
 }

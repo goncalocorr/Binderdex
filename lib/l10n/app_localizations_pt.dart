@@ -407,4 +407,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get continueLabel => 'Continuar';
+
+  @override
+  String get chooseAvatar => 'Escolhe o teu avatar';
 }

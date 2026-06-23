@@ -156,5 +156,6 @@
   "openMyBinder": "Open my binder",
   "askNameTitle": "What should we call you?",
   "askNameBody": "Pick a collector name — it shows on your home and profile.",
-  "continueLabel": "Continue"
+  "continueLabel": "Continue",
+  "chooseAvatar": "Choose your avatar"
 }

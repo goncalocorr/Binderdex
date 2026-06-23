@@ -35,6 +35,8 @@ Future<void> main() async {
   container.read(localeProvider.notifier).state = prefs.getString('locale');
   container.read(displayNameProvider.notifier).state =
       prefs.getString('displayName') ?? '';
+  container.read(avatarProvider.notifier).state =
+      prefs.getString('avatar') ?? '';
   container.read(onboardingDoneProvider.notifier).state =
       prefs.getBool('onboardingDone') ?? false;
 

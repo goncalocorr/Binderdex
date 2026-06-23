@@ -120,5 +120,6 @@
   "openMyBinder": "Abrir o meu binder",
   "askNameTitle": "Como te queres chamar?",
   "askNameBody": "Escolhe um nome de colecionador — aparece no início e no perfil.",
-  "continueLabel": "Continuar"
+  "continueLabel": "Continuar",
+  "chooseAvatar": "Escolhe o teu avatar"
 }

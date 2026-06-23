@@ -50,14 +50,74 @@ class SettingsScreen extends ConsumerWidget {
     ref.read(prefsProvider).setInt('themeMode', i);
   }
 
-  /// Limpa o estado local da sessão (coleção, nome, modo convidado).
+  /// Limpa o estado local da sessão (coleção, nome, avatar, modo convidado).
   /// As mutações de estado vêm PRIMEIRO; deve ser chamado ANTES do signOut/
   /// delete, senão o redirect do gate desmonta o ecrã a meio.
   Future<void> _clearLocalProfile(WidgetRef ref) async {
     ref.read(displayNameProvider.notifier).state = '';
+    ref.read(avatarProvider.notifier).state = '';
     ref.read(guestModeProvider.notifier).state = false;
-    await ref.read(prefsProvider).remove('displayName');
+    final prefs = ref.read(prefsProvider);
+    await prefs.remove('displayName');
+    await prefs.remove('avatar');
     await ref.read(databaseProvider).clearCollection();
+  }
+
+  /// Folha para escolher um dos avatares incluídos.
+  void _pickAvatar(BuildContext context, WidgetRef ref) {
+    final t = AppLocalizations.of(context)!;
+    final cs = Theme.of(context).colorScheme;
+    final current = ref.read(avatarProvider);
+    final ids = List.generate(
+        16, (i) => 'avatar_${(i + 1).toString().padLeft(2, '0')}');
+
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12, left: 4),
+              child: Text(t.chooseAvatar,
+                  style: Theme.of(ctx).textTheme.titleMedium),
+            ),
+            GridView.count(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              crossAxisCount: 4,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              children: ids.map((id) {
+                final selected = id == current;
+                return GestureDetector(
+                  onTap: () async {
+                    ref.read(avatarProvider.notifier).state = id;
+                    await ref.read(prefsProvider).setString('avatar', id);
+                    if (ctx.mounted) Navigator.pop(ctx);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: selected
+                          ? Border.all(color: cs.primary, width: 3)
+                          : null,
+                    ),
+                    child: ClipOval(
+                      child: Image.asset('assets/avatars/$id.png',
+                          fit: BoxFit.cover),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _signOut(WidgetRef ref) async {
@@ -129,6 +189,7 @@ class SettingsScreen extends ConsumerWidget {
     final theme = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
     final name = ref.watch(displayNameProvider);
+    final avatar = ref.watch(avatarProvider);
     final user = ref.watch(authStateProvider).valueOrNull;
     final signedIn = user != null && !user.isAnonymous;
     final owned = ref.watch(globalProgressProvider).valueOrNull?.owned ?? 0;
@@ -148,7 +209,29 @@ class SettingsScreen extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
           child: Row(
             children: [
-              Avatar(name: name, size: 64),
+              InkWell(
+                customBorder: const CircleBorder(),
+                onTap: () => _pickAvatar(context, ref),
+                child: Stack(
+                  children: [
+                    Avatar(name: name, size: 64, avatarId: avatar),
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          color: cs.primary,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: cs.surface, width: 2),
+                        ),
+                        child: const Icon(Icons.edit,
+                            size: 12, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(

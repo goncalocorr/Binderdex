@@ -3,14 +3,31 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
 
-/// Avatar circular com a inicial do nome (ou um ícone para convidado).
+/// Avatar circular: imagem escolhida (assets/avatars/<id>.png) ou, em reserva,
+/// a inicial do nome / um ícone para convidado.
 class Avatar extends StatelessWidget {
   final String name;
   final double size;
-  const Avatar({super.key, required this.name, this.size = 48});
+
+  /// Id do avatar escolhido (ex.: "avatar_03"). Vazio → inicial/ícone.
+  final String avatarId;
+
+  const Avatar(
+      {super.key, required this.name, this.size = 48, this.avatarId = ''});
 
   @override
   Widget build(BuildContext context) {
+    if (avatarId.isNotEmpty) {
+      return ClipOval(
+        child: Image.asset(
+          'assets/avatars/$avatarId.png',
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+
     final trimmed = name.trim();
     final letter = trimmed.isEmpty ? '' : trimmed.characters.first.toUpperCase();
     return Container(
