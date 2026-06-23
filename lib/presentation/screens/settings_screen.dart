@@ -97,6 +97,12 @@ class SettingsScreen extends ConsumerWidget {
                   onTap: () async {
                     ref.read(avatarProvider.notifier).state = id;
                     await ref.read(prefsProvider).setString('avatar', id);
+                    final uid = ref.read(authStateProvider).valueOrNull?.uid;
+                    if (uid != null) {
+                      await ref
+                          .read(profileServiceProvider)
+                          .save(uid, avatar: id);
+                    }
                     if (ctx.mounted) Navigator.pop(ctx);
                   },
                   child: Container(
@@ -159,6 +165,7 @@ class SettingsScreen extends ConsumerWidget {
     try {
       sync.stop(); // pára os listeners antes de apagar
       await sync.deleteRemoteData(user.uid); // ainda autenticado (regras)
+      await ref.read(profileServiceProvider).delete(user.uid); // perfil
       await _clearLocalProfile(ref); // limpa local ANTES de sair (ecrã montado)
       await auth.deleteAccount();
       messenger.showSnackBar(SnackBar(content: Text(t.accountDeleted)));

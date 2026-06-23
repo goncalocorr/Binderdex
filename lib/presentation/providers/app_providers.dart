@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/local/database.dart';
 import '../../data/remote/auth_service.dart';
+import '../../data/remote/profile_service.dart';
 import '../../data/remote/sync_service.dart';
 import '../../data/remote/tcg_api.dart';
 import '../../data/repositories/cards_repository.dart';
@@ -34,6 +35,9 @@ final collectionRepositoryProvider =
 
 // --- Autenticação (Etapa 2) ---
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
+
+/// Perfil na nuvem (nome + avatar).
+final profileServiceProvider = Provider<ProfileService>((ref) => ProfileService());
 
 /// Modo convidado (entrou sem conta para ver o catálogo). Não persiste — cada
 /// arranque a frio volta a pedir login. Convidado não pode editar a coleção.

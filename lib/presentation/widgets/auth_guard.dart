@@ -10,6 +10,24 @@ import '../providers/app_providers.dart';
 bool isSignedIn(WidgetRef ref) =>
     ref.read(authStateProvider).valueOrNull != null;
 
+/// Restaura o perfil (nome + avatar) da conta a partir da nuvem, ao iniciar
+/// sessão. Se a conta já tinha nome, evita que o popup reapareça.
+Future<void> syncProfileFromCloud(WidgetRef ref) async {
+  final uid = ref.read(authStateProvider).valueOrNull?.uid;
+  if (uid == null) return;
+  final p = await ref.read(profileServiceProvider).fetch(uid);
+  if (p == null) return;
+  final prefs = ref.read(prefsProvider);
+  if (p.name.isNotEmpty) {
+    ref.read(displayNameProvider.notifier).state = p.name;
+    await prefs.setString('displayName', p.name);
+  }
+  if (p.avatar.isNotEmpty) {
+    ref.read(avatarProvider.notifier).state = p.avatar;
+    await prefs.setString('avatar', p.avatar);
+  }
+}
+
 /// Mostra o popup do nome se houver sessão e ainda não houver nome. Deve ser
 /// chamado da app já montada (não do login, que o gate desmonta ao autenticar).
 Future<void> ensureDisplayName(BuildContext context, WidgetRef ref) async {
@@ -53,6 +71,11 @@ Future<void> ensureDisplayName(BuildContext context, WidgetRef ref) async {
   if (name != null && name.isNotEmpty) {
     ref.read(displayNameProvider.notifier).state = name;
     await ref.read(prefsProvider).setString('displayName', name);
+    // Guarda também na conta (nuvem) para restaurar noutro login/dispositivo.
+    final uid = ref.read(authStateProvider).valueOrNull?.uid;
+    if (uid != null) {
+      await ref.read(profileServiceProvider).save(uid, name: name);
+    }
   }
 }
 

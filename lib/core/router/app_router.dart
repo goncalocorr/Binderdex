@@ -41,14 +41,19 @@ class _ShellState extends ConsumerState<_Shell> {
     WidgetsBinding.instance.addPostFrameCallback((_) => _maybeAskName());
   }
 
-  /// Pede o nome (uma vez) se há sessão e ainda não há nome. É aqui, e não no
-  /// login, porque o gate desmonta o ecrã de login ao autenticar.
+  /// Após autenticar: restaura o perfil da nuvem e, se a conta ainda não tiver
+  /// nome, pede-o (uma vez). É aqui, e não no login, porque o gate desmonta o
+  /// ecrã de login ao autenticar.
   Future<void> _maybeAskName() async {
     if (_prompting || !mounted) return;
     if (!isSignedIn(ref)) return;
-    if (ref.read(displayNameProvider).trim().isNotEmpty) return;
     _prompting = true;
-    await ensureDisplayName(context, ref);
+    // 1. Restaura nome/avatar da conta (evita o popup em contas existentes).
+    await syncProfileFromCloud(ref);
+    // 2. Só pede o nome se a conta realmente não tiver.
+    if (mounted && ref.read(displayNameProvider).trim().isEmpty) {
+      await ensureDisplayName(context, ref);
+    }
     _prompting = false;
   }
 

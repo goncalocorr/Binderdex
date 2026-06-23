@@ -5,9 +5,16 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    match /users/{userId}/cards/{cardId} {
+    // Perfil do utilizador (nome, avatar).
+    match /users/{userId} {
       allow read, write: if request.auth != null
                          && request.auth.uid == userId;
+
+      // Coleção de cartas do utilizador.
+      match /cards/{cardId} {
+        allow read, write: if request.auth != null
+                           && request.auth.uid == userId;
+      }
     }
 
     // Tudo o resto é negado por omissão.
