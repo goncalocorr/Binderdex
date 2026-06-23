@@ -352,4 +352,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteFailed => 'Couldn\'t delete your account. Please try again.';
+
+  @override
+  String get guestEnter => 'Browse as guest';
+
+  @override
+  String get loginRequiredTitle => 'Sign in to add cards';
+
+  @override
+  String get loginRequiredBody =>
+      'Create a free account or log in to start tracking your collection. As a guest you can only browse.';
+
+  @override
+  String get loginOrCreate => 'Log in or create account';
+
+  @override
+  String get tabHome => 'Home';
+
+  @override
+  String homeGreeting(String name) {
+    return 'Hi, $name';
+  }
+
+  @override
+  String get homeGreetingGuest => 'Welcome';
+
+  @override
+  String get homeAlmostThere => 'Almost there';
+
+  @override
+  String get homeDiscover => 'Discover';
+
+  @override
+  String homeToGo(int n) {
+    return '$n to go';
+  }
+
+  @override
+  String get homeSignInCta => 'Sign in to start your collection';
+
+  @override
+  String get openMyBinder => 'Open my binder';
+
+  @override
+  String get askNameTitle => 'What should we call you?';
+
+  @override
+  String get askNameBody =>
+      'Pick a collector name — it shows on your home and profile.';
+
+  @override
+  String get continueLabel => 'Continue';
 }

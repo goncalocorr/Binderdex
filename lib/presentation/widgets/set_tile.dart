@@ -52,21 +52,22 @@ class SetTile extends StatelessWidget {
             ),
             child: Row(
               children: [
-                // Logo / símbolo do set
+                // Logótipo da coleção (com o símbolo como reserva).
                 Container(
-                  width: 56,
+                  width: 76,
                   height: 56,
                   decoration: BoxDecoration(
                     color: tint,
                     borderRadius: BorderRadius.circular(DexRadii.md),
                   ),
                   clipBehavior: Clip.antiAlias,
-                  child: s.symbolUrl.isEmpty
+                  child: (s.logoUrl.isEmpty && s.symbolUrl.isEmpty)
                       ? Icon(Icons.style, color: cs.primary)
                       : Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(7),
                           child: CachedNetworkImage(
-                            imageUrl: s.symbolUrl,
+                            imageUrl:
+                                s.logoUrl.isNotEmpty ? s.logoUrl : s.symbolUrl,
                             fit: BoxFit.contain,
                             placeholder: (_, __) => const SizedBox.shrink(),
                             errorWidget: (_, __, ___) =>

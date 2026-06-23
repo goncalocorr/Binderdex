@@ -34,6 +34,14 @@ final collectionRepositoryProvider =
 
 // --- Autenticação (Etapa 2) ---
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
+
+/// Modo convidado (entrou sem conta para ver o catálogo). Não persiste — cada
+/// arranque a frio volta a pedir login. Convidado não pode editar a coleção.
+final guestModeProvider = StateProvider<bool>((ref) => false);
+
+/// Separador selecionado na navegação inferior (Início/Coleções/Binder/Perfil).
+/// Em provider para o Home poder saltar para outros separadores.
+final navIndexProvider = StateProvider<int>((ref) => 0);
 final authStateProvider = StreamProvider<User?>(
     (ref) => ref.watch(authServiceProvider).authStateChanges());
 

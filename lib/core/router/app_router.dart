@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../presentation/providers/app_providers.dart';
 import '../../presentation/screens/card_detail_screen.dart';
+import '../../presentation/screens/home_screen.dart';
 import '../../presentation/screens/login_screen.dart';
 import '../../presentation/screens/my_binder_screen.dart';
 import '../../presentation/screens/onboarding_screen.dart';
@@ -12,26 +16,22 @@ import '../../presentation/screens/sets_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
 import '../../presentation/screens/wishlist_screen.dart';
 
-/// Casca com navegação inferior (Coleções, O meu binder, Definições).
-class _Shell extends StatefulWidget {
+/// Casca com navegação inferior (Início, Coleções, O meu binder, Perfil).
+class _Shell extends ConsumerWidget {
   const _Shell();
-  @override
-  State<_Shell> createState() => _ShellState();
-}
-
-class _ShellState extends State<_Shell> {
-  int _index = 0;
 
   static const _tabs = [
+    HomeScreen(),
     SetsScreen(),
     MyBinderScreen(),
     SettingsScreen(),
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = AppLocalizations.of(context)!;
-    final titles = [t.tabSets, t.tabBinder, t.tabProfile];
+    final index = ref.watch(navIndexProvider);
+    final titles = [t.tabHome, t.tabSets, t.tabBinder, t.tabProfile];
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +40,7 @@ class _ShellState extends State<_Shell> {
           padding: const EdgeInsets.only(left: 12),
           child: Image.asset('assets/logo.png', width: 32, height: 32),
         ),
-        title: Text(titles[_index]),
+        title: Text(titles[index]),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -49,11 +49,13 @@ class _ShellState extends State<_Shell> {
           ),
         ],
       ),
-      body: _tabs[_index],
+      body: _tabs[index],
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() => _index = i),
+        selectedIndex: index,
+        onDestinationSelected: (i) =>
+            ref.read(navIndexProvider.notifier).state = i,
         destinations: [
+          NavigationDestination(icon: const Icon(Icons.home), label: t.tabHome),
           NavigationDestination(icon: const Icon(Icons.style), label: t.tabSets),
           NavigationDestination(
               icon: const Icon(Icons.collections_bookmark),
@@ -68,12 +70,41 @@ class _ShellState extends State<_Shell> {
 
 /// Cria o router com a rota inicial decidida no arranque.
 ///
-/// O splash deixou de ser em Dart — passou a ser o splash nativo Android
-/// (Lottie). Por isso a app entra já diretamente no onboarding (1º arranque)
-/// ou no início (arranques seguintes), conforme [initialLocation].
-GoRouter createAppRouter(String initialLocation) => GoRouter(
-  initialLocation: initialLocation,
-  routes: [
+/// Gate de entrada: depois do splash nativo, a app exige **login** (ou entrar
+/// como **convidado**). Onboarding aparece só no 1º arranque. Convidado vê o
+/// catálogo mas não edita (o bloqueio de edição é por ação, com popup).
+final appRouterProvider = Provider<GoRouter>((ref) {
+  // Rota inicial: onboarding (1ª vez) → início (se já autenticado) → login.
+  final onboardingDone = ref.read(onboardingDoneProvider);
+  final initiallyAuthed = fb.FirebaseAuth.instance.currentUser != null;
+  final initial = !onboardingDone
+      ? '/onboarding'
+      : (initiallyAuthed ? '/' : '/login');
+
+  // Reavalia o gate quando a sessão / convidado / onboarding mudam.
+  final refresh = ValueNotifier<int>(0);
+  ref.listen(authStateProvider, (_, __) => refresh.value++);
+  ref.listen(guestModeProvider, (_, __) => refresh.value++);
+  ref.listen(onboardingDoneProvider, (_, __) => refresh.value++);
+  ref.onDispose(refresh.dispose);
+
+  return GoRouter(
+    initialLocation: initial,
+    refreshListenable: refresh,
+    redirect: (context, state) {
+      final auth = ref.read(authStateProvider);
+      if (auth.isLoading) return null; // ainda a restaurar a sessão
+      final authed = auth.valueOrNull != null;
+      final guest = ref.read(guestModeProvider);
+      final done = ref.read(onboardingDoneProvider);
+      final loc = state.matchedLocation;
+
+      if (!done && loc != '/onboarding') return '/onboarding';
+      if (done && !authed && !guest && loc != '/login') return '/login';
+      if (authed && (loc == '/login' || loc == '/onboarding')) return '/';
+      return null;
+    },
+    routes: [
     GoRoute(
         path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
     GoRoute(path: '/', builder: (_, __) => const _Shell()),
@@ -91,5 +122,6 @@ GoRouter createAppRouter(String initialLocation) => GoRouter(
     GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
     GoRoute(path: '/wishlist', builder: (_, __) => const WishlistScreen()),
     GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
-  ],
-);
+    ],
+  );
+});

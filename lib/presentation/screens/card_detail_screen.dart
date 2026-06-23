@@ -8,7 +8,9 @@ import '../../domain/entities/tcg_card.dart';
 import '../../domain/entities/user_card_entry.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import '../widgets/auth_guard.dart';
 import '../widgets/dex_ui.dart';
+import '../widgets/tilt_card.dart';
 
 /// Detalhe de uma carta + edição do registo de coleção.
 class CardDetailScreen extends ConsumerWidget {
@@ -46,6 +48,7 @@ class CardDetailScreen extends ConsumerWidget {
             icon: Icon(wished ? Icons.favorite : Icons.favorite_border,
                 color: wished ? DexColors.red500 : null),
             onPressed: () async {
+              if (!requireSignIn(context, ref)) return; // convidado → login
               await ref
                   .read(collectionRepositoryProvider)
                   .setWishlisted(id, !wished);
@@ -71,8 +74,10 @@ class CardDetailScreen extends ConsumerWidget {
             error: (e, _) => Center(child: Text('$e')),
             data: (entry) {
               final repo = ref.read(collectionRepositoryProvider);
-              void save(UserCardEntry e) =>
-                  repo.save(e.copyWith(updatedAt: DateTime.now()));
+              void save(UserCardEntry e) {
+                if (!requireSignIn(context, ref)) return; // convidado → login
+                repo.save(e.copyWith(updatedAt: DateTime.now()));
+              }
               final sheen = sheenColorsForCard(
                 rarity: card.rarity,
                 ownedHolo: entry.ownedHolo,
@@ -84,39 +89,42 @@ class CardDetailScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 children: [
                   Center(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(DexRadii.lg),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(DexRadii.lg),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.18),
-                              blurRadius: 28,
-                              offset: const Offset(0, 12),
-                            ),
-                          ],
-                        ),
-                        child: Stack(
-                          children: [
-                            CachedNetworkImage(
-                              imageUrl: card.imageLarge.isNotEmpty
-                                  ? card.imageLarge
-                                  : card.imageSmall,
-                              height: 360,
-                              placeholder: (_, __) => const SizedBox(
-                                height: 360,
-                                child:
-                                    Center(child: CircularProgressIndicator()),
+                    child: TiltCard(
+                      radius: DexRadii.lg,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(DexRadii.lg),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(DexRadii.lg),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.18),
+                                blurRadius: 28,
+                                offset: const Offset(0, 12),
                               ),
-                              errorWidget: (_, __, ___) => const Icon(
-                                  Icons.image_not_supported, size: 96),
-                            ),
-                            if (sheen != null)
-                              Positioned.fill(
-                                  child: AnimatedSheen(
-                                      colors: sheen, opacity: 0.5)),
-                          ],
+                            ],
+                          ),
+                          child: Stack(
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl: card.imageLarge.isNotEmpty
+                                    ? card.imageLarge
+                                    : card.imageSmall,
+                                height: 360,
+                                placeholder: (_, __) => const SizedBox(
+                                  height: 360,
+                                  child: Center(
+                                      child: CircularProgressIndicator()),
+                                ),
+                                errorWidget: (_, __, ___) => const Icon(
+                                    Icons.image_not_supported, size: 96),
+                              ),
+                              if (sheen != null)
+                                Positioned.fill(
+                                    child: AnimatedSheen(
+                                        colors: sheen, opacity: 0.5)),
+                            ],
+                          ),
                         ),
                       ),
                     ),

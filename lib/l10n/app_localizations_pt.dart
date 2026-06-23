@@ -356,4 +356,55 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get deleteFailed =>
       'Não foi possível eliminar a conta. Tenta de novo.';
+
+  @override
+  String get guestEnter => 'Entrar como convidado';
+
+  @override
+  String get loginRequiredTitle => 'Inicia sessão para adicionar';
+
+  @override
+  String get loginRequiredBody =>
+      'Cria uma conta (ou inicia sessão) para começares a registar a tua coleção. Como convidado só podes ver.';
+
+  @override
+  String get loginOrCreate => 'Iniciar sessão ou criar conta';
+
+  @override
+  String get tabHome => 'Início';
+
+  @override
+  String homeGreeting(String name) {
+    return 'Olá, $name';
+  }
+
+  @override
+  String get homeGreetingGuest => 'Bem-vindo';
+
+  @override
+  String get homeAlmostThere => 'Quase lá';
+
+  @override
+  String get homeDiscover => 'Descobrir';
+
+  @override
+  String homeToGo(int n) {
+    return 'faltam $n';
+  }
+
+  @override
+  String get homeSignInCta => 'Inicia sessão para começares a tua coleção';
+
+  @override
+  String get openMyBinder => 'Abrir o meu binder';
+
+  @override
+  String get askNameTitle => 'Como te queres chamar?';
+
+  @override
+  String get askNameBody =>
+      'Escolhe um nome de colecionador — aparece no início e no perfil.';
+
+  @override
+  String get continueLabel => 'Continuar';
 }

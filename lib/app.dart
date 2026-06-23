@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
+import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
 import 'presentation/providers/app_providers.dart';
 
 class PokedexApp extends ConsumerWidget {
-  const PokedexApp({super.key, required this.router});
-
-  /// Router criado no arranque, com a rota inicial já decidida.
-  final GoRouter router;
+  const PokedexApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,6 +15,7 @@ class PokedexApp extends ConsumerWidget {
     final localeCode = ref.watch(localeProvider);
     // Liga a sincronização ao ciclo de vida da sessão.
     ref.watch(syncServiceProvider);
+    final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
       title: 'Binderdex',

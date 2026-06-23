@@ -50,6 +50,14 @@ class SettingsScreen extends ConsumerWidget {
     ref.read(prefsProvider).setInt('themeMode', i);
   }
 
+  Future<void> _signOut(WidgetRef ref) async {
+    // Limpa a coleção local ao sair (fica segura na nuvem na conta).
+    ref.read(syncServiceProvider).stop();
+    await ref.read(authServiceProvider).signOut();
+    await ref.read(databaseProvider).clearCollection();
+    ref.read(guestModeProvider.notifier).state = false;
+  }
+
   Future<void> _deleteAccount(BuildContext context, WidgetRef ref) async {
     final t = AppLocalizations.of(context)!;
     final messenger = ScaffoldMessenger.of(context);
@@ -164,7 +172,7 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.account_circle),
             title: Text(t.signedInAs(user.email ?? '')),
             trailing: TextButton(
-              onPressed: () => ref.read(authServiceProvider).signOut(),
+              onPressed: () => _signOut(ref),
               child: Text(t.signOut),
             ),
           )
@@ -239,13 +247,6 @@ class SettingsScreen extends ConsumerWidget {
         ),
         const Divider(),
 
-        // ☁️ Etapa 2 / 3: preparados, sem função ainda.
-        ListTile(
-          leading: const Icon(Icons.cloud_sync_outlined),
-          title: Text(t.backupSync),
-          subtitle: Text(t.comingSoon),
-          enabled: false,
-        ),
         // ⭐ PREMIUM: secção de subscrição — preparada para a Etapa 3.
         ListTile(
           leading: const Icon(Icons.workspace_premium),

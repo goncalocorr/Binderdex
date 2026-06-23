@@ -135,5 +135,26 @@
   "delete": "Delete",
   "reauthNeeded": "For security, sign in again and then retry deleting your account.",
   "accountDeleted": "Account deleted.",
-  "deleteFailed": "Couldn't delete your account. Please try again."
+  "deleteFailed": "Couldn't delete your account. Please try again.",
+  "guestEnter": "Browse as guest",
+  "loginRequiredTitle": "Sign in to add cards",
+  "loginRequiredBody": "Create a free account or log in to start tracking your collection. As a guest you can only browse.",
+  "loginOrCreate": "Log in or create account",
+  "tabHome": "Home",
+  "homeGreeting": "Hi, {name}",
+  "@homeGreeting": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "homeGreetingGuest": "Welcome",
+  "homeAlmostThere": "Almost there",
+  "homeDiscover": "Discover",
+  "homeToGo": "{n} to go",
+  "@homeToGo": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "homeSignInCta": "Sign in to start your collection",
+  "openMyBinder": "Open my binder",
+  "askNameTitle": "What should we call you?",
+  "askNameBody": "Pick a collector name — it shows on your home and profile.",
+  "continueLabel": "Continue"
 }

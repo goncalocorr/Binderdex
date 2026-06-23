@@ -733,6 +733,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Couldn\'t delete your account. Please try again.'**
   String get deleteFailed;
+
+  /// No description provided for @guestEnter.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse as guest'**
+  String get guestEnter;
+
+  /// No description provided for @loginRequiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to add cards'**
+  String get loginRequiredTitle;
+
+  /// No description provided for @loginRequiredBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a free account or log in to start tracking your collection. As a guest you can only browse.'**
+  String get loginRequiredBody;
+
+  /// No description provided for @loginOrCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in or create account'**
+  String get loginOrCreate;
+
+  /// No description provided for @tabHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get tabHome;
+
+  /// No description provided for @homeGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi, {name}'**
+  String homeGreeting(String name);
+
+  /// No description provided for @homeGreetingGuest.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get homeGreetingGuest;
+
+  /// No description provided for @homeAlmostThere.
+  ///
+  /// In en, this message translates to:
+  /// **'Almost there'**
+  String get homeAlmostThere;
+
+  /// No description provided for @homeDiscover.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get homeDiscover;
+
+  /// No description provided for @homeToGo.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} to go'**
+  String homeToGo(int n);
+
+  /// No description provided for @homeSignInCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to start your collection'**
+  String get homeSignInCta;
+
+  /// No description provided for @openMyBinder.
+  ///
+  /// In en, this message translates to:
+  /// **'Open my binder'**
+  String get openMyBinder;
+
+  /// No description provided for @askNameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What should we call you?'**
+  String get askNameTitle;
+
+  /// No description provided for @askNameBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a collector name — it shows on your home and profile.'**
+  String get askNameBody;
+
+  /// No description provided for @continueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueLabel;
 }
 
 class _AppLocalizationsDelegate

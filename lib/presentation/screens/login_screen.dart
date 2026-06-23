@@ -34,13 +34,65 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     setState(() => _busy = true);
     try {
       await action();
-      if (mounted) context.pop();
+      if (!mounted) return;
+      // Entrou com conta: sai do modo convidado e passa o gate.
+      ref.read(guestModeProvider.notifier).state = false;
+      // 1ª vez (sem nome ainda): pede o nome antes de explorar a app.
+      if (ref.read(displayNameProvider).trim().isEmpty) {
+        await _askName();
+      }
+      if (mounted) context.go('/');
     } on FirebaseAuthException catch (e) {
       _error(e.message);
     } catch (_) {
       _error(null);
     } finally {
       if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  /// Popup (obrigatório passar) para escolher o nome de colecionador.
+  Future<void> _askName() async {
+    final t = AppLocalizations.of(context)!;
+    final controller = TextEditingController(
+      text: ref.read(displayNameProvider).isNotEmpty
+          ? ref.read(displayNameProvider)
+          : (FirebaseAuth.instance.currentUser?.displayName ?? ''),
+    );
+    final name = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: Text(t.askNameTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(t.askNameBody,
+                style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(ctx).colorScheme.onSurfaceVariant)),
+            const SizedBox(height: 14),
+            TextField(
+              controller: controller,
+              autofocus: true,
+              textCapitalization: TextCapitalization.words,
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(hintText: t.guest),
+              onSubmitted: (v) => Navigator.pop(ctx, v.trim()),
+            ),
+          ],
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+            child: Text(t.continueLabel),
+          ),
+        ],
+      ),
+    );
+    if (name != null && name.isNotEmpty) {
+      ref.read(displayNameProvider.notifier).state = name;
+      await ref.read(prefsProvider).setString('displayName', name);
     }
   }
 
@@ -165,8 +217,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               Center(
                 child: TextButton(
-                  onPressed: () => context.pop(),
-                  child: Text(t.skipForNow),
+                  onPressed: () {
+                    ref.read(guestModeProvider.notifier).state = true;
+                    context.go('/');
+                  },
+                  child: Text(t.guestEnter),
                 ),
               ),
             ],

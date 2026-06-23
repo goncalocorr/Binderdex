@@ -10,6 +10,7 @@ import '../../domain/entities/tcg_card.dart';
 import '../../domain/entities/user_card_entry.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import '../widgets/auth_guard.dart';
 import '../widgets/card_filter_sheet.dart';
 import '../widgets/card_tile.dart';
 import '../widgets/dex_ui.dart';
@@ -68,12 +69,15 @@ class _SetCardsScreenState extends ConsumerState<SetCardsScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showModalBottomSheet(
-          context: context,
-          showDragHandle: true,
-          isScrollControlled: true,
-          builder: (_) => _QuickAddSheet(setId: widget.setId),
-        ),
+        onPressed: () {
+          if (!requireSignIn(context, ref)) return; // convidado → login
+          showModalBottomSheet(
+            context: context,
+            showDragHandle: true,
+            isScrollControlled: true,
+            builder: (_) => _QuickAddSheet(setId: widget.setId),
+          );
+        },
         child: const Icon(Icons.add),
       ),
       body: Column(
