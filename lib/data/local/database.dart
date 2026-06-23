@@ -54,6 +54,7 @@ class UserCardEntries extends Table {
   IntColumn get qtyHolo => integer().withDefault(const Constant(0))();
   IntColumn get qtyReverse => integer().withDefault(const Constant(0))();
   TextColumn get notes => text().withDefault(const Constant(''))();
+  BoolColumn get wishlisted => boolean().withDefault(const Constant(false))();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get dirty => boolean().withDefault(const Constant(true))();
 
@@ -80,7 +81,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? openConnection());
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -113,6 +114,10 @@ class AppDatabase extends _$AppDatabase {
               await customStatement(
                   'ALTER TABLE user_card_entries DROP COLUMN $col');
             }
+          }
+          if (from < 4) {
+            // Lista de desejos (wishlist).
+            await m.addColumn(userCardEntries, userCardEntries.wishlisted);
           }
         },
       );
@@ -235,6 +240,50 @@ class AppDatabase extends _$AppDatabase {
 
   Future<void> upsertEntry(UserCardEntriesCompanion entry) async {
     await into(userCardEntries).insertOnConflictUpdate(entry);
+  }
+
+  // --- Wishlist (lista de desejos) ---
+
+  /// Marca/desmarca uma carta na wishlist sem tocar na posse.
+  Future<void> setWishlisted(String cardId, bool wanted) async {
+    final n = await (update(userCardEntries)
+          ..where((t) => t.cardId.equals(cardId)))
+        .write(UserCardEntriesCompanion(
+      wishlisted: Value(wanted),
+      updatedAt: Value(DateTime.now()),
+      dirty: const Value(true),
+    ));
+    if (n == 0) {
+      await into(userCardEntries).insert(UserCardEntriesCompanion.insert(
+        cardId: cardId,
+        wishlisted: Value(wanted),
+        updatedAt: DateTime.now(),
+        dirty: const Value(true),
+      ));
+    }
+  }
+
+  /// Cartas desejadas que ainda NÃO possuo (como no design).
+  Stream<List<CardRow>> watchWishlist() {
+    final q = select(tcgCards).join([
+      innerJoin(
+          userCardEntries, userCardEntries.cardId.equalsExp(tcgCards.id)),
+    ])
+      ..where(userCardEntries.wishlisted.equals(true) & _anyOwned().not())
+      ..orderBy([OrderingTerm(expression: tcgCards.numberSort)]);
+    return q.watch().map((rows) => rows
+        .map((r) =>
+            CardRow(r.readTable(tcgCards), r.readTable(userCardEntries)))
+        .toList());
+  }
+
+  /// Contagem de cartas desejadas (não possuídas).
+  Stream<int> watchWishlistCount() {
+    final c = countAll();
+    final q = selectOnly(userCardEntries)
+      ..addColumns([c])
+      ..where(userCardEntries.wishlisted.equals(true) & _anyOwned().not());
+    return q.watchSingle().map((r) => r.read(c) ?? 0);
   }
 
   // --- Progresso / estatísticas ---

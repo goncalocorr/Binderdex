@@ -79,10 +79,10 @@ class OnboardingScreen extends ConsumerWidget {
                   onPressed: () => _start(context, ref),
                 ),
                 const SizedBox(height: 10),
-                // Desativado até à Etapa 2 (login).
+                // Mostra o ecrã de login (visual; auth real na Etapa 2).
                 TextButton(
-                  onPressed: null,
-                  child: Text('${t.haveAccount}  ·  ${t.comingSoon}'),
+                  onPressed: () => context.push('/login'),
+                  child: Text(t.haveAccount),
                 ),
                 const SizedBox(height: 6),
                 Text(

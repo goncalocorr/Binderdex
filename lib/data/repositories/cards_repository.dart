@@ -87,6 +87,13 @@ class CardsRepository {
   Stream<({int total, int owned})> setCounts(String setId) =>
       db.watchSetCounts(setId);
 
+  /// Cartas da wishlist (desejadas e ainda não possuídas).
+  Stream<List<CardItem>> watchWishlist() =>
+      db.watchWishlist().map((rows) => rows.map(_toItem).toList());
+
+  /// Contagem de cartas desejadas.
+  Stream<int> wishlistCount() => db.watchWishlistCount();
+
   /// Pesquisa global em todas as cartas em cache.
   Stream<List<CardItem>> searchAll({
     required String query,

@@ -3,12 +3,14 @@ import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../presentation/screens/card_detail_screen.dart';
+import '../../presentation/screens/login_screen.dart';
 import '../../presentation/screens/my_binder_screen.dart';
 import '../../presentation/screens/onboarding_screen.dart';
 import '../../presentation/screens/search_screen.dart';
 import '../../presentation/screens/set_cards_screen.dart';
 import '../../presentation/screens/sets_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
+import '../../presentation/screens/wishlist_screen.dart';
 
 /// Casca com navegação inferior (Coleções, O meu binder, Definições).
 class _Shell extends StatefulWidget {
@@ -29,7 +31,7 @@ class _ShellState extends State<_Shell> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    final titles = [t.tabSets, t.tabBinder, t.tabSettings];
+    final titles = [t.tabSets, t.tabBinder, t.tabProfile];
 
     return Scaffold(
       appBar: AppBar(
@@ -57,7 +59,7 @@ class _ShellState extends State<_Shell> {
               icon: const Icon(Icons.collections_bookmark),
               label: t.tabBinder),
           NavigationDestination(
-              icon: const Icon(Icons.settings), label: t.tabSettings),
+              icon: const Icon(Icons.person), label: t.tabProfile),
         ],
       ),
     );
@@ -87,5 +89,7 @@ GoRouter createAppRouter(String initialLocation) => GoRouter(
       builder: (_, s) => CardDetailScreen(id: s.pathParameters['id']!),
     ),
     GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
+    GoRoute(path: '/wishlist', builder: (_, __) => const WishlistScreen()),
+    GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
   ],
 );

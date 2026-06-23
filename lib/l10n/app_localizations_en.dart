@@ -229,4 +229,83 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get fanMadeDisclaimer =>
       'A fan-made collection tracker · not affiliated with any card publisher.';
+
+  @override
+  String get tabProfile => 'Profile';
+
+  @override
+  String profileSummary(int cards, int sets) {
+    return '$cards cards · $sets sets';
+  }
+
+  @override
+  String get signIn => 'Sign in';
+
+  @override
+  String get signInSync => 'Sign in to sync across devices';
+
+  @override
+  String get backupSync => 'Backup & sync';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get helpFeedback => 'Help & feedback';
+
+  @override
+  String get aboutApp => 'About Binderdex';
+
+  @override
+  String get loginTitle => 'Welcome back';
+
+  @override
+  String get loginSubtitle => 'Log in to sync your binder across devices.';
+
+  @override
+  String get continueGoogle => 'Continue with Google';
+
+  @override
+  String get continueApple => 'Continue with Apple';
+
+  @override
+  String get orLabel => 'or';
+
+  @override
+  String get emailLabel => 'Email';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get logIn => 'Log in';
+
+  @override
+  String get skipForNow => 'Skip for now';
+
+  @override
+  String get authComingSoon => 'Sign-in arrives with cloud sync — coming soon.';
+
+  @override
+  String get wishlist => 'Wishlist';
+
+  @override
+  String cardsWanted(int n) {
+    return '$n cards wanted';
+  }
+
+  @override
+  String get wishlistEmptyTitle => 'Wishlist is empty';
+
+  @override
+  String get wishlistEmptyBody =>
+      'Heart the cards you\'re hunting for and they\'ll show up here.';
+
+  @override
+  String addedToWishlist(String name) {
+    return 'Added $name to wishlist';
+  }
+
+  @override
+  String get removedFromWishlist => 'Removed from wishlist';
 }

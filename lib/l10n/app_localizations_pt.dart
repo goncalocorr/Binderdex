@@ -230,4 +230,85 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get fanMadeDisclaimer =>
       'Registo de coleção feito por fãs · sem afiliação a qualquer editora de cartas.';
+
+  @override
+  String get tabProfile => 'Perfil';
+
+  @override
+  String profileSummary(int cards, int sets) {
+    return '$cards cartas · $sets sets';
+  }
+
+  @override
+  String get signIn => 'Iniciar sessão';
+
+  @override
+  String get signInSync => 'Inicia sessão para sincronizar entre dispositivos';
+
+  @override
+  String get backupSync => 'Backup e sincronização';
+
+  @override
+  String get notifications => 'Notificações';
+
+  @override
+  String get helpFeedback => 'Ajuda e feedback';
+
+  @override
+  String get aboutApp => 'Sobre o Binderdex';
+
+  @override
+  String get loginTitle => 'Bem-vindo de volta';
+
+  @override
+  String get loginSubtitle =>
+      'Inicia sessão para sincronizar o teu binder entre dispositivos.';
+
+  @override
+  String get continueGoogle => 'Continuar com Google';
+
+  @override
+  String get continueApple => 'Continuar com Apple';
+
+  @override
+  String get orLabel => 'ou';
+
+  @override
+  String get emailLabel => 'Email';
+
+  @override
+  String get passwordLabel => 'Palavra-passe';
+
+  @override
+  String get logIn => 'Iniciar sessão';
+
+  @override
+  String get skipForNow => 'Saltar por agora';
+
+  @override
+  String get authComingSoon =>
+      'O início de sessão chega com a sincronização na nuvem — em breve.';
+
+  @override
+  String get wishlist => 'Lista de desejos';
+
+  @override
+  String cardsWanted(int n) {
+    return '$n cartas desejadas';
+  }
+
+  @override
+  String get wishlistEmptyTitle => 'A lista de desejos está vazia';
+
+  @override
+  String get wishlistEmptyBody =>
+      'Marca com ♥ as cartas que procuras e aparecem aqui.';
+
+  @override
+  String addedToWishlist(String name) {
+    return 'Adicionada $name à lista de desejos';
+  }
+
+  @override
+  String get removedFromWishlist => 'Removida da lista de desejos';
 }

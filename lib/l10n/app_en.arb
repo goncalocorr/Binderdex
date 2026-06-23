@@ -86,5 +86,38 @@
   "onboardingTagline": "Track every card you own, see what's missing, and complete every set.",
   "startCollection": "Start my collection",
   "haveAccount": "I already have an account",
-  "fanMadeDisclaimer": "A fan-made collection tracker · not affiliated with any card publisher."
+  "fanMadeDisclaimer": "A fan-made collection tracker · not affiliated with any card publisher.",
+  "tabProfile": "Profile",
+  "profileSummary": "{cards} cards · {sets} sets",
+  "@profileSummary": {
+    "placeholders": { "cards": { "type": "int" }, "sets": { "type": "int" } }
+  },
+  "signIn": "Sign in",
+  "signInSync": "Sign in to sync across devices",
+  "backupSync": "Backup & sync",
+  "notifications": "Notifications",
+  "helpFeedback": "Help & feedback",
+  "aboutApp": "About Binderdex",
+  "loginTitle": "Welcome back",
+  "loginSubtitle": "Log in to sync your binder across devices.",
+  "continueGoogle": "Continue with Google",
+  "continueApple": "Continue with Apple",
+  "orLabel": "or",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "logIn": "Log in",
+  "skipForNow": "Skip for now",
+  "authComingSoon": "Sign-in arrives with cloud sync — coming soon.",
+  "wishlist": "Wishlist",
+  "cardsWanted": "{n} cards wanted",
+  "@cardsWanted": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "wishlistEmptyTitle": "Wishlist is empty",
+  "wishlistEmptyBody": "Heart the cards you're hunting for and they'll show up here.",
+  "addedToWishlist": "Added {name} to wishlist",
+  "@addedToWishlist": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "removedFromWishlist": "Removed from wishlist"
 }

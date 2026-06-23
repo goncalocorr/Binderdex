@@ -11,6 +11,9 @@ class UserCardEntry {
   final int qtyHolo;
   final int qtyReverse;
   final String notes;
+
+  /// Na lista de desejos (wishlist), independente da posse.
+  final bool wishlisted;
   final DateTime updatedAt;
 
   const UserCardEntry({
@@ -22,6 +25,7 @@ class UserCardEntry {
     this.qtyHolo = 0,
     this.qtyReverse = 0,
     this.notes = '',
+    this.wishlisted = false,
     required this.updatedAt,
   });
 
@@ -75,6 +79,7 @@ class UserCardEntry {
     int? qtyHolo,
     int? qtyReverse,
     String? notes,
+    bool? wishlisted,
     DateTime? updatedAt,
   }) =>
       UserCardEntry(
@@ -86,6 +91,7 @@ class UserCardEntry {
         qtyHolo: qtyHolo ?? this.qtyHolo,
         qtyReverse: qtyReverse ?? this.qtyReverse,
         notes: notes ?? this.notes,
+        wishlisted: wishlisted ?? this.wishlisted,
         updatedAt: updatedAt ?? this.updatedAt,
       );
 }

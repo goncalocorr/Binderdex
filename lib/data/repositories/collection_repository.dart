@@ -24,8 +24,13 @@ class CollectionRepository {
               qtyHolo: e.qtyHolo,
               qtyReverse: e.qtyReverse,
               notes: e.notes,
+              wishlisted: e.wishlisted,
               updatedAt: e.updatedAt,
             ));
+
+  /// Marca/desmarca uma carta na wishlist (não toca na posse).
+  Future<void> setWishlisted(String cardId, bool wanted) =>
+      db.setWishlisted(cardId, wanted);
 
   Future<void> save(UserCardEntry entry) async {
     await db.upsertEntry(UserCardEntriesCompanion.insert(

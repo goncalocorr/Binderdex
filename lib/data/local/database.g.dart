@@ -1130,6 +1130,16 @@ class $UserCardEntriesTable extends UserCardEntries
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultValue: const Constant(''));
+  static const VerificationMeta _wishlistedMeta =
+      const VerificationMeta('wishlisted');
+  @override
+  late final GeneratedColumn<bool> wishlisted = GeneratedColumn<bool>(
+      'wishlisted', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("wishlisted" IN (0, 1))'),
+      defaultValue: const Constant(false));
   static const VerificationMeta _updatedAtMeta =
       const VerificationMeta('updatedAt');
   @override
@@ -1155,6 +1165,7 @@ class $UserCardEntriesTable extends UserCardEntries
         qtyHolo,
         qtyReverse,
         notes,
+        wishlisted,
         updatedAt,
         dirty
       ];
@@ -1208,6 +1219,12 @@ class $UserCardEntriesTable extends UserCardEntries
       context.handle(
           _notesMeta, notes.isAcceptableOrUnknown(data['notes']!, _notesMeta));
     }
+    if (data.containsKey('wishlisted')) {
+      context.handle(
+          _wishlistedMeta,
+          wishlisted.isAcceptableOrUnknown(
+              data['wishlisted']!, _wishlistedMeta));
+    }
     if (data.containsKey('updated_at')) {
       context.handle(_updatedAtMeta,
           updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
@@ -1243,6 +1260,8 @@ class $UserCardEntriesTable extends UserCardEntries
           .read(DriftSqlType.int, data['${effectivePrefix}qty_reverse'])!,
       notes: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}notes'])!,
+      wishlisted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}wishlisted'])!,
       updatedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
       dirty: attachedDatabase.typeMapping
@@ -1266,6 +1285,7 @@ class UserCardEntryRow extends DataClass
   final int qtyHolo;
   final int qtyReverse;
   final String notes;
+  final bool wishlisted;
   final DateTime updatedAt;
   final bool dirty;
   const UserCardEntryRow(
@@ -1277,6 +1297,7 @@ class UserCardEntryRow extends DataClass
       required this.qtyHolo,
       required this.qtyReverse,
       required this.notes,
+      required this.wishlisted,
       required this.updatedAt,
       required this.dirty});
   @override
@@ -1290,6 +1311,7 @@ class UserCardEntryRow extends DataClass
     map['qty_holo'] = Variable<int>(qtyHolo);
     map['qty_reverse'] = Variable<int>(qtyReverse);
     map['notes'] = Variable<String>(notes);
+    map['wishlisted'] = Variable<bool>(wishlisted);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['dirty'] = Variable<bool>(dirty);
     return map;
@@ -1305,6 +1327,7 @@ class UserCardEntryRow extends DataClass
       qtyHolo: Value(qtyHolo),
       qtyReverse: Value(qtyReverse),
       notes: Value(notes),
+      wishlisted: Value(wishlisted),
       updatedAt: Value(updatedAt),
       dirty: Value(dirty),
     );
@@ -1322,6 +1345,7 @@ class UserCardEntryRow extends DataClass
       qtyHolo: serializer.fromJson<int>(json['qtyHolo']),
       qtyReverse: serializer.fromJson<int>(json['qtyReverse']),
       notes: serializer.fromJson<String>(json['notes']),
+      wishlisted: serializer.fromJson<bool>(json['wishlisted']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       dirty: serializer.fromJson<bool>(json['dirty']),
     );
@@ -1338,6 +1362,7 @@ class UserCardEntryRow extends DataClass
       'qtyHolo': serializer.toJson<int>(qtyHolo),
       'qtyReverse': serializer.toJson<int>(qtyReverse),
       'notes': serializer.toJson<String>(notes),
+      'wishlisted': serializer.toJson<bool>(wishlisted),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'dirty': serializer.toJson<bool>(dirty),
     };
@@ -1352,6 +1377,7 @@ class UserCardEntryRow extends DataClass
           int? qtyHolo,
           int? qtyReverse,
           String? notes,
+          bool? wishlisted,
           DateTime? updatedAt,
           bool? dirty}) =>
       UserCardEntryRow(
@@ -1363,6 +1389,7 @@ class UserCardEntryRow extends DataClass
         qtyHolo: qtyHolo ?? this.qtyHolo,
         qtyReverse: qtyReverse ?? this.qtyReverse,
         notes: notes ?? this.notes,
+        wishlisted: wishlisted ?? this.wishlisted,
         updatedAt: updatedAt ?? this.updatedAt,
         dirty: dirty ?? this.dirty,
       );
@@ -1380,6 +1407,8 @@ class UserCardEntryRow extends DataClass
       qtyReverse:
           data.qtyReverse.present ? data.qtyReverse.value : this.qtyReverse,
       notes: data.notes.present ? data.notes.value : this.notes,
+      wishlisted:
+          data.wishlisted.present ? data.wishlisted.value : this.wishlisted,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       dirty: data.dirty.present ? data.dirty.value : this.dirty,
     );
@@ -1396,6 +1425,7 @@ class UserCardEntryRow extends DataClass
           ..write('qtyHolo: $qtyHolo, ')
           ..write('qtyReverse: $qtyReverse, ')
           ..write('notes: $notes, ')
+          ..write('wishlisted: $wishlisted, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('dirty: $dirty')
           ..write(')'))
@@ -1404,7 +1434,7 @@ class UserCardEntryRow extends DataClass
 
   @override
   int get hashCode => Object.hash(cardId, ownedNormal, ownedHolo, ownedReverse,
-      qtyNormal, qtyHolo, qtyReverse, notes, updatedAt, dirty);
+      qtyNormal, qtyHolo, qtyReverse, notes, wishlisted, updatedAt, dirty);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1417,6 +1447,7 @@ class UserCardEntryRow extends DataClass
           other.qtyHolo == this.qtyHolo &&
           other.qtyReverse == this.qtyReverse &&
           other.notes == this.notes &&
+          other.wishlisted == this.wishlisted &&
           other.updatedAt == this.updatedAt &&
           other.dirty == this.dirty);
 }
@@ -1430,6 +1461,7 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
   final Value<int> qtyHolo;
   final Value<int> qtyReverse;
   final Value<String> notes;
+  final Value<bool> wishlisted;
   final Value<DateTime> updatedAt;
   final Value<bool> dirty;
   final Value<int> rowid;
@@ -1442,6 +1474,7 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
     this.qtyHolo = const Value.absent(),
     this.qtyReverse = const Value.absent(),
     this.notes = const Value.absent(),
+    this.wishlisted = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.dirty = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1455,6 +1488,7 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
     this.qtyHolo = const Value.absent(),
     this.qtyReverse = const Value.absent(),
     this.notes = const Value.absent(),
+    this.wishlisted = const Value.absent(),
     required DateTime updatedAt,
     this.dirty = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1469,6 +1503,7 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
     Expression<int>? qtyHolo,
     Expression<int>? qtyReverse,
     Expression<String>? notes,
+    Expression<bool>? wishlisted,
     Expression<DateTime>? updatedAt,
     Expression<bool>? dirty,
     Expression<int>? rowid,
@@ -1482,6 +1517,7 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
       if (qtyHolo != null) 'qty_holo': qtyHolo,
       if (qtyReverse != null) 'qty_reverse': qtyReverse,
       if (notes != null) 'notes': notes,
+      if (wishlisted != null) 'wishlisted': wishlisted,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (dirty != null) 'dirty': dirty,
       if (rowid != null) 'rowid': rowid,
@@ -1497,6 +1533,7 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
       Value<int>? qtyHolo,
       Value<int>? qtyReverse,
       Value<String>? notes,
+      Value<bool>? wishlisted,
       Value<DateTime>? updatedAt,
       Value<bool>? dirty,
       Value<int>? rowid}) {
@@ -1509,6 +1546,7 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
       qtyHolo: qtyHolo ?? this.qtyHolo,
       qtyReverse: qtyReverse ?? this.qtyReverse,
       notes: notes ?? this.notes,
+      wishlisted: wishlisted ?? this.wishlisted,
       updatedAt: updatedAt ?? this.updatedAt,
       dirty: dirty ?? this.dirty,
       rowid: rowid ?? this.rowid,
@@ -1542,6 +1580,9 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
     }
+    if (wishlisted.present) {
+      map['wishlisted'] = Variable<bool>(wishlisted.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -1565,6 +1606,7 @@ class UserCardEntriesCompanion extends UpdateCompanion<UserCardEntryRow> {
           ..write('qtyHolo: $qtyHolo, ')
           ..write('qtyReverse: $qtyReverse, ')
           ..write('notes: $notes, ')
+          ..write('wishlisted: $wishlisted, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('dirty: $dirty, ')
           ..write('rowid: $rowid')
@@ -2094,6 +2136,7 @@ typedef $$UserCardEntriesTableCreateCompanionBuilder = UserCardEntriesCompanion
   Value<int> qtyHolo,
   Value<int> qtyReverse,
   Value<String> notes,
+  Value<bool> wishlisted,
   required DateTime updatedAt,
   Value<bool> dirty,
   Value<int> rowid,
@@ -2108,6 +2151,7 @@ typedef $$UserCardEntriesTableUpdateCompanionBuilder = UserCardEntriesCompanion
   Value<int> qtyHolo,
   Value<int> qtyReverse,
   Value<String> notes,
+  Value<bool> wishlisted,
   Value<DateTime> updatedAt,
   Value<bool> dirty,
   Value<int> rowid,
@@ -2145,6 +2189,9 @@ class $$UserCardEntriesTableFilterComposer
 
   ColumnFilters<String> get notes => $composableBuilder(
       column: $table.notes, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get wishlisted => $composableBuilder(
+      column: $table.wishlisted, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnFilters(column));
@@ -2187,6 +2234,9 @@ class $$UserCardEntriesTableOrderingComposer
   ColumnOrderings<String> get notes => $composableBuilder(
       column: $table.notes, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<bool> get wishlisted => $composableBuilder(
+      column: $table.wishlisted, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
 
@@ -2226,6 +2276,9 @@ class $$UserCardEntriesTableAnnotationComposer
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<bool> get wishlisted => $composableBuilder(
+      column: $table.wishlisted, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
@@ -2269,6 +2322,7 @@ class $$UserCardEntriesTableTableManager extends RootTableManager<
             Value<int> qtyHolo = const Value.absent(),
             Value<int> qtyReverse = const Value.absent(),
             Value<String> notes = const Value.absent(),
+            Value<bool> wishlisted = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<bool> dirty = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -2282,6 +2336,7 @@ class $$UserCardEntriesTableTableManager extends RootTableManager<
             qtyHolo: qtyHolo,
             qtyReverse: qtyReverse,
             notes: notes,
+            wishlisted: wishlisted,
             updatedAt: updatedAt,
             dirty: dirty,
             rowid: rowid,
@@ -2295,6 +2350,7 @@ class $$UserCardEntriesTableTableManager extends RootTableManager<
             Value<int> qtyHolo = const Value.absent(),
             Value<int> qtyReverse = const Value.absent(),
             Value<String> notes = const Value.absent(),
+            Value<bool> wishlisted = const Value.absent(),
             required DateTime updatedAt,
             Value<bool> dirty = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -2308,6 +2364,7 @@ class $$UserCardEntriesTableTableManager extends RootTableManager<
             qtyHolo: qtyHolo,
             qtyReverse: qtyReverse,
             notes: notes,
+            wishlisted: wishlisted,
             updatedAt: updatedAt,
             dirty: dirty,
             rowid: rowid,

@@ -35,8 +35,32 @@ class CardDetailScreen extends ConsumerWidget {
     final cardAsync = ref.watch(cardByIdProvider(id));
     final entryAsync = ref.watch(entryProvider(id));
 
+    final wished = entryAsync.valueOrNull?.wishlisted ?? false;
+
     return Scaffold(
-      appBar: AppBar(title: Text(cardAsync.valueOrNull?.name ?? '')),
+      appBar: AppBar(
+        title: Text(cardAsync.valueOrNull?.name ?? ''),
+        actions: [
+          IconButton(
+            tooltip: t.wishlist,
+            icon: Icon(wished ? Icons.favorite : Icons.favorite_border,
+                color: wished ? DexColors.red500 : null),
+            onPressed: () async {
+              await ref
+                  .read(collectionRepositoryProvider)
+                  .setWishlisted(id, !wished);
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context)
+                ..clearSnackBars()
+                ..showSnackBar(SnackBar(
+                  content: Text(wished
+                      ? t.removedFromWishlist
+                      : t.addedToWishlist(cardAsync.valueOrNull?.name ?? '')),
+                ));
+            },
+          ),
+        ],
+      ),
       body: cardAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('$e')),

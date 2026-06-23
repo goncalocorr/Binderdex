@@ -511,6 +511,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A fan-made collection tracker · not affiliated with any card publisher.'**
   String get fanMadeDisclaimer;
+
+  /// No description provided for @tabProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get tabProfile;
+
+  /// No description provided for @profileSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'{cards} cards · {sets} sets'**
+  String profileSummary(int cards, int sets);
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signIn;
+
+  /// No description provided for @signInSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to sync across devices'**
+  String get signInSync;
+
+  /// No description provided for @backupSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup & sync'**
+  String get backupSync;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @helpFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & feedback'**
+  String get helpFeedback;
+
+  /// No description provided for @aboutApp.
+  ///
+  /// In en, this message translates to:
+  /// **'About Binderdex'**
+  String get aboutApp;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get loginTitle;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in to sync your binder across devices.'**
+  String get loginSubtitle;
+
+  /// No description provided for @continueGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Google'**
+  String get continueGoogle;
+
+  /// No description provided for @continueApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue with Apple'**
+  String get continueApple;
+
+  /// No description provided for @orLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get orLabel;
+
+  /// No description provided for @emailLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailLabel;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordLabel;
+
+  /// No description provided for @logIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in'**
+  String get logIn;
+
+  /// No description provided for @skipForNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip for now'**
+  String get skipForNow;
+
+  /// No description provided for @authComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in arrives with cloud sync — coming soon.'**
+  String get authComingSoon;
+
+  /// No description provided for @wishlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishlist'**
+  String get wishlist;
+
+  /// No description provided for @cardsWanted.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} cards wanted'**
+  String cardsWanted(int n);
+
+  /// No description provided for @wishlistEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishlist is empty'**
+  String get wishlistEmptyTitle;
+
+  /// No description provided for @wishlistEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Heart the cards you\'re hunting for and they\'ll show up here.'**
+  String get wishlistEmptyBody;
+
+  /// No description provided for @addedToWishlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {name} to wishlist'**
+  String addedToWishlist(String name);
+
+  /// No description provided for @removedFromWishlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from wishlist'**
+  String get removedFromWishlist;
 }
 
 class _AppLocalizationsDelegate

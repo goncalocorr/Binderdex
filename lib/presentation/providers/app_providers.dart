@@ -73,6 +73,12 @@ final cardByIdProvider = FutureProvider.family<TcgCard?, String>(
 final entryProvider = StreamProvider.family<UserCardEntry, String>(
     (ref, id) => ref.watch(collectionRepositoryProvider).watchEntry(id));
 
+// --- Wishlist (lista de desejos) ---
+final wishlistProvider = StreamProvider<List<CardItem>>(
+    (ref) => ref.watch(cardsRepositoryProvider).watchWishlist());
+final wishlistCountProvider = StreamProvider<int>(
+    (ref) => ref.watch(cardsRepositoryProvider).wishlistCount());
+
 // --- Progresso / Estatísticas ---
 final globalProgressProvider = FutureProvider<ProgressStats>((ref) {
   ref.watch(setsListProvider); // recalcula quando a coleção muda

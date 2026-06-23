@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../core/theme/dex_tokens.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/avatar.dart';
 
-/// Definições: perfil, tema e idioma. Sincronização e Premium ficam preparados
-/// aqui mas só ganham função nas Etapas 2 e 3.
+/// Perfil: cabeçalho com avatar + resumo, atalhos (Iniciar sessão, Wishlist),
+/// tema e idioma. Sincronização e Premium ficam preparados aqui mas só ganham
+/// função nas Etapas 2 e 3.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -65,60 +66,65 @@ class SettingsScreen extends ConsumerWidget {
     final theme = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
     final name = ref.watch(displayNameProvider);
+    final owned = ref.watch(globalProgressProvider).valueOrNull?.owned ?? 0;
+    final mySets = ref
+            .watch(setsListProvider)
+            .valueOrNull
+            ?.where((s) => s.progress.owned > 0)
+            .length ??
+        0;
 
     final themeLabels = [t.themeSystem, t.themeLight, t.themeDark];
 
     return ListView(
       children: [
-        // --- Perfil ---
+        // --- Cabeçalho de perfil ---
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-          child: Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(
-              color: cs.surface,
-              borderRadius: BorderRadius.circular(DexRadii.lg),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(
-                      alpha: Theme.of(context).brightness == Brightness.dark
-                          ? 0.35
-                          : 0.06),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
+          child: Row(
+            children: [
+              Avatar(name: name, size: 64),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(name.isEmpty ? t.guest : name,
+                        style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(height: 2),
+                    Text(t.profileSummary(owned, mySets),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(color: cs.onSurfaceVariant)),
+                  ],
                 ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Avatar(name: name, size: 52),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(name.isEmpty ? t.guest : name,
-                          style: Theme.of(context).textTheme.titleLarge),
-                      Text(t.localCollection,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(color: cs.onSurfaceVariant)),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.edit_outlined),
-                  tooltip: t.editName,
-                  onPressed: () => _editName(context, ref),
-                ),
-              ],
-            ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit_outlined),
+                tooltip: t.editName,
+                onPressed: () => _editName(context, ref),
+              ),
+            ],
           ),
         ),
-        // ☁️ Etapa 2: aqui entrará "Iniciar sessão / Sincronizar".
 
+        // --- Atalhos ---
+        ListTile(
+          leading: const Icon(Icons.login),
+          title: Text(t.signIn),
+          subtitle: Text(t.signInSync),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.push('/login'),
+        ),
+        ListTile(
+          leading: const Icon(Icons.favorite_border),
+          title: Text(t.wishlist),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.push('/wishlist'),
+        ),
         const Divider(),
+
         // --- Tema ---
         ListTile(
           leading: const Icon(Icons.palette_outlined),
@@ -140,6 +146,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
         ),
         const Divider(),
+
         // --- Idioma ---
         ListTile(
           leading: const Icon(Icons.language),
@@ -173,6 +180,13 @@ class SettingsScreen extends ConsumerWidget {
         ),
         const Divider(),
 
+        // ☁️ Etapa 2 / 3: preparados, sem função ainda.
+        ListTile(
+          leading: const Icon(Icons.cloud_sync_outlined),
+          title: Text(t.backupSync),
+          subtitle: Text(t.comingSoon),
+          enabled: false,
+        ),
         // ⭐ PREMIUM: secção de subscrição — preparada para a Etapa 3.
         ListTile(
           leading: const Icon(Icons.workspace_premium),
