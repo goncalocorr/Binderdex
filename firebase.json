@@ -1,1 +1,26 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"binderdex-b1908","appId":"1:1002246218437:android:fc199a6ba3cff80e6c06ac","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"binderdex-b1908","configurations":{"android":"1:1002246218437:android:fc199a6ba3cff80e6c06ac","web":"1:1002246218437:web:b3c20a21cefcb7e06c06ac"}}}}}}
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "binderdex-b1908",
+          "appId": "1:1002246218437:android:fc199a6ba3cff80e6c06ac",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "binderdex-b1908",
+          "configurations": {
+            "android": "1:1002246218437:android:fc199a6ba3cff80e6c06ac",
+            "web": "1:1002246218437:web:b3c20a21cefcb7e06c06ac"
+          }
+        }
+      }
+    }
+  }
+}

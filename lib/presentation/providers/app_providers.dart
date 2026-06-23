@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/local/database.dart';
 import '../../data/remote/auth_service.dart';
+import '../../data/remote/sync_service.dart';
 import '../../data/remote/tcg_api.dart';
 import '../../data/repositories/cards_repository.dart';
 import '../../data/repositories/collection_repository.dart';
@@ -35,6 +36,21 @@ final collectionRepositoryProvider =
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 final authStateProvider = StreamProvider<User?>(
     (ref) => ref.watch(authServiceProvider).authStateChanges());
+
+/// Sincronização: arranca ao iniciar sessão, pára ao terminar.
+final syncServiceProvider = Provider<SyncService>((ref) {
+  final svc = SyncService(ref.watch(databaseProvider));
+  ref.onDispose(svc.stop);
+  ref.listen<AsyncValue<User?>>(authStateProvider, (_, next) {
+    final user = next.valueOrNull;
+    if (user != null) {
+      svc.start(user.uid);
+    } else {
+      svc.stop();
+    }
+  }, fireImmediately: true);
+  return svc;
+});
 
 // --- Sets (ecrã inicial) ---
 final setsListProvider =

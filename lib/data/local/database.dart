@@ -242,6 +242,28 @@ class AppDatabase extends _$AppDatabase {
     await into(userCardEntries).insertOnConflictUpdate(entry);
   }
 
+  // --- Sincronização (Etapa 2) ---
+
+  /// Entradas por enviar para a nuvem (alteradas localmente).
+  Stream<List<UserCardEntryRow>> watchDirtyEntries() =>
+      (select(userCardEntries)..where((t) => t.dirty.equals(true))).watch();
+
+  Future<UserCardEntryRow?> entryOnce(String cardId) =>
+      (select(userCardEntries)..where((t) => t.cardId.equals(cardId)))
+          .getSingleOrNull();
+
+  /// Aplica valores vindos do servidor (already-won pelo chamador), dirty=false.
+  Future<void> applyRemoteEntry(UserCardEntriesCompanion entry) async {
+    await into(userCardEntries).insertOnConflictUpdate(entry);
+  }
+
+  /// Marca como enviada (dirty=false) sem mexer nos valores; o updatedAt do
+  /// servidor chega depois pelo listener remoto.
+  Future<void> markPushed(String cardId) async {
+    await (update(userCardEntries)..where((t) => t.cardId.equals(cardId)))
+        .write(const UserCardEntriesCompanion(dirty: Value(false)));
+  }
+
   // --- Wishlist (lista de desejos) ---
 
   /// Marca/desmarca uma carta na wishlist sem tocar na posse.

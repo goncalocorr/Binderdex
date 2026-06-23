@@ -16,6 +16,8 @@ class PokedexApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeIdx = ref.watch(themeModeProvider);
     final localeCode = ref.watch(localeProvider);
+    // Liga a sincronização ao ciclo de vida da sessão.
+    ref.watch(syncServiceProvider);
 
     return MaterialApp.router(
       title: 'Binderdex',
