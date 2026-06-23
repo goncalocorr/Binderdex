@@ -1,0 +1,15 @@
+# Modelo para android/key.properties (NÃO versionado — contém palavras-passe).
+# Copia este ficheiro para android/key.properties e preenche com os teus valores.
+#
+# storeFile: caminho ABSOLUTO para a tua keystore .jks (usa / nas barras).
+# Cria a keystore com (escolhe TU as palavras-passe; guarda-as em segurança):
+#   keytool -genkey -v -keystore C:/Users/saloc/keys/binderdex-release.jks \
+#     -keyalg RSA -keysize 2048 -validity 10000 -alias binderdex
+#
+# ⚠️ Esta keystore é PERMANENTE: se a perderes, não consegues atualizar a app
+#    na Play Store. Faz backup seguro do ficheiro .jks e das palavras-passe.
+
+storePassword=AS_TUAS_PASSWORDS_AQUI
+keyPassword=AS_TUAS_PASSWORDS_AQUI
+keyAlias=binderdex
+storeFile=C:/Users/saloc/keys/binderdex-release.jks

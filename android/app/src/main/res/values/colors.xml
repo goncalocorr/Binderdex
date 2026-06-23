@@ -2,4 +2,5 @@
 <resources>
     <!-- Vermelho da marca Binderdex (Flare Red) — fundo do splash. -->
     <color name="splash_red">#F0263C</color>
+	<color name="ic_launcher_background">#F03B36</color>
 </resources>
