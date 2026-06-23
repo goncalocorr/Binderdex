@@ -1,19 +1,64 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
+import '../providers/app_providers.dart';
 
-/// Ecrã de início de sessão — **só visual** nesta fase. A autenticação real
-/// (Firebase: Google/Apple/email + sincronização) chega na Etapa 2.
-class LoginScreen extends StatelessWidget {
+/// Início de sessão (Etapa 2): Google + email/password, com modo entrar/criar.
+/// A app continua local-first — isto serve para sincronizar entre dispositivos.
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
-  void _comingSoon(BuildContext context) {
+  @override
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  bool _register = false;
+  bool _busy = false;
+  bool _obscure = true;
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
+  Future<void> _run(Future<void> Function() action) async {
+    setState(() => _busy = true);
+    try {
+      await action();
+      if (mounted) context.pop();
+    } on FirebaseAuthException catch (e) {
+      _error(e.message);
+    } catch (_) {
+      _error(null);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  void _error(String? message) {
+    if (!mounted) return;
     final t = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context)
       ..clearSnackBars()
-      ..showSnackBar(SnackBar(content: Text(t.authComingSoon)));
+      ..showSnackBar(SnackBar(content: Text(message ?? t.authFailed)));
+  }
+
+  Future<void> _emailAuth() {
+    final auth = ref.read(authServiceProvider);
+    final email = _email.text;
+    final pass = _password.text;
+    return _run(() => _register
+        ? auth.registerWithEmail(email, pass)
+        : auth.signInWithEmail(email, pass));
   }
 
   @override
@@ -24,85 +69,108 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(28, 8, 28, 24),
-          children: [
-            Image.asset('assets/logo.png', width: 56, height: 56),
-            const SizedBox(height: 14),
-            Text(
-              t.loginTitle,
-              style: TextStyle(
-                fontFamily: AppTheme.displayFont,
-                fontWeight: FontWeight.w700,
-                fontSize: 30,
-                color: cs.onSurface,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              t.loginSubtitle,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: cs.onSurfaceVariant),
-            ),
-            const SizedBox(height: 22),
-
-            // Botões sociais.
-            _SocialButton(
-              icon: Icons.g_mobiledata,
-              label: t.continueGoogle,
-              onTap: () => _comingSoon(context),
-            ),
-            const SizedBox(height: 10),
-            _SocialButton(
-              icon: Icons.apple,
-              label: t.continueApple,
-              onTap: () => _comingSoon(context),
-            ),
-            const SizedBox(height: 18),
-
-            // Divisor "ou".
-            Row(
-              children: [
-                Expanded(child: Divider(color: cs.outlineVariant)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Text(t.orLabel,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          fontWeight: FontWeight.w700, color: cs.onSurfaceVariant)),
+        child: AbsorbPointer(
+          absorbing: _busy,
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(28, 8, 28, 24),
+            children: [
+              Image.asset('assets/logo.png', width: 56, height: 56),
+              const SizedBox(height: 14),
+              Text(
+                _register ? t.createAccount : t.loginTitle,
+                style: TextStyle(
+                  fontFamily: AppTheme.displayFont,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 30,
+                  color: cs.onSurface,
                 ),
-                Expanded(child: Divider(color: cs.outlineVariant)),
-              ],
-            ),
-            const SizedBox(height: 18),
-
-            TextField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: t.emailLabel,
-                prefixIcon: const Icon(Icons.mail_outline),
-                hintText: 'you@example.com',
               ),
-            ),
-            const SizedBox(height: 14),
-            const _PasswordField(),
-            const SizedBox(height: 22),
-
-            FilledButton(
-              onPressed: () => _comingSoon(context),
-              style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52)),
-              child: Text(t.logIn),
-            ),
-            const SizedBox(height: 16),
-            Center(
-              child: TextButton(
-                onPressed: () => context.pop(),
-                child: Text(t.skipForNow),
+              const SizedBox(height: 4),
+              Text(
+                t.loginSubtitle,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: cs.onSurfaceVariant),
               ),
-            ),
-          ],
+              const SizedBox(height: 22),
+
+              _SocialButton(
+                icon: Icons.g_mobiledata,
+                label: t.continueGoogle,
+                onTap: () =>
+                    _run(() => ref.read(authServiceProvider).signInWithGoogle()),
+              ),
+              const SizedBox(height: 18),
+
+              Row(
+                children: [
+                  Expanded(child: Divider(color: cs.outlineVariant)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(t.orLabel,
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: cs.onSurfaceVariant)),
+                  ),
+                  Expanded(child: Divider(color: cs.outlineVariant)),
+                ],
+              ),
+              const SizedBox(height: 18),
+
+              TextField(
+                controller: _email,
+                keyboardType: TextInputType.emailAddress,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  labelText: t.emailLabel,
+                  prefixIcon: const Icon(Icons.mail_outline),
+                  hintText: 'you@example.com',
+                ),
+              ),
+              const SizedBox(height: 14),
+              TextField(
+                controller: _password,
+                obscureText: _obscure,
+                decoration: InputDecoration(
+                  labelText: t.passwordLabel,
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                        _obscure ? Icons.visibility_off : Icons.visibility),
+                    onPressed: () => setState(() => _obscure = !_obscure),
+                  ),
+                  hintText: '••••••••',
+                ),
+              ),
+              const SizedBox(height: 22),
+
+              FilledButton(
+                onPressed: _busy ? null : _emailAuth,
+                style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(52)),
+                child: _busy
+                    ? const SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: CircularProgressIndicator(strokeWidth: 2.5))
+                    : Text(_register ? t.createAccount : t.logIn),
+              ),
+              const SizedBox(height: 12),
+              Center(
+                child: TextButton(
+                  onPressed: () => setState(() => _register = !_register),
+                  child: Text(_register ? t.switchToLogin : t.switchToRegister),
+                ),
+              ),
+              Center(
+                child: TextButton(
+                  onPressed: () => context.pop(),
+                  child: Text(t.skipForNow),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -131,32 +199,6 @@ class _SocialButton extends StatelessWidget {
             fontFamily: AppTheme.displayFont,
             fontWeight: FontWeight.w600,
             fontSize: 15),
-      ),
-    );
-  }
-}
-
-class _PasswordField extends StatefulWidget {
-  const _PasswordField();
-  @override
-  State<_PasswordField> createState() => _PasswordFieldState();
-}
-
-class _PasswordFieldState extends State<_PasswordField> {
-  bool _obscure = true;
-  @override
-  Widget build(BuildContext context) {
-    final t = AppLocalizations.of(context)!;
-    return TextField(
-      obscureText: _obscure,
-      decoration: InputDecoration(
-        labelText: t.passwordLabel,
-        prefixIcon: const Icon(Icons.lock_outline),
-        suffixIcon: IconButton(
-          icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility),
-          onPressed: () => setState(() => _obscure = !_obscure),
-        ),
-        hintText: '••••••••',
       ),
     );
   }

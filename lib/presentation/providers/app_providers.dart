@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/local/database.dart';
+import '../../data/remote/auth_service.dart';
 import '../../data/remote/tcg_api.dart';
 import '../../data/repositories/cards_repository.dart';
 import '../../data/repositories/collection_repository.dart';
@@ -28,6 +30,11 @@ final cardsRepositoryProvider = Provider((ref) =>
     CardsRepository(ref.watch(databaseProvider), ref.watch(tcgApiProvider)));
 final collectionRepositoryProvider =
     Provider((ref) => CollectionRepository(ref.watch(databaseProvider)));
+
+// --- Autenticação (Etapa 2) ---
+final authServiceProvider = Provider<AuthService>((ref) => AuthService());
+final authStateProvider = StreamProvider<User?>(
+    (ref) => ref.watch(authServiceProvider).authStateChanges());
 
 // --- Sets (ecrã inicial) ---
 final setsListProvider =

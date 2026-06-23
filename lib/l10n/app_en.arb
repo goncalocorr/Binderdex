@@ -119,5 +119,14 @@
   "@addedToWishlist": {
     "placeholders": { "name": { "type": "String" } }
   },
-  "removedFromWishlist": "Removed from wishlist"
+  "removedFromWishlist": "Removed from wishlist",
+  "createAccount": "Create account",
+  "switchToRegister": "New here? Create an account",
+  "switchToLogin": "Already have an account? Log in",
+  "authFailed": "Couldn't sign in. Check your details and try again.",
+  "signedInAs": "Signed in as {email}",
+  "@signedInAs": {
+    "placeholders": { "email": { "type": "String" } }
+  },
+  "signOut": "Sign out"
 }

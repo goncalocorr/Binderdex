@@ -92,5 +92,11 @@
   "wishlistEmptyTitle": "A lista de desejos está vazia",
   "wishlistEmptyBody": "Marca com ♥ as cartas que procuras e aparecem aqui.",
   "addedToWishlist": "Adicionada {name} à lista de desejos",
-  "removedFromWishlist": "Removida da lista de desejos"
+  "removedFromWishlist": "Removida da lista de desejos",
+  "createAccount": "Criar conta",
+  "switchToRegister": "Novo por aqui? Cria uma conta",
+  "switchToLogin": "Já tens conta? Inicia sessão",
+  "authFailed": "Não foi possível iniciar sessão. Verifica os dados e tenta de novo.",
+  "signedInAs": "Sessão iniciada como {email}",
+  "signOut": "Terminar sessão"
 }

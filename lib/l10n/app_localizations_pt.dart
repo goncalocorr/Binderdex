@@ -311,4 +311,25 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get removedFromWishlist => 'Removida da lista de desejos';
+
+  @override
+  String get createAccount => 'Criar conta';
+
+  @override
+  String get switchToRegister => 'Novo por aqui? Cria uma conta';
+
+  @override
+  String get switchToLogin => 'Já tens conta? Inicia sessão';
+
+  @override
+  String get authFailed =>
+      'Não foi possível iniciar sessão. Verifica os dados e tenta de novo.';
+
+  @override
+  String signedInAs(String email) {
+    return 'Sessão iniciada como $email';
+  }
+
+  @override
+  String get signOut => 'Terminar sessão';
 }

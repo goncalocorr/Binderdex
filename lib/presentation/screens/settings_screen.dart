@@ -66,6 +66,8 @@ class SettingsScreen extends ConsumerWidget {
     final theme = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
     final name = ref.watch(displayNameProvider);
+    final user = ref.watch(authStateProvider).valueOrNull;
+    final signedIn = user != null && !user.isAnonymous;
     final owned = ref.watch(globalProgressProvider).valueOrNull?.owned ?? 0;
     final mySets = ref
             .watch(setsListProvider)
@@ -110,13 +112,23 @@ class SettingsScreen extends ConsumerWidget {
         ),
 
         // --- Atalhos ---
-        ListTile(
-          leading: const Icon(Icons.login),
-          title: Text(t.signIn),
-          subtitle: Text(t.signInSync),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => context.push('/login'),
-        ),
+        if (signedIn)
+          ListTile(
+            leading: const Icon(Icons.account_circle),
+            title: Text(t.signedInAs(user.email ?? '')),
+            trailing: TextButton(
+              onPressed: () => ref.read(authServiceProvider).signOut(),
+              child: Text(t.signOut),
+            ),
+          )
+        else
+          ListTile(
+            leading: const Icon(Icons.login),
+            title: Text(t.signIn),
+            subtitle: Text(t.signInSync),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/login'),
+          ),
         ListTile(
           leading: const Icon(Icons.favorite_border),
           title: Text(t.wishlist),

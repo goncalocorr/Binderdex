@@ -655,6 +655,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Removed from wishlist'**
   String get removedFromWishlist;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get createAccount;
+
+  /// No description provided for @switchToRegister.
+  ///
+  /// In en, this message translates to:
+  /// **'New here? Create an account'**
+  String get switchToRegister;
+
+  /// No description provided for @switchToLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Log in'**
+  String get switchToLogin;
+
+  /// No description provided for @authFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t sign in. Check your details and try again.'**
+  String get authFailed;
+
+  /// No description provided for @signedInAs.
+  ///
+  /// In en, this message translates to:
+  /// **'Signed in as {email}'**
+  String signedInAs(String email);
+
+  /// No description provided for @signOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get signOut;
 }
 
 class _AppLocalizationsDelegate

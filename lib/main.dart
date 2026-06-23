@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -5,10 +6,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'core/router/app_router.dart';
 import 'data/seed/sets_loader.dart';
+import 'firebase_options.dart';
 import 'presentation/providers/app_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Firebase (Etapa 2: auth + sincronização). A app continua a funcionar
+  // offline; se a inicialização falhar, segue sem nuvem.
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (_) {
+    // Sem Firebase, a app fica em modo local-only.
+  }
 
   final prefs = await SharedPreferences.getInstance();
 

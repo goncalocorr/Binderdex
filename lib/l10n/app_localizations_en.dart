@@ -308,4 +308,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get removedFromWishlist => 'Removed from wishlist';
+
+  @override
+  String get createAccount => 'Create account';
+
+  @override
+  String get switchToRegister => 'New here? Create an account';
+
+  @override
+  String get switchToLogin => 'Already have an account? Log in';
+
+  @override
+  String get authFailed =>
+      'Couldn\'t sign in. Check your details and try again.';
+
+  @override
+  String signedInAs(String email) {
+    return 'Signed in as $email';
+  }
+
+  @override
+  String get signOut => 'Sign out';
 }
