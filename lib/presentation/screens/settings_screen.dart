@@ -88,10 +88,11 @@ class SettingsScreen extends ConsumerWidget {
       messenger.showSnackBar(SnackBar(content: Text(t.accountDeleted)));
     } on FirebaseAuthException catch (e) {
       messenger.showSnackBar(SnackBar(
-          content: Text(
-              e.code == 'requires-recent-login' ? t.reauthNeeded : (e.message ?? t.authFailed))));
+          content: Text(e.code == 'requires-recent-login'
+              ? t.reauthNeeded
+              : (e.message ?? t.authFailed))));
     } catch (_) {
-      messenger.showSnackBar(SnackBar(content: Text(t.authFailed)));
+      messenger.showSnackBar(SnackBar(content: Text(t.deleteFailed)));
     }
   }
 

@@ -108,8 +108,8 @@ class SyncService {
       }
       await batch.commit();
     }
-    // Remove também o documento-pai (caso tenha campos).
-    await fs.collection('users').doc(uid).delete();
+    // O documento-pai users/{uid} é virtual (sem campos) e não tem regra de
+    // escrita própria — não há nada para apagar nele.
   }
 
   void stop() {

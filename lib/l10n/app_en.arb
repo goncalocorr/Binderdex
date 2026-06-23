@@ -134,5 +134,6 @@
   "deleteAccountBody": "This permanently deletes your account and your collection — from the cloud and this device. This can't be undone.",
   "delete": "Delete",
   "reauthNeeded": "For security, sign in again and then retry deleting your account.",
-  "accountDeleted": "Account deleted."
+  "accountDeleted": "Account deleted.",
+  "deleteFailed": "Couldn't delete your account. Please try again."
 }

@@ -349,4 +349,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountDeleted => 'Account deleted.';
+
+  @override
+  String get deleteFailed => 'Couldn\'t delete your account. Please try again.';
 }

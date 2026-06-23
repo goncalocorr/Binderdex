@@ -727,6 +727,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Account deleted.'**
   String get accountDeleted;
+
+  /// No description provided for @deleteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t delete your account. Please try again.'**
+  String get deleteFailed;
 }
 
 class _AppLocalizationsDelegate

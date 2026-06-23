@@ -352,4 +352,8 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get accountDeleted => 'Conta eliminada.';
+
+  @override
+  String get deleteFailed =>
+      'Não foi possível eliminar a conta. Tenta de novo.';
 }
