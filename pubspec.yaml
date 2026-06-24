@@ -73,4 +73,5 @@ flutter:
     - assets/data/tcg_sets.json
     - assets/logo.png
     - assets/google_g.svg
+    - assets/card_back.png
     - assets/avatars/

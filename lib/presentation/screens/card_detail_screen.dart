@@ -345,7 +345,7 @@ class _VariantRow extends StatelessWidget {
   }
 }
 
-/// Verso da carta (brand-neutral): vermelho da marca + logo + wordmark.
+/// Verso da carta — imagem oficial da Binderdex.
 class _CardBack extends StatelessWidget {
   const _CardBack();
 
@@ -353,54 +353,7 @@ class _CardBack extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(DexRadii.lg),
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFF0463C), Color(0xFFB01C1B)],
-          ),
-        ),
-        child: Stack(
-          children: [
-            // Moldura dourada subtil.
-            Positioned.fill(
-              child: Container(
-                margin: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(DexRadii.md),
-                  border: Border.all(
-                      color: const Color(0x55FCC419), width: 2),
-                ),
-              ),
-            ),
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset('assets/logo.png', width: 108, height: 108),
-                  const SizedBox(height: 12),
-                  Text.rich(
-                    const TextSpan(children: [
-                      TextSpan(
-                          text: 'Binder',
-                          style: TextStyle(color: Color(0xFFFCC419))),
-                      TextSpan(
-                          text: 'dex',
-                          style: TextStyle(color: Colors.white)),
-                    ]),
-                    style: TextStyle(
-                      fontFamily: AppTheme.displayFont,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 22,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      child: Image.asset('assets/card_back.png', fit: BoxFit.cover),
     );
   }
 }
