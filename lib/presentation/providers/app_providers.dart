@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/local/database.dart';
 import '../../data/remote/auth_service.dart';
+import '../../data/remote/market_service.dart';
 import '../../data/remote/profile_service.dart';
 import '../../data/remote/sync_service.dart';
 import '../../data/remote/tcg_api.dart';
@@ -12,6 +14,7 @@ import '../../data/repositories/collection_repository.dart';
 import '../../data/repositories/sets_repository.dart';
 import '../../domain/entities/card_filter.dart';
 import '../../domain/entities/card_set.dart';
+import '../../domain/entities/listing.dart';
 import '../../domain/entities/progress.dart';
 import '../../domain/entities/tcg_card.dart';
 import '../../domain/entities/user_card_entry.dart';
@@ -172,3 +175,53 @@ final avatarProvider = StateProvider<String>((_) => '');
 
 /// Se o ecrã de boas-vindas já foi visto (mostra-se só uma vez).
 final onboardingDoneProvider = StateProvider<bool>((_) => false);
+
+// --- Comunidade / marketplace ---
+final marketServiceProvider = Provider<MarketService>((ref) => MarketService());
+
+String? _uid(Ref ref) => ref.watch(authStateProvider).valueOrNull?.uid;
+
+final blockedUidsProvider = StreamProvider<Set<String>>((ref) {
+  final uid = _uid(ref);
+  if (uid == null) return Stream.value(<String>{});
+  return ref.watch(marketServiceProvider).watchBlocked(uid);
+});
+
+final recentListingsProvider = StreamProvider<List<Listing>>((ref) {
+  final blocked = ref.watch(blockedUidsProvider).valueOrNull ?? const <String>{};
+  return ref
+      .watch(marketServiceProvider)
+      .watchRecent()
+      .map((list) => list.where((l) => !blocked.contains(l.ownerUid)).toList());
+});
+
+final listingsForCardProvider =
+    StreamProvider.family<List<Listing>, String>((ref, cardId) {
+  final blocked = ref.watch(blockedUidsProvider).valueOrNull ?? const <String>{};
+  return ref
+      .watch(marketServiceProvider)
+      .watchForCard(cardId)
+      .map((list) => list.where((l) => !blocked.contains(l.ownerUid)).toList());
+});
+
+final myListingsProvider = StreamProvider<List<Listing>>((ref) {
+  final uid = _uid(ref);
+  if (uid == null) return Stream.value(const <Listing>[]);
+  return ref.watch(marketServiceProvider).watchMine(uid);
+});
+
+final activeListingsCountProvider = Provider<int>(
+    (ref) => ref.watch(myListingsProvider).valueOrNull?.length ?? 0);
+
+final marketTierProvider = StreamProvider<int>((ref) {
+  final uid = _uid(ref);
+  if (uid == null) return Stream.value(0);
+  return FirebaseFirestore.instance
+      .collection('users')
+      .doc(uid)
+      .snapshots()
+      .map((d) => (d.data()?['marketTier'] ?? 0) as int);
+});
+
+final communityDisclaimerSeenProvider = StateProvider<bool>(
+    (ref) => ref.read(prefsProvider).getBool('communityDisclaimerSeen') ?? false);
