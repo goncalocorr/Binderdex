@@ -400,7 +400,7 @@ class AppDatabase extends _$AppDatabase {
   /// Todas as cartas com ≥1 variante possuída. `onlyDuplicates` limita às que
   /// têm 2+ cópias da mesma variante.
   Future<List<OwnedCard>> ownedCards({bool onlyDuplicates = false}) async {
-    final dupeExpr =
+    const dupeExpr =
         '(e.qty_normal > 1 OR e.qty_holo > 1 OR e.qty_reverse > 1)';
     final rows = await customSelect(
       'SELECT c.*, $dupeExpr AS is_dupe '
