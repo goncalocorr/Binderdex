@@ -225,3 +225,9 @@ final marketTierProvider = StreamProvider<int>((ref) {
 
 final communityDisclaimerSeenProvider = StateProvider<bool>(
     (ref) => ref.read(prefsProvider).getBool('communityDisclaimerSeen') ?? false);
+
+final ownedCardsProvider =
+    FutureProvider.family<List<OwnedCard>, bool>((ref, onlyDuplicates) {
+  ref.watch(setsListProvider); // recalcula quando a coleção muda
+  return ref.watch(databaseProvider).ownedCards(onlyDuplicates: onlyDuplicates);
+});

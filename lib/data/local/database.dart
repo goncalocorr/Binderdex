@@ -80,7 +80,7 @@ class CardRow {
 class OwnedCard {
   final TcgCardRow card;
   final bool isDuplicate;
-  OwnedCard(this.card, this.isDuplicate);
+  const OwnedCard(this.card, this.isDuplicate);
 }
 
 @DriftDatabase(tables: [CardSets, TcgCards, UserCardEntries])
