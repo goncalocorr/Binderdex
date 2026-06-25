@@ -44,28 +44,35 @@ class SetsScreen extends ConsumerWidget {
                           s.set.name.toLowerCase().contains(query) ||
                           s.set.series.toLowerCase().contains(query))
                       .toList();
-              return ListView(
-                padding: const EdgeInsets.only(bottom: 16),
-                children: [
-                  if (query.isEmpty) _HeroProgress(),
+              // Cabeçalhos fixos; os SetTile (até 173) são construídos
+              // preguiçosamente à medida que entram no ecrã.
+              final header = <Widget>[
+                if (query.isEmpty) _HeroProgress(),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                  child: Text(t.tabSets.toUpperCase(),
+                      style: AppTheme.mono(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: cs.onSurfaceVariant)),
+                ),
+                if (filtered.isEmpty)
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    child: Text(t.tabSets.toUpperCase(),
-                        style: AppTheme.mono(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            color: cs.onSurfaceVariant)),
+                    padding: const EdgeInsets.all(24),
+                    child: Center(child: Text(t.noSets)),
                   ),
-                  if (filtered.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Center(child: Text(t.noSets)),
-                    ),
-                  ...filtered.map((s) => SetTile(
-                        data: s,
-                        onTap: () => context.push('/set/${s.set.id}'),
-                      )),
-                ],
+              ];
+              return ListView.builder(
+                padding: const EdgeInsets.only(bottom: 16),
+                itemCount: header.length + filtered.length,
+                itemBuilder: (context, i) {
+                  if (i < header.length) return header[i];
+                  final s = filtered[i - header.length];
+                  return SetTile(
+                    data: s,
+                    onTap: () => context.push('/set/${s.set.id}'),
+                  );
+                },
               );
             },
           ),
