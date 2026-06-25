@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/entities/listing.dart';
 import '../../l10n/app_localizations.dart';
 import '../../presentation/providers/app_providers.dart';
 import '../../presentation/screens/card_detail_screen.dart';
+import '../../presentation/screens/card_listings_screen.dart';
+import '../../presentation/screens/community_screen.dart';
 import '../../presentation/screens/home_screen.dart';
+import '../../presentation/screens/listing_detail_screen.dart';
 import '../../presentation/screens/login_screen.dart';
 import '../../presentation/screens/my_binder_screen.dart';
+import '../../presentation/screens/my_cards_screen.dart';
+import '../../presentation/screens/my_listings_screen.dart';
 import '../../presentation/screens/onboarding_screen.dart';
 import '../../presentation/screens/search_screen.dart';
 import '../../presentation/screens/set_cards_screen.dart';
@@ -31,6 +37,7 @@ class _ShellState extends ConsumerState<_Shell> {
     HomeScreen(),
     SetsScreen(),
     MyBinderScreen(),
+    CommunityScreen(),
     SettingsScreen(),
   ];
 
@@ -61,7 +68,13 @@ class _ShellState extends ConsumerState<_Shell> {
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
     final index = ref.watch(navIndexProvider);
-    final titles = [t.tabHome, t.tabSets, t.tabBinder, t.tabProfile];
+    final titles = [
+      t.tabHome,
+      t.tabSets,
+      t.tabBinder,
+      t.tabCommunity,
+      t.tabProfile,
+    ];
 
     // Após login (mudança de sessão), pede o nome se faltar.
     ref.listen(authStateProvider, (_, __) {
@@ -95,6 +108,8 @@ class _ShellState extends ConsumerState<_Shell> {
           NavigationDestination(
               icon: const Icon(Icons.collections_bookmark),
               label: t.tabBinder),
+          NavigationDestination(
+              icon: const Icon(Icons.storefront), label: t.tabCommunity),
           NavigationDestination(
               icon: const Icon(Icons.person), label: t.tabProfile),
         ],
@@ -157,6 +172,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
     GoRoute(path: '/wishlist', builder: (_, __) => const WishlistScreen()),
     GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
+    GoRoute(path: '/my-cards', builder: (_, __) => const MyCardsScreen()),
+    GoRoute(
+        path: '/my-listings', builder: (_, __) => const MyListingsScreen()),
+    GoRoute(
+      path: '/listing/:id',
+      builder: (_, s) => ListingDetailScreen(listing: s.extra as Listing),
+    ),
+    GoRoute(
+      path: '/community/card/:id',
+      builder: (_, s) => CardListingsScreen(cardId: s.pathParameters['id']!),
+    ),
     ],
   );
 });
