@@ -57,7 +57,9 @@ final syncServiceProvider = Provider<SyncService>((ref) {
   ref.onDispose(svc.stop);
   ref.listen<AsyncValue<User?>>(authStateProvider, (_, next) {
     final user = next.valueOrNull;
-    if (user != null) {
+    // Convidados anónimos não sincronizam — evita criar dados na nuvem
+    // para sessões que existem só para poder LER a Comunidade.
+    if (user != null && !user.isAnonymous) {
       svc.start(user.uid);
     } else {
       svc.stop();

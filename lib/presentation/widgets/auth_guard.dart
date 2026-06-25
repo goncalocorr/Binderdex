@@ -6,9 +6,13 @@ import 'package:go_router/go_router.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 
-/// Verdadeiro se há sessão iniciada (pode editar a coleção).
-bool isSignedIn(WidgetRef ref) =>
-    ref.read(authStateProvider).valueOrNull != null;
+/// Verdadeiro se há sessão iniciada com conta real (pode editar a coleção).
+/// Utilizadores anónimos (convidados que entraram para poder ler a
+/// Comunidade) contam como NÃO autenticados — continuam só-leitura.
+bool isSignedIn(WidgetRef ref) {
+  final u = ref.read(authStateProvider).valueOrNull;
+  return u != null && !u.isAnonymous;
+}
 
 /// Restaura o perfil (nome + avatar) da conta a partir da nuvem, ao iniciar
 /// sessão. Se a conta já tinha nome, evita que o popup reapareça.

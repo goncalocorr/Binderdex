@@ -57,6 +57,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ..showSnackBar(SnackBar(content: Text(message ?? t.authFailed)));
   }
 
+  /// Convidado: entra em modo só-leitura. Faz login anónimo no Firebase para
+  /// poder LER a Comunidade (regras exigem `request.auth != null`); se falhar
+  /// (ex.: sem rede), mantém o comportamento de convidado offline.
+  Future<void> _enterAsGuest() async {
+    setState(() => _busy = true);
+    try {
+      await ref.read(authServiceProvider).signInAnonymously();
+    } catch (_) {
+      // Sem rede ou anónimo desativado — segue em modo convidado offline.
+    }
+    if (!mounted) return;
+    ref.read(guestModeProvider.notifier).state = true;
+    context.go('/');
+  }
+
   Future<void> _emailAuth() async {
     final email = _email.text.trim();
     final pass = _password.text;
@@ -176,10 +191,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               Center(
                 child: TextButton(
-                  onPressed: () {
-                    ref.read(guestModeProvider.notifier).state = true;
-                    context.go('/');
-                  },
+                  onPressed: _busy ? null : _enterAsGuest,
                   child: Text(t.guestEnter),
                 ),
               ),
