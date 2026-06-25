@@ -15,6 +15,34 @@ service cloud.firestore {
         allow read, write: if request.auth != null
                            && request.auth.uid == userId;
       }
+
+      // Utilizadores bloqueados por este user.
+      match /blocks/{blockedUid} {
+        allow read, write: if request.auth != null
+                           && request.auth.uid == userId;
+      }
+    }
+
+    // Marketplace público — leitura por autenticados; escrita só do dono.
+    match /listings/{id} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.mode in ['trade','sell','both']
+        && request.resource.data.condition in ['mint','good','used','damaged']
+        && (!('wantText' in request.resource.data)
+            || request.resource.data.wantText.size() <= 280)
+        && (!('note' in request.resource.data)
+            || request.resource.data.note.size() <= 280);
+      allow update, delete: if request.auth != null
+        && resource.data.ownerUid == request.auth.uid;
+    }
+
+    // Denúncias — criar por autenticados; sem leitura no cliente.
+    match /reports/{id} {
+      allow create: if request.auth != null
+        && request.resource.data.reporterUid == request.auth.uid;
+      allow read, update, delete: if false;
     }
 
     // Tudo o resto é negado por omissão.
