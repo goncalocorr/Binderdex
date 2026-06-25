@@ -835,6 +835,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter your email and password.'**
   String get fillFields;
+
+  /// No description provided for @tabCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'Community'**
+  String get tabCommunity;
+
+  /// No description provided for @communityDisclaimerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Before you start'**
+  String get communityDisclaimerTitle;
+
+  /// No description provided for @communityDisclaimerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Community connects collectors to trade and sell cards. Deals are between users — Binderdex is not part of and isn\'t responsible for trades, payments or scams. Be careful, confirm with who you\'re trading with and never share sensitive data.'**
+  String get communityDisclaimerBody;
+
+  /// No description provided for @communityDisclaimerOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get communityDisclaimerOk;
+
+  /// No description provided for @sellOrTrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell or trade cards'**
+  String get sellOrTrade;
+
+  /// No description provided for @addToCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to community ({n})'**
+  String addToCommunity(Object n);
+
+  /// No description provided for @onlyDuplicates.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicates only'**
+  String get onlyDuplicates;
+
+  /// No description provided for @myListings.
+  ///
+  /// In en, this message translates to:
+  /// **'My listings'**
+  String get myListings;
+
+  /// No description provided for @publish.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get publish;
+
+  /// No description provided for @modeTrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade'**
+  String get modeTrade;
+
+  /// No description provided for @modeSell.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell'**
+  String get modeSell;
+
+  /// No description provided for @modeBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Both'**
+  String get modeBoth;
+
+  /// No description provided for @condMint.
+  ///
+  /// In en, this message translates to:
+  /// **'Mint'**
+  String get condMint;
+
+  /// No description provided for @condGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get condGood;
+
+  /// No description provided for @condUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Used'**
+  String get condUsed;
+
+  /// No description provided for @condDamaged.
+  ///
+  /// In en, this message translates to:
+  /// **'Damaged'**
+  String get condDamaged;
+
+  /// No description provided for @whatIWant.
+  ///
+  /// In en, this message translates to:
+  /// **'What I want in exchange'**
+  String get whatIWant;
+
+  /// No description provided for @noteOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'Note (optional)'**
+  String get noteOptional;
+
+  /// No description provided for @contactSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact (coming soon)'**
+  String get contactSoon;
+
+  /// No description provided for @report.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get report;
+
+  /// No description provided for @block.
+  ///
+  /// In en, this message translates to:
+  /// **'Block'**
+  String get block;
+
+  /// No description provided for @unblock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unblock'**
+  String get unblock;
+
+  /// No description provided for @slotsUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'{used}/{limit} slots used'**
+  String slotsUsed(Object used, Object limit);
+
+  /// No description provided for @slotLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve hit your slot limit. Unlock more with Premium.'**
+  String get slotLimitReached;
+
+  /// No description provided for @premiumSlots.
+  ///
+  /// In en, this message translates to:
+  /// **'Slots & Premium'**
+  String get premiumSlots;
+
+  /// No description provided for @recentListings.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent listings'**
+  String get recentListings;
+
+  /// No description provided for @searchCardHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search a card…'**
+  String get searchCardHint;
+
+  /// No description provided for @noListings.
+  ///
+  /// In en, this message translates to:
+  /// **'No listings yet.'**
+  String get noListings;
 }
 
 class _AppLocalizationsDelegate

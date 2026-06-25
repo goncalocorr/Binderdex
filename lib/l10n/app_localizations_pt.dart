@@ -413,4 +413,94 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get fillFields => 'Escreve o email e a palavra-passe.';
+
+  @override
+  String get tabCommunity => 'Comunidade';
+
+  @override
+  String get communityDisclaimerTitle => 'Antes de começares';
+
+  @override
+  String get communityDisclaimerBody =>
+      'A Comunidade liga colecionadores para trocar e vender cartas. Os negócios são entre utilizadores — a Binderdex não é parte nem se responsabiliza por trocas, pagamentos ou eventuais burlas. Tem cuidado, confirma com quem negoceias e nunca partilhes dados sensíveis.';
+
+  @override
+  String get communityDisclaimerOk => 'Compreendo';
+
+  @override
+  String get sellOrTrade => 'Vender ou trocar cartas';
+
+  @override
+  String addToCommunity(Object n) {
+    return 'Adicionar à comunidade ($n)';
+  }
+
+  @override
+  String get onlyDuplicates => 'Só repetidas';
+
+  @override
+  String get myListings => 'Os meus anúncios';
+
+  @override
+  String get publish => 'Publicar';
+
+  @override
+  String get modeTrade => 'Trocar';
+
+  @override
+  String get modeSell => 'Vender';
+
+  @override
+  String get modeBoth => 'Ambos';
+
+  @override
+  String get condMint => 'Nova';
+
+  @override
+  String get condGood => 'Boa';
+
+  @override
+  String get condUsed => 'Usada';
+
+  @override
+  String get condDamaged => 'Danificada';
+
+  @override
+  String get whatIWant => 'O que quero em troca';
+
+  @override
+  String get noteOptional => 'Nota (opcional)';
+
+  @override
+  String get contactSoon => 'Contactar (em breve)';
+
+  @override
+  String get report => 'Denunciar';
+
+  @override
+  String get block => 'Bloquear';
+
+  @override
+  String get unblock => 'Desbloquear';
+
+  @override
+  String slotsUsed(Object used, Object limit) {
+    return '$used/$limit slots usados';
+  }
+
+  @override
+  String get slotLimitReached =>
+      'Atingiste o limite de slots. Desbloqueia mais com Premium.';
+
+  @override
+  String get premiumSlots => 'Slots e Premium';
+
+  @override
+  String get recentListings => 'Anúncios recentes';
+
+  @override
+  String get searchCardHint => 'Procurar uma carta…';
+
+  @override
+  String get noListings => 'Ainda não há anúncios.';
 }

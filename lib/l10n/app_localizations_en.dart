@@ -409,4 +409,94 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fillFields => 'Enter your email and password.';
+
+  @override
+  String get tabCommunity => 'Community';
+
+  @override
+  String get communityDisclaimerTitle => 'Before you start';
+
+  @override
+  String get communityDisclaimerBody =>
+      'Community connects collectors to trade and sell cards. Deals are between users — Binderdex is not part of and isn\'t responsible for trades, payments or scams. Be careful, confirm with who you\'re trading with and never share sensitive data.';
+
+  @override
+  String get communityDisclaimerOk => 'Got it';
+
+  @override
+  String get sellOrTrade => 'Sell or trade cards';
+
+  @override
+  String addToCommunity(Object n) {
+    return 'Add to community ($n)';
+  }
+
+  @override
+  String get onlyDuplicates => 'Duplicates only';
+
+  @override
+  String get myListings => 'My listings';
+
+  @override
+  String get publish => 'Publish';
+
+  @override
+  String get modeTrade => 'Trade';
+
+  @override
+  String get modeSell => 'Sell';
+
+  @override
+  String get modeBoth => 'Both';
+
+  @override
+  String get condMint => 'Mint';
+
+  @override
+  String get condGood => 'Good';
+
+  @override
+  String get condUsed => 'Used';
+
+  @override
+  String get condDamaged => 'Damaged';
+
+  @override
+  String get whatIWant => 'What I want in exchange';
+
+  @override
+  String get noteOptional => 'Note (optional)';
+
+  @override
+  String get contactSoon => 'Contact (coming soon)';
+
+  @override
+  String get report => 'Report';
+
+  @override
+  String get block => 'Block';
+
+  @override
+  String get unblock => 'Unblock';
+
+  @override
+  String slotsUsed(Object used, Object limit) {
+    return '$used/$limit slots used';
+  }
+
+  @override
+  String get slotLimitReached =>
+      'You\'ve hit your slot limit. Unlock more with Premium.';
+
+  @override
+  String get premiumSlots => 'Slots & Premium';
+
+  @override
+  String get recentListings => 'Recent listings';
+
+  @override
+  String get searchCardHint => 'Search a card…';
+
+  @override
+  String get noListings => 'No listings yet.';
 }
