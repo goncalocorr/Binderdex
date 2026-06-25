@@ -76,6 +76,13 @@ class CardRow {
   CardRow(this.card, this.entry);
 }
 
+/// Carta possuída + indicação de duplicado (para a grelha "As minhas cartas").
+class OwnedCard {
+  final TcgCardRow card;
+  final bool isDuplicate;
+  OwnedCard(this.card, this.isDuplicate);
+}
+
 @DriftDatabase(tables: [CardSets, TcgCards, UserCardEntries])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? openConnection());
@@ -387,6 +394,24 @@ class AppDatabase extends _$AppDatabase {
     ).get();
     return rows
         .map((r) => (type: r.read<String>('t'), owned: r.read<int>('n')))
+        .toList();
+  }
+
+  /// Todas as cartas com ≥1 variante possuída. `onlyDuplicates` limita às que
+  /// têm 2+ cópias da mesma variante.
+  Future<List<OwnedCard>> ownedCards({bool onlyDuplicates = false}) async {
+    final dupeExpr =
+        '(e.qty_normal > 1 OR e.qty_holo > 1 OR e.qty_reverse > 1)';
+    final rows = await customSelect(
+      'SELECT c.*, $dupeExpr AS is_dupe '
+      'FROM tcg_cards c JOIN user_card_entries e ON e.card_id = c.id '
+      'WHERE (e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1) '
+      '${onlyDuplicates ? 'AND $dupeExpr ' : ''}'
+      'ORDER BY c.set_id, c.number_sort',
+      readsFrom: {tcgCards, userCardEntries},
+    ).get();
+    return rows
+        .map((r) => OwnedCard(tcgCards.map(r.data), r.read<int>('is_dupe') == 1))
         .toList();
   }
 
