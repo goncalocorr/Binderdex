@@ -228,6 +228,22 @@ final marketTierProvider = StreamProvider<int>((ref) {
 final communityDisclaimerSeenProvider = StateProvider<bool>(
     (ref) => ref.read(prefsProvider).getBool('communityDisclaimerSeen') ?? false);
 
+/// Query de pesquisa de cartas DENTRO da Comunidade (estado local, separado
+/// do [searchQueryProvider] do ecrã de pesquisa global). Vazia = mostra o
+/// feed de anúncios recentes; com texto = mostra cartas correspondentes.
+final communitySearchQueryProvider = StateProvider<String>((_) => '');
+
+/// Resultados da pesquisa de cartas da Comunidade (catálogo local em cache).
+final communitySearchResultsProvider = StreamProvider<List<CardItem>>((ref) {
+  final q = ref.watch(communitySearchQueryProvider);
+  if (q.trim().isEmpty) return Stream.value(const <CardItem>[]);
+  return ref.watch(cardsRepositoryProvider).searchAll(
+        query: q,
+        types: const [],
+        status: CardStatusFilter.all,
+      );
+});
+
 final ownedCardsProvider =
     FutureProvider.family<List<OwnedCard>, bool>((ref, onlyDuplicates) {
   ref.watch(setsListProvider); // recalcula quando a coleção muda
