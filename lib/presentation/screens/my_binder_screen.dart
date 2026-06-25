@@ -9,6 +9,7 @@ import '../providers/app_providers.dart';
 import '../widgets/completion_ring.dart';
 import '../widgets/dex_ui.dart';
 import '../widgets/set_tile.dart';
+import 'my_cards_screen.dart';
 
 /// "O meu binder": painel pessoal único que reúne o progresso das minhas
 /// coleções (as que já comecei = tenho ≥1 carta) — cartão hero, estatísticas
@@ -55,6 +56,17 @@ class MyBinderScreen extends ConsumerWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: cs.onSurfaceVariant),
+              ),
+            ),
+
+            // Entrada para o marketplace da Comunidade.
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+              child: OutlinedButton.icon(
+                icon: const Icon(Icons.storefront),
+                label: Text(AppLocalizations.of(context)!.sellOrTrade),
+                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => const MyCardsScreen())),
               ),
             ),
 

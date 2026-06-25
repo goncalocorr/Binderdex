@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/avatar.dart';
@@ -297,6 +298,33 @@ class SettingsScreen extends ConsumerWidget {
           title: Text(t.wishlist),
           trailing: const Icon(Icons.chevron_right),
           onTap: () => context.push('/wishlist'),
+        ),
+        ListTile(
+          leading: const Icon(Icons.workspace_premium),
+          title: Text(t.premiumSlots),
+          subtitle: Text(
+              '${MarketTier.slotsFor(ref.watch(marketTierProvider).valueOrNull ?? 0)} slots'),
+          onTap: () async {
+            final uid = ref.read(authStateProvider).valueOrNull?.uid;
+            if (uid == null) return;
+            final svc = ref.read(marketServiceProvider);
+            await showDialog<void>(
+              context: context,
+              builder: (_) => SimpleDialog(
+                title: Text(t.premiumSlots),
+                children: [
+                  for (var i = 0; i < MarketTier.slots.length; i++)
+                    SimpleDialogOption(
+                      onPressed: () {
+                        svc.setTier(uid, i);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Nível $i — ${MarketTier.slots[i]} slots'),
+                    ),
+                ],
+              ),
+            );
+          },
         ),
         const Divider(),
 

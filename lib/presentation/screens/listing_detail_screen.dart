@@ -1,0 +1,82 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../domain/entities/listing.dart';
+import '../../l10n/app_localizations.dart';
+import '../providers/app_providers.dart';
+import '../widgets/auth_guard.dart';
+
+class ListingDetailScreen extends ConsumerWidget {
+  final Listing listing;
+  const ListingDetailScreen({super.key, required this.listing});
+
+  String _modeLabel(AppLocalizations t) => switch (listing.mode) {
+        TradeMode.trade => t.modeTrade,
+        TradeMode.sell => t.modeSell,
+        TradeMode.both => t.modeBoth,
+      };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = AppLocalizations.of(context)!;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(listing.cardName),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (v) async {
+              final uid = ref.read(authStateProvider).valueOrNull?.uid;
+              if (uid == null) {
+                requireSignIn(context, ref);
+                return;
+              }
+              final svc = ref.read(marketServiceProvider);
+              if (v == 'report') {
+                await svc.report(
+                    listingId: listing.id, reporterUid: uid, reason: 'user');
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(t.report)));
+                }
+              } else if (v == 'block') {
+                await svc.block(uid, listing.ownerUid);
+                if (context.mounted) Navigator.of(context).pop();
+              }
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(value: 'report', child: Text(t.report)),
+              PopupMenuItem(value: 'block', child: Text(t.block)),
+            ],
+          ),
+        ],
+      ),
+      body: ListView(padding: const EdgeInsets.all(16), children: [
+        if (listing.cardImage.isNotEmpty)
+          Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: CachedNetworkImage(
+                  imageUrl: listing.cardImage, height: 320, fit: BoxFit.contain),
+            ),
+          ),
+        const SizedBox(height: 16),
+        ListTile(
+          leading: const Icon(Icons.person),
+          title: Text(listing.ownerName),
+          subtitle: Text(_modeLabel(t)),
+        ),
+        if (listing.wantText != null && listing.wantText!.isNotEmpty)
+          ListTile(title: Text(t.whatIWant), subtitle: Text(listing.wantText!)),
+        if (listing.note != null && listing.note!.isNotEmpty)
+          ListTile(title: Text(t.noteOptional), subtitle: Text(listing.note!)),
+        const SizedBox(height: 16),
+        FilledButton.icon(
+          onPressed: null, // Fase 2: chat
+          icon: const Icon(Icons.chat_bubble_outline),
+          label: Text(t.contactSoon),
+        ),
+      ]),
+    );
+  }
+}
