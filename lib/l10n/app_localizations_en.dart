@@ -498,5 +498,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchCardHint => 'Search a card…';
 
   @override
+  String get communitySearchPrompt =>
+      'Search a card to see who\'s selling or trading it.';
+
+  @override
   String get noListings => 'No listings yet.';
 }

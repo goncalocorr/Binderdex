@@ -6,7 +6,6 @@ import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/auth_guard.dart';
 import '../widgets/card_tile.dart';
-import '../widgets/listing_tile.dart';
 import 'my_cards_screen.dart';
 
 class CommunityScreen extends ConsumerStatefulWidget {
@@ -107,9 +106,35 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
             ),
           ),
         Expanded(
-          child: searching ? _buildSearchResults(t) : _buildFeed(t),
+          child: searching ? _buildSearchResults(t) : _buildPrompt(t),
         ),
       ]),
+    );
+  }
+
+  /// Estado inicial: a Comunidade é só por pesquisa — sem feed geral. Convida
+  /// o utilizador a procurar uma carta para ver quem a vende ou troca.
+  Widget _buildPrompt(AppLocalizations t) {
+    final cs = Theme.of(context).colorScheme;
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.storefront_outlined, size: 56, color: cs.onSurfaceVariant),
+            const SizedBox(height: 16),
+            Text(
+              t.communitySearchPrompt,
+              textAlign: TextAlign.center,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.copyWith(color: cs.onSurfaceVariant),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -134,25 +159,6 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                 item: items[i],
                 onTap: () =>
                     context.push('/community/card/${items[i].card.id}'),
-              ),
-            ),
-    );
-  }
-
-  /// Feed dos anúncios recentes (quando não há pesquisa ativa).
-  Widget _buildFeed(AppLocalizations t) {
-    final recent = ref.watch(recentListingsProvider);
-    return recent.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('$e')),
-      data: (list) => list.isEmpty
-          ? Center(child: Text(t.noListings))
-          : ListView.builder(
-              itemCount: list.length,
-              itemBuilder: (_, i) => ListingTile(
-                listing: list[i],
-                onTap: () =>
-                    context.push('/listing/${list[i].id}', extra: list[i]),
               ),
             ),
     );

@@ -502,5 +502,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get searchCardHint => 'Procurar uma carta…';
 
   @override
+  String get communitySearchPrompt =>
+      'Procura uma carta para veres quem a vende ou troca.';
+
+  @override
   String get noListings => 'Ainda não há anúncios.';
 }

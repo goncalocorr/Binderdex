@@ -189,14 +189,6 @@ final blockedUidsProvider = StreamProvider<Set<String>>((ref) {
   return ref.watch(marketServiceProvider).watchBlocked(uid);
 });
 
-final recentListingsProvider = StreamProvider<List<Listing>>((ref) {
-  final blocked = ref.watch(blockedUidsProvider).valueOrNull ?? const <String>{};
-  return ref
-      .watch(marketServiceProvider)
-      .watchRecent()
-      .map((list) => list.where((l) => !blocked.contains(l.ownerUid)).toList());
-});
-
 final listingsForCardProvider =
     StreamProvider.family<List<Listing>, String>((ref, cardId) {
   final blocked = ref.watch(blockedUidsProvider).valueOrNull ?? const <String>{};

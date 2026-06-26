@@ -188,5 +188,6 @@
   "premiumSlots": "Slots & Premium",
   "recentListings": "Recent listings",
   "searchCardHint": "Search a card…",
+  "communitySearchPrompt": "Search a card to see who's selling or trading it.",
   "noListings": "No listings yet."
 }

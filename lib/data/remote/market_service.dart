@@ -20,13 +20,6 @@ class MarketService {
   List<Listing> _map(QuerySnapshot<Map<String, dynamic>> s) =>
       s.docs.map((d) => Listing.fromMap(d.id, d.data())).toList();
 
-  Stream<List<Listing>> watchRecent({int limit = 30}) => _listings
-      .where('status', isEqualTo: 'active')
-      .orderBy('createdAt', descending: true)
-      .limit(limit)
-      .snapshots()
-      .map(_map);
-
   Stream<List<Listing>> watchForCard(String cardId) => _listings
       .where('status', isEqualTo: 'active')
       .where('cardId', isEqualTo: cardId)

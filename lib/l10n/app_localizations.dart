@@ -998,6 +998,12 @@ abstract class AppLocalizations {
   /// **'Search a card…'**
   String get searchCardHint;
 
+  /// No description provided for @communitySearchPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Search a card to see who\'s selling or trading it.'**
+  String get communitySearchPrompt;
+
   /// No description provided for @noListings.
   ///
   /// In en, this message translates to:
