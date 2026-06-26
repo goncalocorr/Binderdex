@@ -123,7 +123,7 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset('assets/community_empty.png', width: 200),
+            Image.asset('assets/community_empty.png', width: 140),
             const SizedBox(height: 16),
             Text(
               t.communitySearchPrompt,
