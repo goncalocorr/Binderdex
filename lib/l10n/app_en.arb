@@ -190,5 +190,6 @@
   "searchCardHint": "Search a card…",
   "communitySearchPrompt": "Search a card to see who's selling or trading it.",
   "checkCommunityOffers": "Check community offers",
-  "noListings": "No listings yet."
+  "noListings": "No listings yet.",
+  "noListingsBody": "When new listings are published, they'll show up here."
 }

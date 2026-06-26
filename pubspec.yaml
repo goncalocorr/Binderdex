@@ -74,4 +74,5 @@ flutter:
     - assets/logo.png
     - assets/google_g.svg
     - assets/card_back.png
+    - assets/empty_listings.png
     - assets/avatars/

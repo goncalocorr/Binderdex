@@ -506,4 +506,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noListings => 'No listings yet.';
+
+  @override
+  String get noListingsBody =>
+      'When new listings are published, they\'ll show up here.';
 }

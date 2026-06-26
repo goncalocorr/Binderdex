@@ -510,4 +510,8 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noListings => 'Ainda não há anúncios.';
+
+  @override
+  String get noListingsBody =>
+      'Quando novos anúncios forem publicados, eles aparecerão aqui.';
 }

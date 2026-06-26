@@ -1015,6 +1015,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No listings yet.'**
   String get noListings;
+
+  /// No description provided for @noListingsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When new listings are published, they\'ll show up here.'**
+  String get noListingsBody;
 }
 
 class _AppLocalizationsDelegate

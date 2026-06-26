@@ -9,12 +9,17 @@ class EmptyState extends StatelessWidget {
   final String title;
   final String? description;
   final Widget? action;
+
+  /// Ilustração opcional (ex.: 'assets/empty_listings.png'). Quando definida,
+  /// substitui o círculo do ícone.
+  final String? imageAsset;
   const EmptyState({
     super.key,
     required this.icon,
     required this.title,
     this.description,
     this.action,
+    this.imageAsset,
   });
 
   @override
@@ -26,15 +31,18 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: cs.surfaceContainerHigh,
-                shape: BoxShape.circle,
+            if (imageAsset != null)
+              Image.asset(imageAsset!, width: 200, fit: BoxFit.contain)
+            else
+              Container(
+                width: 72,
+                height: 72,
+                decoration: BoxDecoration(
+                  color: cs.surfaceContainerHigh,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 34, color: cs.onSurfaceVariant),
               ),
-              child: Icon(icon, size: 34, color: cs.onSurfaceVariant),
-            ),
             const SizedBox(height: 16),
             Text(title,
                 textAlign: TextAlign.center,

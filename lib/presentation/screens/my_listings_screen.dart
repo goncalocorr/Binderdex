@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import '../widgets/dex_ui.dart';
 import '../widgets/listing_tile.dart';
 
 class MyListingsScreen extends ConsumerWidget {
@@ -28,7 +29,12 @@ class MyListingsScreen extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => Center(child: Text('$e')),
             data: (list) => list.isEmpty
-                ? Center(child: Text(t.noListings))
+                ? EmptyState(
+                    imageAsset: 'assets/empty_listings.png',
+                    icon: Icons.storefront_outlined,
+                    title: t.noListings,
+                    description: t.noListingsBody,
+                  )
                 : ListView.builder(
                     itemCount: list.length,
                     itemBuilder: (_, i) {
