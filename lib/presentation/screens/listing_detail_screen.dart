@@ -23,28 +23,35 @@ class ListingDetailScreen extends ConsumerWidget {
     if (!requireSignIn(context, ref)) return;
     final meUid = ref.read(authStateProvider).valueOrNull?.uid;
     if (meUid == null) return;
-    final convId = await ref.read(chatServiceProvider).openConversation(
-          meUid: meUid,
-          meName: ref.read(displayNameProvider),
-          meAvatar: ref.read(avatarProvider),
+    try {
+      final convId = await ref.read(chatServiceProvider).openConversation(
+            meUid: meUid,
+            meName: ref.read(displayNameProvider),
+            meAvatar: ref.read(avatarProvider),
+            otherUid: listing.ownerUid,
+            otherName: listing.ownerName,
+            otherAvatar: listing.ownerAvatar,
+          );
+      if (!context.mounted) return;
+      context.push(
+        '/chat',
+        extra: Conversation(
+          id: convId,
           otherUid: listing.ownerUid,
           otherName: listing.ownerName,
           otherAvatar: listing.ownerAvatar,
-        );
-    if (!context.mounted) return;
-    context.push(
-      '/chat',
-      extra: Conversation(
-        id: convId,
-        otherUid: listing.ownerUid,
-        otherName: listing.ownerName,
-        otherAvatar: listing.ownerAvatar,
-        lastMessage: '',
-        lastSenderUid: '',
-        unread: 0,
-        updatedAt: DateTime.now(),
-      ),
-    );
+          lastMessage: '',
+          lastSenderUid: '',
+          unread: 0,
+          updatedAt: DateTime.now(),
+        ),
+      );
+    } catch (err) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('$err')));
+      }
+    }
   }
 
   @override

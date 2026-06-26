@@ -26,6 +26,10 @@ class ChatService {
           s.docs.map((d) => ChatMessage.fromMap(d.id, d.data())).toList());
 
   /// Abre (ou cria) a conversa entre os dois utilizadores. Devolve o convId.
+  /// Usa `set(merge)` sem ler primeiro — ler um doc inexistente seria negado
+  /// pelas regras (que testam os participantes). Só define a identidade
+  /// (participantes/nomes/avatares); o `lastMessage`/`updatedAt`/`unread`
+  /// surgem com a 1ª mensagem (conversas vazias não aparecem na caixa).
   Future<String> openConversation({
     required String meUid,
     required String meName,
@@ -35,19 +39,11 @@ class ChatService {
     required String otherAvatar,
   }) async {
     final id = conversationIdFor(meUid, otherUid);
-    final doc = _convos.doc(id);
-    final snap = await doc.get();
-    if (!snap.exists) {
-      await doc.set({
-        'participants': [meUid, otherUid],
-        'names': {meUid: meName, otherUid: otherName},
-        'avatars': {meUid: meAvatar, otherUid: otherAvatar},
-        'lastMessage': '',
-        'lastSenderUid': '',
-        'unread': {meUid: 0, otherUid: 0},
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-    }
+    await _convos.doc(id).set({
+      'participants': [meUid, otherUid],
+      'names': {meUid: meName, otherUid: otherName},
+      'avatars': {meUid: meAvatar, otherUid: otherAvatar},
+    }, SetOptions(merge: true));
     return id;
   }
 
