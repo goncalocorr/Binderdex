@@ -22,6 +22,7 @@ class MessagesScreen extends ConsumerWidget {
         error: (e, _) => Center(child: Text('$e')),
         data: (list) => list.isEmpty
             ? EmptyState(
+                imageAsset: 'assets/messages_empty.png',
                 icon: Icons.forum_outlined,
                 title: t.noConversations,
                 description: t.noConversationsBody,
