@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/entities/chat.dart';
 import '../../domain/entities/listing.dart';
 import '../../l10n/app_localizations.dart';
 import '../../presentation/providers/app_providers.dart';
@@ -10,8 +11,10 @@ import '../../presentation/screens/card_detail_screen.dart';
 import '../../presentation/screens/card_listings_screen.dart';
 import '../../presentation/screens/community_screen.dart';
 import '../../presentation/screens/home_screen.dart';
+import '../../presentation/screens/chat_screen.dart';
 import '../../presentation/screens/listing_detail_screen.dart';
 import '../../presentation/screens/login_screen.dart';
+import '../../presentation/screens/messages_screen.dart';
 import '../../presentation/screens/my_binder_screen.dart';
 import '../../presentation/screens/my_cards_screen.dart';
 import '../../presentation/screens/my_listings_screen.dart';
@@ -90,6 +93,18 @@ class _ShellState extends ConsumerState<_Shell> {
         ),
         title: Text(titles[index]),
         actions: [
+          if (index == 3)
+            IconButton(
+              tooltip: t.messages,
+              icon: () {
+                final unread = ref.watch(unreadTotalProvider);
+                const ic = Icon(Icons.chat_bubble_outline);
+                return unread > 0
+                    ? Badge(label: Text('$unread'), child: ic)
+                    : ic;
+              }(),
+              onPressed: () => context.push('/messages'),
+            ),
           IconButton(
             icon: const Icon(Icons.search),
             tooltip: t.tabSearch,
@@ -182,6 +197,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     GoRoute(
       path: '/community/card/:id',
       builder: (_, s) => CardListingsScreen(cardId: s.pathParameters['id']!),
+    ),
+    GoRoute(path: '/messages', builder: (_, __) => const MessagesScreen()),
+    GoRoute(
+      path: '/chat',
+      builder: (_, s) => ChatScreen(conversation: s.extra as Conversation),
     ),
     ],
   );

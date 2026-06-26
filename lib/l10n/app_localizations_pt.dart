@@ -536,4 +536,24 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get deleteListingConfirm => 'Queres mesmo apagar este anúncio?';
+
+  @override
+  String get messages => 'Mensagens';
+
+  @override
+  String get noConversations => 'Ainda não tens conversas.';
+
+  @override
+  String get noConversationsBody =>
+      'Contacta alguém a partir de um anúncio para começar.';
+
+  @override
+  String get typeMessage => 'Escreve uma mensagem…';
+
+  @override
+  String get contact => 'Contactar';
+
+  @override
+  String get contactWarning =>
+      'Esta mensagem partilha um contacto. Tem cuidado — a Binderdex não se responsabiliza por trocas, pagamentos ou burlas.';
 }

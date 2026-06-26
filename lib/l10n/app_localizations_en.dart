@@ -532,4 +532,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteListingConfirm => 'Delete this listing for good?';
+
+  @override
+  String get messages => 'Messages';
+
+  @override
+  String get noConversations => 'No conversations yet.';
+
+  @override
+  String get noConversationsBody =>
+      'Contact someone from a listing to get started.';
+
+  @override
+  String get typeMessage => 'Type a message…';
+
+  @override
+  String get contact => 'Contact';
+
+  @override
+  String get contactWarning =>
+      'This message shares a contact. Be careful — Binderdex isn\'t responsible for trades, payments or scams.';
 }

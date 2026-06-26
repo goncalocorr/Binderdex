@@ -300,6 +300,12 @@ class SettingsScreen extends ConsumerWidget {
           onTap: () => context.push('/wishlist'),
         ),
         ListTile(
+          leading: const Icon(Icons.chat_bubble_outline),
+          title: Text(t.messages),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.push('/messages'),
+        ),
+        ListTile(
           leading: const Icon(Icons.workspace_premium),
           title: Text(t.premiumSlots),
           subtitle: Text(

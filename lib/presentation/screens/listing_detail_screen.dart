@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/entities/chat.dart';
 import '../../domain/entities/listing.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
@@ -17,6 +18,34 @@ class ListingDetailScreen extends ConsumerWidget {
         TradeMode.sell => t.modeSell,
         TradeMode.both => t.modeBoth,
       };
+
+  Future<void> _contact(BuildContext context, WidgetRef ref) async {
+    if (!requireSignIn(context, ref)) return;
+    final meUid = ref.read(authStateProvider).valueOrNull?.uid;
+    if (meUid == null) return;
+    final convId = await ref.read(chatServiceProvider).openConversation(
+          meUid: meUid,
+          meName: ref.read(displayNameProvider),
+          meAvatar: ref.read(avatarProvider),
+          otherUid: listing.ownerUid,
+          otherName: listing.ownerName,
+          otherAvatar: listing.ownerAvatar,
+        );
+    if (!context.mounted) return;
+    context.push(
+      '/chat',
+      extra: Conversation(
+        id: convId,
+        otherUid: listing.ownerUid,
+        otherName: listing.ownerName,
+        otherAvatar: listing.ownerAvatar,
+        lastMessage: '',
+        lastSenderUid: '',
+        unread: 0,
+        updatedAt: DateTime.now(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -103,11 +132,12 @@ class ListingDetailScreen extends ConsumerWidget {
         if (listing.note != null && listing.note!.isNotEmpty)
           ListTile(title: Text(t.noteOptional), subtitle: Text(listing.note!)),
         const SizedBox(height: 16),
-        FilledButton.icon(
-          onPressed: null, // Fase 2: chat
-          icon: const Icon(Icons.chat_bubble_outline),
-          label: Text(t.contactSoon),
-        ),
+        if (listing.ownerUid != ref.watch(authStateProvider).valueOrNull?.uid)
+          FilledButton.icon(
+            onPressed: () => _contact(context, ref),
+            icon: const Icon(Icons.chat_bubble_outline),
+            label: Text(t.contact),
+          ),
       ]),
     );
   }

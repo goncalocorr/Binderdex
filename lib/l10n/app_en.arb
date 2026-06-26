@@ -199,5 +199,11 @@
   "wishlistEmpty": "Your wishlist is empty. Search for a card above.",
   "deleteListingAction": "Delete listing",
   "deleteListingConfirm": "Delete this listing for good?",
-  "delete": "Delete"
+  "delete": "Delete",
+  "messages": "Messages",
+  "noConversations": "No conversations yet.",
+  "noConversationsBody": "Contact someone from a listing to get started.",
+  "typeMessage": "Type a message…",
+  "contact": "Contact",
+  "contactWarning": "This message shares a contact. Be careful — Binderdex isn't responsible for trades, payments or scams."
 }

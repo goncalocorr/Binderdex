@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/local/database.dart';
 import '../../data/remote/auth_service.dart';
+import '../../data/remote/chat_service.dart';
 import '../../data/remote/market_service.dart';
 import '../../data/remote/profile_service.dart';
 import '../../data/remote/sync_service.dart';
@@ -14,6 +15,7 @@ import '../../data/repositories/collection_repository.dart';
 import '../../data/repositories/sets_repository.dart';
 import '../../domain/entities/card_filter.dart';
 import '../../domain/entities/card_set.dart';
+import '../../domain/entities/chat.dart';
 import '../../domain/entities/listing.dart';
 import '../../domain/entities/progress.dart';
 import '../../domain/entities/tcg_card.dart';
@@ -219,6 +221,27 @@ final marketTierProvider = StreamProvider<int>((ref) {
 
 final communityDisclaimerSeenProvider = StateProvider<bool>(
     (ref) => ref.read(prefsProvider).getBool('communityDisclaimerSeen') ?? false);
+
+// --- Chat (Fase 2) ---
+final chatServiceProvider = Provider<ChatService>((ref) => ChatService());
+
+final conversationsProvider = StreamProvider<List<Conversation>>((ref) {
+  final uid = _uid(ref);
+  if (uid == null) return Stream.value(const <Conversation>[]);
+  final blocked = ref.watch(blockedUidsProvider).valueOrNull ?? const <String>{};
+  return ref.watch(chatServiceProvider).watchConversations(uid).map(
+      (list) => list.where((c) => !blocked.contains(c.otherUid)).toList());
+});
+
+final messagesProvider =
+    StreamProvider.family<List<ChatMessage>, String>((ref, convId) =>
+        ref.watch(chatServiceProvider).watchMessages(convId));
+
+/// Total de mensagens não-lidas (para o badge na Comunidade).
+final unreadTotalProvider = Provider<int>((ref) {
+  final convos = ref.watch(conversationsProvider).valueOrNull ?? const [];
+  return convos.fold<int>(0, (a, c) => a + c.unread);
+});
 
 /// Query de pesquisa de cartas DENTRO da Comunidade (estado local, separado
 /// do [searchQueryProvider] do ecrã de pesquisa global). Vazia = mostra o

@@ -1063,6 +1063,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete this listing for good?'**
   String get deleteListingConfirm;
+
+  /// No description provided for @messages.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get messages;
+
+  /// No description provided for @noConversations.
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations yet.'**
+  String get noConversations;
+
+  /// No description provided for @noConversationsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact someone from a listing to get started.'**
+  String get noConversationsBody;
+
+  /// No description provided for @typeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message…'**
+  String get typeMessage;
+
+  /// No description provided for @contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get contact;
+
+  /// No description provided for @contactWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'This message shares a contact. Be careful — Binderdex isn\'t responsible for trades, payments or scams.'**
+  String get contactWarning;
 }
 
 class _AppLocalizationsDelegate
