@@ -502,5 +502,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'Search a card to see who\'s selling or trading it.';
 
   @override
+  String get checkCommunityOffers => 'Check community offers';
+
+  @override
   String get noListings => 'No listings yet.';
 }

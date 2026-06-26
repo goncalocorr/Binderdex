@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
@@ -161,6 +162,16 @@ class CardDetailScreen extends ConsumerWidget {
                             color: cs.onSurfaceVariant,
                             outlined: true),
                     ],
+                  ),
+                  const SizedBox(height: 14),
+                  // Saltar para os anúncios desta carta na Comunidade.
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Icons.storefront, size: 18),
+                      label: Text(t.checkCommunityOffers),
+                      onPressed: () => context.push('/community/card/$id'),
+                    ),
                   ),
                   if (card.hp != null || card.atk != null) ...[
                     const SizedBox(height: 16),

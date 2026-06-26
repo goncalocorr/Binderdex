@@ -506,5 +506,8 @@ class AppLocalizationsPt extends AppLocalizations {
       'Procura uma carta para veres quem a vende ou troca.';
 
   @override
+  String get checkCommunityOffers => 'Ver ofertas na comunidade';
+
+  @override
   String get noListings => 'Ainda não há anúncios.';
 }

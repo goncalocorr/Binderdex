@@ -1004,6 +1004,12 @@ abstract class AppLocalizations {
   /// **'Search a card to see who\'s selling or trading it.'**
   String get communitySearchPrompt;
 
+  /// No description provided for @checkCommunityOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'Check community offers'**
+  String get checkCommunityOffers;
+
   /// No description provided for @noListings.
   ///
   /// In en, this message translates to:
