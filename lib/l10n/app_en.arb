@@ -206,5 +206,8 @@
   "typeMessage": "Type a message…",
   "contact": "Contact",
   "contactWarning": "You're about to share your own contact (email or phone). Binderdex isn't responsible for trades, payments or scams.",
-  "sendAnyway": "Send anyway"
+  "sendAnyway": "Send anyway",
+  "blockConfirm": "Block {name}? You'll stop seeing this person's listings and messages.",
+  "@blockConfirm": { "placeholders": { "name": {} } },
+  "userBlocked": "User blocked."
 }

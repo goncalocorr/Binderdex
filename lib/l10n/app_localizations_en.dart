@@ -555,4 +555,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sendAnyway => 'Send anyway';
+
+  @override
+  String blockConfirm(Object name) {
+    return 'Block $name? You\'ll stop seeing this person\'s listings and messages.';
+  }
+
+  @override
+  String get userBlocked => 'User blocked.';
 }

@@ -80,6 +80,45 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     }
   }
 
+  Future<void> _block() async {
+    final t = AppLocalizations.of(context)!;
+    final meUid = ref.read(authStateProvider).valueOrNull?.uid;
+    if (meUid == null) return;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        content: Text(t.blockConfirm(widget.conversation.otherName)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(t.block),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    try {
+      await ref
+          .read(marketServiceProvider)
+          .block(meUid, widget.conversation.otherUid);
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(t.userBlocked)));
+        Navigator.of(context).pop();
+      }
+    } catch (err) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('$err')));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
@@ -89,16 +128,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       appBar: AppBar(
         title: Text(widget.conversation.otherName),
         actions: [
-          IconButton(
-            tooltip: t.block,
-            icon: const Icon(Icons.block),
-            onPressed: () async {
-              if (meUid == null) return;
-              await ref
-                  .read(marketServiceProvider)
-                  .block(meUid, widget.conversation.otherUid);
-              if (context.mounted) Navigator.of(context).pop();
+          PopupMenuButton<String>(
+            onSelected: (v) {
+              if (v == 'block') _block();
             },
+            itemBuilder: (_) => [
+              PopupMenuItem(value: 'block', child: Text(t.block)),
+            ],
           ),
         ],
       ),

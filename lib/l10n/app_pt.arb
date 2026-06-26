@@ -170,5 +170,8 @@
   "typeMessage": "Escreve uma mensagem…",
   "contact": "Contactar",
   "contactWarning": "Estás prestes a partilhar um contacto teu (email ou telemóvel). A Binderdex não se responsabiliza por trocas, pagamentos ou burlas.",
-  "sendAnyway": "Enviar à mesma"
+  "sendAnyway": "Enviar à mesma",
+  "blockConfirm": "Bloquear {name}? Deixas de ver os anúncios e as mensagens desta pessoa.",
+  "@blockConfirm": { "placeholders": { "name": {} } },
+  "userBlocked": "Utilizador bloqueado."
 }

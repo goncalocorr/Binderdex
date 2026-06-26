@@ -559,4 +559,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get sendAnyway => 'Enviar à mesma';
+
+  @override
+  String blockConfirm(Object name) {
+    return 'Bloquear $name? Deixas de ver os anúncios e as mensagens desta pessoa.';
+  }
+
+  @override
+  String get userBlocked => 'Utilizador bloqueado.';
 }

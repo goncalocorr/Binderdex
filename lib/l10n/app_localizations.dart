@@ -1105,6 +1105,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Send anyway'**
   String get sendAnyway;
+
+  /// No description provided for @blockConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Block {name}? You\'ll stop seeing this person\'s listings and messages.'**
+  String blockConfirm(Object name);
+
+  /// No description provided for @userBlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'User blocked.'**
+  String get userBlocked;
 }
 
 class _AppLocalizationsDelegate
