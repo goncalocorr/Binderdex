@@ -1021,6 +1021,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'When new listings are published, they\'ll show up here.'**
   String get noListingsBody;
+
+  /// No description provided for @editListingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit listing'**
+  String get editListingTitle;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
 }
 
 class _AppLocalizationsDelegate

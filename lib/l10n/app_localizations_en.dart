@@ -510,4 +510,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get noListingsBody =>
       'When new listings are published, they\'ll show up here.';
+
+  @override
+  String get editListingTitle => 'Edit listing';
+
+  @override
+  String get save => 'Save';
 }

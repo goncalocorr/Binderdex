@@ -514,4 +514,10 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get noListingsBody =>
       'Quando novos anúncios forem publicados, eles aparecerão aqui.';
+
+  @override
+  String get editListingTitle => 'Editar anúncio';
+
+  @override
+  String get save => 'Guardar';
 }

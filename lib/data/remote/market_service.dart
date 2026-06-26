@@ -82,8 +82,21 @@ class MarketService {
     await batch.commit();
   }
 
-  Future<void> updateListing(Listing l) =>
-      _listings.doc(l.id).update(l.toMap());
+  /// Edita os campos de um anúncio existente. Atualiza sempre os 4 campos
+  /// (vazio = guarda ''), por isso é possível apagar a nota / o que quero.
+  Future<void> editListing({
+    required String id,
+    required TradeMode mode,
+    required CardCondition condition,
+    String? wantText,
+    String? note,
+  }) =>
+      _listings.doc(id).update({
+        'mode': mode.id,
+        'condition': condition.id,
+        'wantText': wantText?.trim() ?? '',
+        'note': note?.trim() ?? '',
+      });
 
   Future<void> deleteListing(String id, String ownerUid) async {
     final batch = _db.batch();

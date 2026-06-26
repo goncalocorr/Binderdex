@@ -5,6 +5,7 @@ import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/dex_ui.dart';
+import '../widgets/edit_listing_sheet.dart';
 import '../widgets/listing_tile.dart';
 
 class MyListingsScreen extends ConsumerWidget {
@@ -66,7 +67,14 @@ class MyListingsScreen extends ConsumerWidget {
                           }
                           return false;
                         },
-                        child: ListingTile(listing: l),
+                        child: ListingTile(
+                          listing: l,
+                          onTap: () => showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (_) => EditListingSheet(listing: l),
+                          ),
+                        ),
                       );
                     },
                   ),
