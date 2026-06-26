@@ -33,6 +33,9 @@ class ListingDetailScreen extends ConsumerWidget {
             otherUid: listing.ownerUid,
             otherName: listing.ownerName,
             otherAvatar: listing.ownerAvatar,
+            cardId: listing.cardId,
+            cardName: listing.cardName,
+            cardImage: listing.cardImage,
           );
       if (!context.mounted) return;
       context.push(
@@ -46,6 +49,9 @@ class ListingDetailScreen extends ConsumerWidget {
           lastSenderUid: '',
           unread: 0,
           updatedAt: DateTime.now(),
+          cardId: listing.cardId,
+          cardName: listing.cardName,
+          cardImage: listing.cardImage,
         ),
       );
     } catch (err) {

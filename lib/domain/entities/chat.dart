@@ -20,8 +20,10 @@ DateTime _ts(dynamic v) =>
     v is Timestamp ? v.toDate() : DateTime.fromMillisecondsSinceEpoch(0);
 
 /// Uma conversa, já resolvida na perspetiva do utilizador atual (o "outro").
+/// `card*` = carta em negociação (vinda do anúncio que originou o contacto).
 class Conversation {
   final String id, otherUid, otherName, otherAvatar, lastMessage, lastSenderUid;
+  final String cardId, cardName, cardImage;
   final int unread;
   final DateTime updatedAt;
 
@@ -34,6 +36,9 @@ class Conversation {
     required this.lastSenderUid,
     required this.unread,
     required this.updatedAt,
+    this.cardId = '',
+    this.cardName = '',
+    this.cardImage = '',
   });
 
   factory Conversation.fromMap(String id, Map<String, dynamic> m, String meUid) {
@@ -49,6 +54,9 @@ class Conversation {
       otherAvatar: (avatars[other] ?? '') as String,
       lastMessage: (m['lastMessage'] ?? '') as String,
       lastSenderUid: (m['lastSenderUid'] ?? '') as String,
+      cardId: (m['cardId'] ?? '') as String,
+      cardName: (m['cardName'] ?? '') as String,
+      cardImage: (m['cardImage'] ?? '') as String,
       unread: (unread[meUid] ?? 0) as int,
       updatedAt: _ts(m['updatedAt']),
     );

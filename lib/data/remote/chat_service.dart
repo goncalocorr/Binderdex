@@ -37,12 +37,19 @@ class ChatService {
     required String otherUid,
     required String otherName,
     required String otherAvatar,
+    String? cardId,
+    String? cardName,
+    String? cardImage,
   }) async {
     final id = conversationIdFor(meUid, otherUid);
     await _convos.doc(id).set({
       'participants': [meUid, otherUid],
       'names': {meUid: meName, otherUid: otherName},
       'avatars': {meUid: meAvatar, otherUid: otherAvatar},
+      // Carta em negociação (do anúncio que originou o contacto).
+      if (cardId != null && cardId.isNotEmpty) 'cardId': cardId,
+      if (cardName != null && cardName.isNotEmpty) 'cardName': cardName,
+      if (cardImage != null && cardImage.isNotEmpty) 'cardImage': cardImage,
     }, SetOptions(merge: true));
     return id;
   }

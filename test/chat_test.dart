@@ -48,6 +48,9 @@ void main() {
         'lastMessage': 'combinado',
         'lastSenderUid': 'ana',
         'unread': {'ana': 0, 'rui': 2},
+        'cardId': 'base1-4',
+        'cardName': 'Charizard',
+        'cardImage': 'img',
         'updatedAt': null,
       },
       'rui',
@@ -55,5 +58,6 @@ void main() {
     expect(c.otherUid, 'ana');
     expect(c.otherName, 'Ana');
     expect(c.unread, 2); // o meu (rui) unread
+    expect(c.cardName, 'Charizard'); // carta em negociação
   });
 }

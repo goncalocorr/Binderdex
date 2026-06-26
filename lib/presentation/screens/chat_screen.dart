@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../domain/entities/chat.dart';
 import '../../l10n/app_localizations.dart';
@@ -119,6 +121,44 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     }
   }
 
+  /// Cabeçalho com a carta em negociação (do anúncio que originou o contacto).
+  Widget _cardHeader(BuildContext context) {
+    final c = widget.conversation;
+    final cs = Theme.of(context).colorScheme;
+    return Material(
+      color: cs.surfaceContainerHigh,
+      child: InkWell(
+        onTap: c.cardId.isEmpty ? null : () => context.push('/card/${c.cardId}'),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(children: [
+            if (c.cardImage.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: CachedNetworkImage(
+                    imageUrl: c.cardImage,
+                    width: 34,
+                    height: 48,
+                    fit: BoxFit.cover,
+                    memCacheWidth: 120),
+              ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(c.cardName,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleSmall
+                      ?.copyWith(fontWeight: FontWeight.w700)),
+            ),
+            Icon(Icons.chevron_right, size: 18, color: cs.onSurfaceVariant),
+          ]),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
@@ -139,6 +179,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ],
       ),
       body: Column(children: [
+        if (widget.conversation.cardName.isNotEmpty) _cardHeader(context),
         Expanded(
           child: messages.when(
             loading: () => const Center(child: CircularProgressIndicator()),
