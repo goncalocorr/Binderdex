@@ -50,6 +50,10 @@ class Listing {
 
   /// Cartas que o dono quer em troca (só relevante em trocar/ambos).
   final List<CardRef> wantCards;
+
+  /// Nível premium do dono no momento de publicar (desnormalizado, para
+  /// mostrar o selo a outros). 0 = sem premium.
+  final int ownerTier;
   final DateTime createdAt;
 
   const Listing({
@@ -67,6 +71,7 @@ class Listing {
     required this.note,
     required this.createdAt,
     this.wantCards = const [],
+    this.ownerTier = 0,
   });
 
   /// Mapa para o Firestore. `createdAt` é omitido aqui — o serviço acrescenta
@@ -85,6 +90,7 @@ class Listing {
         if (note != null && note!.isNotEmpty) 'note': note,
         if (wantCards.isNotEmpty)
           'wantCards': wantCards.map((c) => c.toMap()).toList(),
+        if (ownerTier > 0) 'ownerTier': ownerTier,
         'status': 'active',
       };
 
@@ -106,6 +112,7 @@ class Listing {
       wantCards: ((m['wantCards'] as List?) ?? const [])
           .map((e) => CardRef.fromMap(Map<String, dynamic>.from(e as Map)))
           .toList(),
+      ownerTier: (m['ownerTier'] ?? 0) as int,
       createdAt: ts is Timestamp
           ? ts.toDate()
           : DateTime.fromMillisecondsSinceEpoch(0),

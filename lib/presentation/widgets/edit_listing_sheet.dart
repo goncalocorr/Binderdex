@@ -74,6 +74,7 @@ class _EditListingSheetState extends ConsumerState<EditListingSheet> {
             wantText: null,
             note: _note.text,
             wantCards: _mode == TradeMode.sell ? const [] : _wantCards,
+            ownerTier: ref.read(marketTierProvider).valueOrNull ?? 0,
           );
       if (mounted) Navigator.of(context).pop(true);
     } catch (err) {

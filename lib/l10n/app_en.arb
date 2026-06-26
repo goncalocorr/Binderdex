@@ -209,5 +209,15 @@
   "sendAnyway": "Send anyway",
   "blockConfirm": "Block {name}? You'll stop seeing this person's listings and messages.",
   "@blockConfirm": { "placeholders": { "name": {} } },
-  "userBlocked": "User blocked."
+  "userBlocked": "User blocked.",
+  "premiumYourPlan": "Your plan: {name}",
+  "@premiumYourPlan": { "placeholders": { "name": {} } },
+  "unlock": "Unlock",
+  "currentPlanTag": "Current",
+  "perkSlots": "{n} listing slots",
+  "@perkSlots": { "placeholders": { "n": {} } },
+  "perkBadge": "Premium badge",
+  "perkAvatars": "Exclusive avatars",
+  "perMonth": "/month",
+  "premiumOnly": "Premium only"
 }

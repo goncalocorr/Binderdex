@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/listing.dart';
+import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
+import 'premium_badge.dart';
 
 class ListingTile extends StatelessWidget {
   final Listing listing;
@@ -33,8 +35,17 @@ class ListingTile extends StatelessWidget {
       ),
       title: Text(listing.cardName,
           maxLines: 1, overflow: TextOverflow.ellipsis),
-      subtitle: Text(listing.ownerName,
-          maxLines: 1, overflow: TextOverflow.ellipsis),
+      subtitle: Row(children: [
+        Flexible(
+          child: Text(listing.ownerName,
+              maxLines: 1, overflow: TextOverflow.ellipsis),
+        ),
+        if (MarketTier.isPremium(listing.ownerTier))
+          const Padding(
+            padding: EdgeInsets.only(left: 4),
+            child: PremiumBadge(size: 14),
+          ),
+      ]),
       trailing: Chip(
         label: Text(_modeLabel(t)),
         backgroundColor: cs.primaryContainer,

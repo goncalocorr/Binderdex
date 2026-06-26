@@ -10,6 +10,16 @@ final List<String> kAvatarIds = [
     'person_avatar_${i.toString().padLeft(2, '0')}',
 ];
 
+/// Avatares exclusivos premium (desbloqueados com marketTier ≥ 1).
+const List<String> kPremiumAvatarIds = [
+  'premium_avatar_1',
+  'premium_avatar_2',
+  'premium_avatar_3',
+  'premium_avatar_4',
+];
+
+bool isPremiumAvatar(String id) => kPremiumAvatarIds.contains(id);
+
 /// Avatar circular: imagem escolhida (assets/avatars/<id>.png) ou, em reserva,
 /// a inicial do nome / um ícone para convidado.
 class Avatar extends StatelessWidget {

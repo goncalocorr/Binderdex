@@ -1117,6 +1117,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'User blocked.'**
   String get userBlocked;
+
+  /// No description provided for @premiumYourPlan.
+  ///
+  /// In en, this message translates to:
+  /// **'Your plan: {name}'**
+  String premiumYourPlan(Object name);
+
+  /// No description provided for @unlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock'**
+  String get unlock;
+
+  /// No description provided for @currentPlanTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get currentPlanTag;
+
+  /// No description provided for @perkSlots.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} listing slots'**
+  String perkSlots(Object n);
+
+  /// No description provided for @perkBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium badge'**
+  String get perkBadge;
+
+  /// No description provided for @perkAvatars.
+  ///
+  /// In en, this message translates to:
+  /// **'Exclusive avatars'**
+  String get perkAvatars;
+
+  /// No description provided for @perMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'/month'**
+  String get perMonth;
+
+  /// No description provided for @premiumOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium only'**
+  String get premiumOnly;
 }
 
 class _AppLocalizationsDelegate

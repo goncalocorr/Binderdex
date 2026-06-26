@@ -19,6 +19,7 @@ import '../../presentation/screens/my_binder_screen.dart';
 import '../../presentation/screens/my_cards_screen.dart';
 import '../../presentation/screens/my_listings_screen.dart';
 import '../../presentation/screens/onboarding_screen.dart';
+import '../../presentation/screens/premium_screen.dart';
 import '../../presentation/screens/search_screen.dart';
 import '../../presentation/screens/set_cards_screen.dart';
 import '../../presentation/screens/sets_screen.dart';
@@ -198,6 +199,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       path: '/community/card/:id',
       builder: (_, s) => CardListingsScreen(cardId: s.pathParameters['id']!),
     ),
+    GoRoute(path: '/premium', builder: (_, __) => const PremiumScreen()),
     GoRoute(path: '/messages', builder: (_, __) => const MessagesScreen()),
     GoRoute(
       path: '/chat',

@@ -5,9 +5,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../domain/entities/chat.dart';
 import '../../domain/entities/listing.dart';
+import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/auth_guard.dart';
+import '../widgets/premium_badge.dart';
 
 class ListingDetailScreen extends ConsumerWidget {
   final Listing listing;
@@ -100,7 +102,14 @@ class ListingDetailScreen extends ConsumerWidget {
         const SizedBox(height: 16),
         ListTile(
           leading: const Icon(Icons.person),
-          title: Text(listing.ownerName),
+          title: Row(children: [
+            Flexible(child: Text(listing.ownerName)),
+            if (MarketTier.isPremium(listing.ownerTier))
+              const Padding(
+                padding: EdgeInsets.only(left: 6),
+                child: PremiumBadge(size: 16),
+              ),
+          ]),
           subtitle: Text(_modeLabel(t)),
         ),
         if (listing.wantCards.isNotEmpty) ...[

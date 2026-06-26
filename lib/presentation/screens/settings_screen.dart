@@ -7,6 +7,7 @@ import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/avatar.dart';
+import '../widgets/premium_badge.dart';
 
 /// Perfil: cabeçalho com avatar + resumo, atalhos (Iniciar sessão, Wishlist),
 /// tema e idioma. Sincronização e Premium ficam preparados aqui mas só ganham
@@ -69,7 +70,8 @@ class SettingsScreen extends ConsumerWidget {
     final t = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     final current = ref.read(avatarProvider);
-    final ids = kAvatarIds;
+    final tier = ref.read(marketTierProvider).valueOrNull ?? 0;
+    final ids = [...kPremiumAvatarIds, ...kAvatarIds];
 
     showModalBottomSheet<void>(
       context: context,
@@ -98,8 +100,14 @@ class SettingsScreen extends ConsumerWidget {
                   crossAxisSpacing: 12,
                   children: ids.map((id) {
                 final selected = id == current;
+                final locked = isPremiumAvatar(id) && !MarketTier.isPremium(tier);
                 return GestureDetector(
                   onTap: () async {
+                    if (locked) {
+                      Navigator.pop(ctx);
+                      context.push('/premium');
+                      return;
+                    }
                     ref.read(avatarProvider.notifier).state = id;
                     await ref.read(prefsProvider).setString('avatar', id);
                     final uid = ref.read(authStateProvider).valueOrNull?.uid;
@@ -112,17 +120,31 @@ class SettingsScreen extends ConsumerWidget {
                     }
                     if (ctx.mounted) Navigator.pop(ctx);
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: selected
-                          ? Border.all(color: cs.primary, width: 3)
-                          : null,
-                    ),
-                    child: ClipOval(
-                      child: Image.asset('assets/avatars/$id.png',
-                          fit: BoxFit.cover),
-                    ),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: selected
+                              ? Border.all(color: cs.primary, width: 3)
+                              : null,
+                        ),
+                        child: ClipOval(
+                          child: Image.asset('assets/avatars/$id.png',
+                              fit: BoxFit.cover),
+                        ),
+                      ),
+                      if (locked)
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.black.withValues(alpha: 0.45),
+                          ),
+                          child: const Icon(Icons.lock,
+                              color: Colors.white, size: 22),
+                        ),
+                    ],
                   ),
                 );
                 }).toList(),
@@ -210,6 +232,8 @@ class SettingsScreen extends ConsumerWidget {
     final avatar = ref.watch(avatarProvider);
     final user = ref.watch(authStateProvider).valueOrNull;
     final signedIn = user != null && !user.isAnonymous;
+    final isPremium =
+        MarketTier.isPremium(ref.watch(marketTierProvider).valueOrNull ?? 0);
     final owned = ref.watch(globalProgressProvider).valueOrNull?.owned ?? 0;
     final mySets = ref
             .watch(setsListProvider)
@@ -255,8 +279,19 @@ class SettingsScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name.isEmpty ? t.guest : name,
-                        style: Theme.of(context).textTheme.titleLarge),
+                    Row(children: [
+                      Flexible(
+                        child: Text(name.isEmpty ? t.guest : name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleLarge),
+                      ),
+                      if (isPremium)
+                        const Padding(
+                          padding: EdgeInsets.only(left: 6),
+                          child: PremiumBadge(size: 20),
+                        ),
+                    ]),
                     const SizedBox(height: 2),
                     Text(t.profileSummary(owned, mySets),
                         style: Theme.of(context)
@@ -309,28 +344,9 @@ class SettingsScreen extends ConsumerWidget {
           leading: const Icon(Icons.workspace_premium),
           title: Text(t.premiumSlots),
           subtitle: Text(
-              '${MarketTier.slotsFor(ref.watch(marketTierProvider).valueOrNull ?? 0)} slots'),
-          onTap: () async {
-            final uid = ref.read(authStateProvider).valueOrNull?.uid;
-            if (uid == null) return;
-            final svc = ref.read(marketServiceProvider);
-            await showDialog<void>(
-              context: context,
-              builder: (_) => SimpleDialog(
-                title: Text(t.premiumSlots),
-                children: [
-                  for (var i = 0; i < MarketTier.slots.length; i++)
-                    SimpleDialogOption(
-                      onPressed: () {
-                        svc.setTier(uid, i);
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Nível $i — ${MarketTier.slots[i]} slots'),
-                    ),
-                ],
-              ),
-            );
-          },
+              '${MarketTier.nameFor(ref.watch(marketTierProvider).valueOrNull ?? 0)} · ${MarketTier.slotsFor(ref.watch(marketTierProvider).valueOrNull ?? 0)} slots'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => context.push('/premium'),
         ),
         const Divider(),
 

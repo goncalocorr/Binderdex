@@ -173,5 +173,15 @@
   "sendAnyway": "Enviar à mesma",
   "blockConfirm": "Bloquear {name}? Deixas de ver os anúncios e as mensagens desta pessoa.",
   "@blockConfirm": { "placeholders": { "name": {} } },
-  "userBlocked": "Utilizador bloqueado."
+  "userBlocked": "Utilizador bloqueado.",
+  "premiumYourPlan": "O teu plano: {name}",
+  "@premiumYourPlan": { "placeholders": { "name": {} } },
+  "unlock": "Desbloquear",
+  "currentPlanTag": "Atual",
+  "perkSlots": "{n} slots de anúncios",
+  "@perkSlots": { "placeholders": { "n": {} } },
+  "perkBadge": "Selo premium",
+  "perkAvatars": "Avatares exclusivos",
+  "perMonth": "/mês",
+  "premiumOnly": "Só premium"
 }

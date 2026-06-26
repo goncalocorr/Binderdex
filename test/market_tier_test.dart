@@ -14,6 +14,14 @@ void main() {
     expect(MarketTier.slotsFor(99), 500);
   });
 
+  test('names/prices têm o mesmo nº de níveis que slots', () {
+    expect(MarketTier.names.length, MarketTier.slots.length);
+    expect(MarketTier.prices.length, MarketTier.slots.length);
+    expect(MarketTier.names.first, 'Grátis');
+    expect(MarketTier.isPremium(0), false);
+    expect(MarketTier.isPremium(1), true);
+  });
+
   test('canPublish permite até ao limite e bloqueia acima', () {
     expect(MarketTier.canPublish(activeCount: 18, tier: 0, selectedCount: 2), true);
     expect(MarketTier.canPublish(activeCount: 19, tier: 0, selectedCount: 2), false);

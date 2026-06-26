@@ -73,6 +73,7 @@ class MarketService {
         if (wantText != null && wantText.isNotEmpty) 'wantText': wantText,
         if (note != null && note.isNotEmpty) 'note': note,
         if (wanted.isNotEmpty) 'wantCards': wanted,
+        if (tier > 0) 'ownerTier': tier,
         'status': 'active',
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -94,6 +95,7 @@ class MarketService {
     String? wantText,
     String? note,
     List<CardRef> wantCards = const [],
+    int ownerTier = 0,
   }) =>
       _listings.doc(id).update({
         'mode': mode.id,
@@ -101,6 +103,7 @@ class MarketService {
         'wantText': wantText?.trim() ?? '',
         'note': note?.trim() ?? '',
         'wantCards': wantCards.map((c) => c.toMap()).toList(),
+        'ownerTier': ownerTier,
       });
 
   Future<void> deleteListing(String id, String ownerUid) async {

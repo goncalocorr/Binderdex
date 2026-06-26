@@ -67,4 +67,19 @@ void main() {
     expect(back.wantCards.single.cardName, 'Pikachu');
     expect(back.wantCards.single.cardImage, 'pika');
   });
+
+  test('ownerTier faz ida-e-volta (default 0)', () {
+    final l = Listing(
+      id: 'x', ownerUid: 'u1', ownerName: 'Ana', ownerAvatar: '',
+      cardId: 'c', cardName: 'C', cardImage: '', setId: 's',
+      mode: TradeMode.sell, condition: CardCondition.good,
+      wantText: null, note: null,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+      ownerTier: 2,
+    );
+    expect(l.toMap()['ownerTier'], 2);
+    expect(Listing.fromMap('x', l.toMap()).ownerTier, 2);
+    // ausente → 0
+    expect(Listing.fromMap('y', {'ownerUid': 'u'}).ownerTier, 0);
+  });
 }

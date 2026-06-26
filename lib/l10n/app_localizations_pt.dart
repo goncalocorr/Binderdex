@@ -567,4 +567,32 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get userBlocked => 'Utilizador bloqueado.';
+
+  @override
+  String premiumYourPlan(Object name) {
+    return 'O teu plano: $name';
+  }
+
+  @override
+  String get unlock => 'Desbloquear';
+
+  @override
+  String get currentPlanTag => 'Atual';
+
+  @override
+  String perkSlots(Object n) {
+    return '$n slots de anúncios';
+  }
+
+  @override
+  String get perkBadge => 'Selo premium';
+
+  @override
+  String get perkAvatars => 'Avatares exclusivos';
+
+  @override
+  String get perMonth => '/mês';
+
+  @override
+  String get premiumOnly => 'Só premium';
 }
