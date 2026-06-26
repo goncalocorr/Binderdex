@@ -34,6 +34,7 @@ class MyBinderScreen extends ConsumerWidget {
 
         if (mine.isEmpty) {
           return EmptyState(
+            imageAsset: 'assets/binder_empty.png',
             icon: Icons.collections_bookmark_outlined,
             title: t.noStartedCollections,
             description: t.noStartedCollectionsBody,
