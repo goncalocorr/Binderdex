@@ -40,40 +40,13 @@ class MyListingsScreen extends ConsumerWidget {
                     itemCount: list.length,
                     itemBuilder: (_, i) {
                       final l = list[i];
-                      return Dismissible(
-                        key: ValueKey(l.id),
-                        direction: DismissDirection.endToStart,
-                        background: Container(
-                          color: Colors.red,
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.only(right: 16),
-                          child: const Icon(Icons.delete, color: Colors.white),
-                        ),
-                        // Apaga primeiro; só remove da lista se a escrita
-                        // tiver sucesso. Devolve sempre false: é o stream do
-                        // Firestore que retira o item (evita o erro do
-                        // Dismissible "ainda na árvore" e o contador a
-                        // dessincronizar se a escrita falhar).
-                        confirmDismiss: (_) async {
-                          try {
-                            await ref
-                                .read(marketServiceProvider)
-                                .deleteListing(l.id, l.ownerUid);
-                          } catch (err) {
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('$err')));
-                            }
-                          }
-                          return false;
-                        },
-                        child: ListingTile(
-                          listing: l,
-                          onTap: () => showModalBottomSheet<void>(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (_) => EditListingSheet(listing: l),
-                          ),
+                      // Tocar abre a edição, onde está o botão "Apagar anúncio".
+                      return ListingTile(
+                        listing: l,
+                        onTap: () => showModalBottomSheet<void>(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (_) => EditListingSheet(listing: l),
                         ),
                       );
                     },
