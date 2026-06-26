@@ -157,5 +157,8 @@
   "noListings": "Ainda não há anúncios.",
   "noListingsBody": "Quando novos anúncios forem publicados, eles aparecerão aqui.",
   "editListingTitle": "Editar anúncio",
-  "save": "Guardar"
+  "save": "Guardar",
+  "wantCardsLimit": "Já chegaste ao máximo de cartas.",
+  "wantedCards": "Cartas que quero",
+  "wishlistEmpty": "A tua wishlist está vazia. Pesquisa uma carta acima."
 }

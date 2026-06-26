@@ -40,5 +40,31 @@ void main() {
     expect(l.mode, TradeMode.sell);
     expect(l.condition, CardCondition.mint);
     expect(l.createdAt.millisecondsSinceEpoch, 0);
+    expect(l.wantCards, isEmpty);
+  });
+
+  test('wantCards faz ida-e-volta no toMap/fromMap', () {
+    final l = Listing(
+      id: 'x', ownerUid: 'u1', ownerName: 'Ana', ownerAvatar: '',
+      cardId: 'base1-4', cardName: 'Charizard', cardImage: 'img', setId: 'base1',
+      mode: TradeMode.trade, condition: CardCondition.good,
+      wantText: null, note: null,
+      createdAt: DateTime.fromMillisecondsSinceEpoch(0),
+      wantCards: const [
+        CardRef(
+            cardId: 'base1-58',
+            cardName: 'Pikachu',
+            cardImage: 'pika',
+            setId: 'base1'),
+      ],
+    );
+    final m = l.toMap();
+    expect(m['wantCards'], isA<List>());
+    expect((m['wantCards'] as List).single['cardId'], 'base1-58');
+
+    final back = Listing.fromMap('x', m);
+    expect(back.wantCards.length, 1);
+    expect(back.wantCards.single.cardName, 'Pikachu');
+    expect(back.wantCards.single.cardImage, 'pika');
   });
 }

@@ -236,6 +236,18 @@ final communitySearchResultsProvider = StreamProvider<List<CardItem>>((ref) {
       );
 });
 
+/// Pesquisa de cartas do catálogo para o seletor "o que quero em troca".
+/// Estado local (a query é passada como argumento family).
+final marketCardSearchProvider =
+    StreamProvider.family<List<CardItem>, String>((ref, q) {
+  if (q.trim().isEmpty) return Stream.value(const <CardItem>[]);
+  return ref.watch(cardsRepositoryProvider).searchAll(
+        query: q,
+        types: const [],
+        status: CardStatusFilter.all,
+      );
+});
+
 final ownedCardsProvider =
     FutureProvider.family<List<OwnedCard>, bool>((ref, onlyDuplicates) {
   ref.watch(setsListProvider); // recalcula quando a coleção muda

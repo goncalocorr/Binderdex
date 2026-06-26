@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../domain/entities/listing.dart';
 import '../../l10n/app_localizations.dart';
@@ -66,6 +67,37 @@ class ListingDetailScreen extends ConsumerWidget {
           title: Text(listing.ownerName),
           subtitle: Text(_modeLabel(t)),
         ),
+        if (listing.wantCards.isNotEmpty) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+            child: Text(t.whatIWant,
+                style: Theme.of(context).textTheme.titleMedium),
+          ),
+          SizedBox(
+            height: 110,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: listing.wantCards.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 8),
+              itemBuilder: (_, i) {
+                final c = listing.wantCards[i];
+                return GestureDetector(
+                  onTap: () => context.push('/card/${c.cardId}'),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: c.cardImage.isEmpty
+                        ? Container(width: 78, color: Colors.grey)
+                        : CachedNetworkImage(
+                            imageUrl: c.cardImage,
+                            width: 78,
+                            fit: BoxFit.cover),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
         if (listing.wantText != null && listing.wantText!.isNotEmpty)
           ListTile(title: Text(t.whatIWant), subtitle: Text(listing.wantText!)),
         if (listing.note != null && listing.note!.isNotEmpty)

@@ -1033,6 +1033,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// No description provided for @wantCardsLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve reached the card limit.'**
+  String get wantCardsLimit;
+
+  /// No description provided for @wantedCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards I want'**
+  String get wantedCards;
+
+  /// No description provided for @wishlistEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your wishlist is empty. Search for a card above.'**
+  String get wishlistEmpty;
 }
 
 class _AppLocalizationsDelegate

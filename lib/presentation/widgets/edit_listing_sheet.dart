@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/listing.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import 'want_cards_field.dart';
 
 /// Folha de edição de um anúncio já publicado. A carta é fixa; só se editam
 /// modo, condição, "o que quero" e nota.
@@ -18,13 +19,12 @@ class EditListingSheet extends ConsumerStatefulWidget {
 class _EditListingSheetState extends ConsumerState<EditListingSheet> {
   late TradeMode _mode = widget.listing.mode;
   late CardCondition _cond = widget.listing.condition;
-  late final _want = TextEditingController(text: widget.listing.wantText ?? '');
+  late List<CardRef> _wantCards = widget.listing.wantCards;
   late final _note = TextEditingController(text: widget.listing.note ?? '');
   bool _busy = false;
 
   @override
   void dispose() {
-    _want.dispose();
     _note.dispose();
     super.dispose();
   }
@@ -36,8 +36,9 @@ class _EditListingSheetState extends ConsumerState<EditListingSheet> {
             id: widget.listing.id,
             mode: _mode,
             condition: _cond,
-            wantText: _want.text,
+            wantText: null,
             note: _note.text,
+            wantCards: _mode == TradeMode.sell ? const [] : _wantCards,
           );
       if (mounted) Navigator.of(context).pop(true);
     } catch (err) {
@@ -94,12 +95,13 @@ class _EditListingSheetState extends ConsumerState<EditListingSheet> {
           onChanged: (v) => setState(() => _cond = v ?? CardCondition.good),
         ),
         const SizedBox(height: 12),
-        TextField(
-          controller: _want,
-          maxLength: 280,
-          decoration: InputDecoration(
-              labelText: t.whatIWant, border: const OutlineInputBorder()),
-        ),
+        if (_mode != TradeMode.sell) ...[
+          WantCardsField(
+            cards: _wantCards,
+            onChanged: (v) => setState(() => _wantCards = v),
+          ),
+          const SizedBox(height: 12),
+        ],
         TextField(
           controller: _note,
           maxLength: 280,

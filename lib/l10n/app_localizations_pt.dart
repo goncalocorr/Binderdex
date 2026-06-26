@@ -520,4 +520,14 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get save => 'Guardar';
+
+  @override
+  String get wantCardsLimit => 'Já chegaste ao máximo de cartas.';
+
+  @override
+  String get wantedCards => 'Cartas que quero';
+
+  @override
+  String get wishlistEmpty =>
+      'A tua wishlist está vazia. Pesquisa uma carta acima.';
 }

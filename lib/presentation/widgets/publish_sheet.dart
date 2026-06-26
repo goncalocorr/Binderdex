@@ -6,6 +6,7 @@ import '../../domain/entities/listing.dart';
 import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import 'want_cards_field.dart';
 
 class PublishSheet extends ConsumerStatefulWidget {
   final List<CardRef> cards;
@@ -18,13 +19,12 @@ class PublishSheet extends ConsumerStatefulWidget {
 class _PublishSheetState extends ConsumerState<PublishSheet> {
   TradeMode _mode = TradeMode.trade;
   CardCondition _cond = CardCondition.good;
-  final _want = TextEditingController();
+  List<CardRef> _wantCards = [];
   final _note = TextEditingController();
   bool _busy = false;
 
   @override
   void dispose() {
-    _want.dispose();
     _note.dispose();
     super.dispose();
   }
@@ -52,8 +52,9 @@ class _PublishSheetState extends ConsumerState<PublishSheet> {
             activeCount: active,
             mode: _mode,
             condition: _cond,
-            wantText: _want.text.trim(),
+            wantText: null,
             note: _note.text.trim(),
+            wantCards: _mode == TradeMode.sell ? const [] : _wantCards,
           );
       if (mounted) Navigator.of(context).pop(true);
     } on SlotLimitException {
@@ -101,12 +102,13 @@ class _PublishSheetState extends ConsumerState<PublishSheet> {
           onChanged: (v) => setState(() => _cond = v ?? CardCondition.good),
         ),
         const SizedBox(height: 12),
-        TextField(
-          controller: _want,
-          maxLength: 280,
-          decoration: InputDecoration(
-              labelText: t.whatIWant, border: const OutlineInputBorder()),
-        ),
+        if (_mode != TradeMode.sell) ...[
+          WantCardsField(
+            cards: _wantCards,
+            onChanged: (v) => setState(() => _wantCards = v),
+          ),
+          const SizedBox(height: 12),
+        ],
         TextField(
           controller: _note,
           maxLength: 280,

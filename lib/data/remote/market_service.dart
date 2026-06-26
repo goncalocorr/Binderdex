@@ -50,11 +50,13 @@ class MarketService {
     required CardCondition condition,
     String? wantText,
     String? note,
+    List<CardRef> wantCards = const [],
   }) async {
     if (!MarketTier.canPublish(
         activeCount: activeCount, tier: tier, selectedCount: cards.length)) {
       throw SlotLimitException(MarketTier.slotsFor(tier));
     }
+    final wanted = wantCards.map((c) => c.toMap()).toList();
     final batch = _db.batch();
     for (final c in cards) {
       final doc = _listings.doc();
@@ -70,6 +72,7 @@ class MarketService {
         'condition': condition.id,
         if (wantText != null && wantText.isNotEmpty) 'wantText': wantText,
         if (note != null && note.isNotEmpty) 'note': note,
+        if (wanted.isNotEmpty) 'wantCards': wanted,
         'status': 'active',
         'createdAt': FieldValue.serverTimestamp(),
       });
@@ -90,12 +93,14 @@ class MarketService {
     required CardCondition condition,
     String? wantText,
     String? note,
+    List<CardRef> wantCards = const [],
   }) =>
       _listings.doc(id).update({
         'mode': mode.id,
         'condition': condition.id,
         'wantText': wantText?.trim() ?? '',
         'note': note?.trim() ?? '',
+        'wantCards': wantCards.map((c) => c.toMap()).toList(),
       });
 
   Future<void> deleteListing(String id, String ownerUid) async {

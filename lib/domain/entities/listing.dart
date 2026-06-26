@@ -16,7 +16,7 @@ enum CardCondition {
       .firstWhere((e) => e.name == s, orElse: () => CardCondition.good);
 }
 
-/// Identidade mínima de uma carta a publicar.
+/// Identidade mínima de uma carta (a publicar ou desejada em troca).
 class CardRef {
   final String cardId, cardName, cardImage, setId;
   const CardRef({
@@ -25,6 +25,20 @@ class CardRef {
     required this.cardImage,
     required this.setId,
   });
+
+  Map<String, dynamic> toMap() => {
+        'cardId': cardId,
+        'cardName': cardName,
+        'cardImage': cardImage,
+        'setId': setId,
+      };
+
+  factory CardRef.fromMap(Map<String, dynamic> m) => CardRef(
+        cardId: (m['cardId'] ?? '') as String,
+        cardName: (m['cardName'] ?? '') as String,
+        cardImage: (m['cardImage'] ?? '') as String,
+        setId: (m['setId'] ?? '') as String,
+      );
 }
 
 class Listing {
@@ -33,6 +47,9 @@ class Listing {
   final TradeMode mode;
   final CardCondition condition;
   final String? wantText, note;
+
+  /// Cartas que o dono quer em troca (só relevante em trocar/ambos).
+  final List<CardRef> wantCards;
   final DateTime createdAt;
 
   const Listing({
@@ -49,6 +66,7 @@ class Listing {
     required this.wantText,
     required this.note,
     required this.createdAt,
+    this.wantCards = const [],
   });
 
   /// Mapa para o Firestore. `createdAt` é omitido aqui — o serviço acrescenta
@@ -65,6 +83,8 @@ class Listing {
         'condition': condition.id,
         if (wantText != null && wantText!.isNotEmpty) 'wantText': wantText,
         if (note != null && note!.isNotEmpty) 'note': note,
+        if (wantCards.isNotEmpty)
+          'wantCards': wantCards.map((c) => c.toMap()).toList(),
         'status': 'active',
       };
 
@@ -83,6 +103,9 @@ class Listing {
       condition: CardCondition.fromId((m['condition'] ?? 'good') as String),
       wantText: m['wantText'] as String?,
       note: m['note'] as String?,
+      wantCards: ((m['wantCards'] as List?) ?? const [])
+          .map((e) => CardRef.fromMap(Map<String, dynamic>.from(e as Map)))
+          .toList(),
       createdAt: ts is Timestamp
           ? ts.toDate()
           : DateTime.fromMillisecondsSinceEpoch(0),

@@ -516,4 +516,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get save => 'Save';
+
+  @override
+  String get wantCardsLimit => 'You\'ve reached the card limit.';
+
+  @override
+  String get wantedCards => 'Cards I want';
+
+  @override
+  String get wishlistEmpty =>
+      'Your wishlist is empty. Search for a card above.';
 }
