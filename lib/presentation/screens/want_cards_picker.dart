@@ -6,6 +6,7 @@ import '../../data/repositories/cards_repository.dart';
 import '../../domain/entities/listing.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import '../widgets/dex_ui.dart';
 
 /// Seletor das cartas que o utilizador quer em troca. Devolve `List<CardRef>`
 /// via `Navigator.pop`. Mostra a wishlist quando não há pesquisa; ao escrever,
@@ -94,8 +95,13 @@ class _WantCardsPickerState extends ConsumerState<WantCardsPicker> {
             error: (e, _) => Center(child: Text('$e')),
             data: (items) {
               if (items.isEmpty) {
-                return Center(
-                    child: Text(searching ? t.noMatch : t.wishlistEmpty));
+                return searching
+                    ? Center(child: Text(t.noMatch))
+                    : EmptyState(
+                        imageAsset: 'assets/wishlist_empty.png',
+                        icon: Icons.favorite_border,
+                        title: t.wishlistEmpty,
+                      );
               }
               return GridView.builder(
                 padding: const EdgeInsets.all(12),

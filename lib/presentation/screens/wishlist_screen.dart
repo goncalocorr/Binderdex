@@ -38,6 +38,7 @@ class WishlistScreen extends ConsumerWidget {
         data: (items) {
           if (items.isEmpty) {
             return EmptyState(
+              imageAsset: 'assets/wishlist_empty.png',
               icon: Icons.favorite_border,
               title: t.wishlistEmptyTitle,
               description: t.wishlistEmptyBody,
