@@ -19,7 +19,13 @@ const ColorFilter _grayscale = ColorFilter.matrix(<double>[
 class CardTile extends StatelessWidget {
   final CardItem item;
   final VoidCallback onTap;
-  const CardTile({super.key, required this.item, required this.onTap});
+  final VoidCallback? onLongPress;
+  const CardTile({
+    super.key,
+    required this.item,
+    required this.onTap,
+    this.onLongPress,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +60,7 @@ class CardTile extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
+        onLongPress: onLongPress,
         borderRadius: BorderRadius.circular(DexRadii.lg),
         child: Ink(
           decoration: BoxDecoration(

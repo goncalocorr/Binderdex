@@ -15,6 +15,35 @@ import '../widgets/card_filter_sheet.dart';
 import '../widgets/card_tile.dart';
 import '../widgets/dex_ui.dart';
 
+/// Folha de ações ao manter pressionada uma carta na grelha — atalho para ver
+/// os anúncios dessa carta na Comunidade sem abrir o detalhe.
+void _showCardOffersSheet(BuildContext context, String cardId, String cardName) {
+  final t = AppLocalizations.of(context)!;
+  showModalBottomSheet<void>(
+    context: context,
+    builder: (sheetCtx) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.style),
+            title: Text(cardName),
+          ),
+          const Divider(height: 1),
+          ListTile(
+            leading: const Icon(Icons.storefront),
+            title: Text(t.checkCommunityOffers),
+            onTap: () {
+              Navigator.of(sheetCtx).pop();
+              context.push('/community/card/$cardId');
+            },
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 /// Cartas de um set: sincroniza (busca à API), abas com contagens, pesquisa,
 /// barra de progresso e FAB de adição rápida.
 class SetCardsScreen extends ConsumerStatefulWidget {
@@ -198,10 +227,15 @@ class _SetCardsScreenState extends ConsumerState<SetCardsScreen> {
                       mainAxisSpacing: 10,
                     ),
                     itemCount: items.length,
-                    itemBuilder: (_, i) => CardTile(
-                      item: items[i],
-                      onTap: () => context.push('/card/${items[i].card.id}'),
-                    ),
+                    itemBuilder: (_, i) {
+                      final card = items[i].card;
+                      return CardTile(
+                        item: items[i],
+                        onTap: () => context.push('/card/${card.id}'),
+                        onLongPress: () =>
+                            _showCardOffersSheet(context, card.id, card.name),
+                      );
+                    },
                   );
                 },
               ),
