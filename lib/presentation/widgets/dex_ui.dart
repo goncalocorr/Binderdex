@@ -13,6 +13,10 @@ class EmptyState extends StatelessWidget {
   /// Ilustração opcional (ex.: 'assets/empty_listings.png'). Quando definida,
   /// substitui o círculo do ícone.
   final String? imageAsset;
+
+  /// Alinhamento vertical do bloco. Por omissão centrado; usar p.ex.
+  /// `Alignment(0, -0.3)` para puxar ligeiramente para cima.
+  final Alignment alignment;
   const EmptyState({
     super.key,
     required this.icon,
@@ -20,12 +24,14 @@ class EmptyState extends StatelessWidget {
     this.description,
     this.action,
     this.imageAsset,
+    this.alignment = Alignment.center,
   });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    return Center(
+    return Align(
+      alignment: alignment,
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(

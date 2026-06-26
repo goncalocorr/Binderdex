@@ -42,6 +42,7 @@ class WishlistScreen extends ConsumerWidget {
               icon: Icons.favorite_border,
               title: t.wishlistEmptyTitle,
               description: t.wishlistEmptyBody,
+              alignment: const Alignment(0, -0.35),
             );
           }
           return GridView.builder(

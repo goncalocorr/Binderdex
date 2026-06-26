@@ -101,6 +101,7 @@ class _WantCardsPickerState extends ConsumerState<WantCardsPicker> {
                         imageAsset: 'assets/wishlist_empty.png',
                         icon: Icons.favorite_border,
                         title: t.wishlistEmpty,
+                        alignment: const Alignment(0, -0.35),
                       );
               }
               return GridView.builder(
