@@ -116,7 +116,8 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
   /// o utilizador a procurar uma carta para ver quem a vende ou troca.
   Widget _buildPrompt(AppLocalizations t) {
     final cs = Theme.of(context).colorScheme;
-    return Center(
+    return Align(
+      alignment: const Alignment(0, -0.25),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Column(
