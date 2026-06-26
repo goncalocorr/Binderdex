@@ -179,7 +179,10 @@ class _GridCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           child: c.imageSmall.isEmpty
               ? Container(color: cs.surfaceContainerHigh)
-              : CachedNetworkImage(imageUrl: c.imageSmall, fit: BoxFit.cover),
+              : CachedNetworkImage(
+                  imageUrl: c.imageSmall,
+                  fit: BoxFit.cover,
+                  memCacheWidth: 360),
         ),
         if (selected)
           Container(

@@ -292,7 +292,8 @@ class _VariantToggleState extends State<VariantToggle>
     final owned = widget.owned;
 
     if (owned && widget.sheen != null) {
-      return AnimatedBuilder(
+      return RepaintBoundary(
+        child: AnimatedBuilder(
         animation: _c,
         builder: (_, __) {
           final shift = _c.value * 2;
@@ -310,6 +311,7 @@ class _VariantToggleState extends State<VariantToggle>
             const Color(0xFF3A2A14),
           );
         },
+      ),
       );
     }
     if (owned) {
@@ -417,7 +419,8 @@ class _RarityBadgeState extends State<RarityBadge>
     final sheen = raritySheen(widget.rarity);
     if (sheen != null) {
       final rainbow = identical(sheen, DexSheens.rainbow);
-      return AnimatedBuilder(
+      return RepaintBoundary(
+        child: AnimatedBuilder(
         animation: _c,
         builder: (_, __) {
           final shift = _c.value * 2;
@@ -437,6 +440,7 @@ class _RarityBadgeState extends State<RarityBadge>
                 rainbow ? Colors.white : const Color(0xFF3A2A14)),
           );
         },
+      ),
       );
     }
     return Container(
@@ -477,7 +481,10 @@ class _AnimatedSheenState extends State<AnimatedSheen>
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
+    // RepaintBoundary: isola a repintura contínua do brilho do resto da carta
+    // (imagem/badges não repintam a cada frame).
+    return RepaintBoundary(
+      child: IgnorePointer(
       child: AnimatedBuilder(
         animation: _c,
         builder: (_, __) {
@@ -516,6 +523,7 @@ class _AnimatedSheenState extends State<AnimatedSheen>
             ],
           );
         },
+      ),
       ),
     );
   }

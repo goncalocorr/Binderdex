@@ -73,7 +73,9 @@ class _MyCardsScreenState extends ConsumerState<MyCardsScreen> {
                   child: o.card.imageLarge.isEmpty
                       ? Container(color: Theme.of(context).colorScheme.surfaceContainerHigh)
                       : CachedNetworkImage(
-                          imageUrl: o.card.imageLarge, fit: BoxFit.cover),
+                          imageUrl: o.card.imageLarge,
+                          fit: BoxFit.cover,
+                          memCacheWidth: 400),
                 ),
                 if (sel)
                   Container(

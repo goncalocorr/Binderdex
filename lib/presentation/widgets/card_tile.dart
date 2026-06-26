@@ -46,6 +46,7 @@ class CardTile extends StatelessWidget {
     Widget art = CachedNetworkImage(
       imageUrl: c.imageSmall,
       fit: BoxFit.contain,
+      memCacheWidth: 360,
       placeholder: (_, __) =>
           const Center(child: CircularProgressIndicator(strokeWidth: 2)),
       errorWidget: (_, __, ___) =>
