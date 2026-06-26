@@ -526,4 +526,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get wishlistEmpty =>
       'Your wishlist is empty. Search for a card above.';
+
+  @override
+  String get deleteListingAction => 'Delete listing';
+
+  @override
+  String get deleteListingConfirm => 'Delete this listing for good?';
 }

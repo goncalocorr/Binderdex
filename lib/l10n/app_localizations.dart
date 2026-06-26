@@ -1051,6 +1051,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your wishlist is empty. Search for a card above.'**
   String get wishlistEmpty;
+
+  /// No description provided for @deleteListingAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete listing'**
+  String get deleteListingAction;
+
+  /// No description provided for @deleteListingConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this listing for good?'**
+  String get deleteListingConfirm;
 }
 
 class _AppLocalizationsDelegate

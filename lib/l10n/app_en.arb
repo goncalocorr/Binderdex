@@ -196,5 +196,8 @@
   "save": "Save",
   "wantCardsLimit": "You've reached the card limit.",
   "wantedCards": "Cards I want",
-  "wishlistEmpty": "Your wishlist is empty. Search for a card above."
+  "wishlistEmpty": "Your wishlist is empty. Search for a card above.",
+  "deleteListingAction": "Delete listing",
+  "deleteListingConfirm": "Delete this listing for good?",
+  "delete": "Delete"
 }

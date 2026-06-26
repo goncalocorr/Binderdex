@@ -344,7 +344,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'Isto elimina permanentemente a tua conta e a tua coleção — na nuvem e neste dispositivo. Não pode ser anulado.';
 
   @override
-  String get delete => 'Eliminar';
+  String get delete => 'Apagar';
 
   @override
   String get reauthNeeded =>
@@ -530,4 +530,10 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get wishlistEmpty =>
       'A tua wishlist está vazia. Pesquisa uma carta acima.';
+
+  @override
+  String get deleteListingAction => 'Apagar anúncio';
+
+  @override
+  String get deleteListingConfirm => 'Queres mesmo apagar este anúncio?';
 }

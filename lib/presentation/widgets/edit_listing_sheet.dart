@@ -29,6 +29,41 @@ class _EditListingSheetState extends ConsumerState<EditListingSheet> {
     super.dispose();
   }
 
+  Future<void> _delete() async {
+    final t = AppLocalizations.of(context)!;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        content: Text(t.deleteListingConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(t.delete),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    setState(() => _busy = true);
+    try {
+      await ref
+          .read(marketServiceProvider)
+          .deleteListing(widget.listing.id, widget.listing.ownerUid);
+      if (mounted) Navigator.of(context).pop(true);
+    } catch (err) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('$err')));
+        setState(() => _busy = false);
+      }
+    }
+  }
+
   Future<void> _save() async {
     setState(() => _busy = true);
     try {
@@ -117,6 +152,12 @@ class _EditListingSheetState extends ConsumerState<EditListingSheet> {
                   width: 18,
                   child: CircularProgressIndicator(strokeWidth: 2))
               : Text(t.save),
+        ),
+        TextButton.icon(
+          onPressed: _busy ? null : _delete,
+          icon: const Icon(Icons.delete_outline, color: Colors.red),
+          label: Text(t.deleteListingAction,
+              style: const TextStyle(color: Colors.red)),
         ),
       ]),
     );
