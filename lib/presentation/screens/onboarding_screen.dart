@@ -7,14 +7,24 @@ import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 
 /// Ecrã de boas-vindas (primeiro arranque): logo, frase, e CTA para começar.
-/// O "Já tenho conta" fica desativado até à Etapa 2 (login/Firebase).
 class OnboardingScreen extends ConsumerWidget {
   const OnboardingScreen({super.key});
 
-  void _start(BuildContext context, WidgetRef ref) {
+  /// Conclui o onboarding (persiste) e navega. Sem marcar como concluído, o
+  /// gate do router reenvia qualquer rota de volta para `/onboarding`.
+  void _finishOnboarding(WidgetRef ref) {
     ref.read(onboardingDoneProvider.notifier).state = true;
     ref.read(prefsProvider).setBool('onboardingDone', true);
+  }
+
+  void _start(BuildContext context, WidgetRef ref) {
+    _finishOnboarding(ref);
     context.go('/');
+  }
+
+  void _login(BuildContext context, WidgetRef ref) {
+    _finishOnboarding(ref);
+    context.go('/login');
   }
 
   @override
@@ -79,9 +89,9 @@ class OnboardingScreen extends ConsumerWidget {
                   onPressed: () => _start(context, ref),
                 ),
                 const SizedBox(height: 10),
-                // Mostra o ecrã de login (visual; auth real na Etapa 2).
+                // Conclui o onboarding e abre o ecrã de login.
                 TextButton(
-                  onPressed: () => context.push('/login'),
+                  onPressed: () => _login(context, ref),
                   child: Text(t.haveAccount),
                 ),
                 const SizedBox(height: 6),
