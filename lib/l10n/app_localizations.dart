@@ -1097,8 +1097,14 @@ abstract class AppLocalizations {
   /// No description provided for @contactWarning.
   ///
   /// In en, this message translates to:
-  /// **'This message shares a contact. Be careful — Binderdex isn\'t responsible for trades, payments or scams.'**
+  /// **'You\'re about to share your own contact (email or phone). Binderdex isn\'t responsible for trades, payments or scams.'**
   String get contactWarning;
+
+  /// No description provided for @sendAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Send anyway'**
+  String get sendAnyway;
 }
 
 class _AppLocalizationsDelegate

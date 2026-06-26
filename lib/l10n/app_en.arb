@@ -205,5 +205,6 @@
   "noConversationsBody": "Contact someone from a listing to get started.",
   "typeMessage": "Type a message…",
   "contact": "Contact",
-  "contactWarning": "This message shares a contact. Be careful — Binderdex isn't responsible for trades, payments or scams."
+  "contactWarning": "You're about to share your own contact (email or phone). Binderdex isn't responsible for trades, payments or scams.",
+  "sendAnyway": "Send anyway"
 }

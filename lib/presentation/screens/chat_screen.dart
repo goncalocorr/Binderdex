@@ -39,6 +39,28 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final uid = ref.read(authStateProvider).valueOrNull?.uid;
     final text = _input.text.trim();
     if (uid == null || text.isEmpty) return;
+    // Aviso a QUEM ENVIA quando vai partilhar um contacto seu (email/telemóvel).
+    if (messageHasContact(text)) {
+      final t = AppLocalizations.of(context)!;
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          icon: const Icon(Icons.warning_amber_rounded),
+          content: Text(t.contactWarning),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: Text(t.sendAnyway),
+            ),
+          ],
+        ),
+      );
+      if (ok != true) return;
+    }
     setState(() => _sending = true);
     _input.clear();
     try {
@@ -91,7 +113,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               itemCount: list.length,
               itemBuilder: (_, i) {
                 final m = list[list.length - 1 - i];
-                return _Bubble(message: m, mine: m.senderUid == meUid, t: t);
+                return _Bubble(message: m, mine: m.senderUid == meUid);
               },
             ),
           ),
@@ -130,54 +152,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 class _Bubble extends StatelessWidget {
   final ChatMessage message;
   final bool mine;
-  final AppLocalizations t;
-  const _Bubble({required this.message, required this.mine, required this.t});
+  const _Bubble({required this.message, required this.mine});
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    // Aviso de burla só nas mensagens RECEBIDAS com contacto.
-    final warn = !mine && messageHasContact(message.text);
     return Align(
       alignment: mine ? Alignment.centerRight : Alignment.centerLeft,
-      child: Column(
-        crossAxisAlignment:
-            mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 3),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.75),
-            decoration: BoxDecoration(
-              color: mine ? cs.primary : cs.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: Text(message.text,
-                style: TextStyle(color: mine ? cs.onPrimary : cs.onSurface)),
-          ),
-          if (warn)
-            Container(
-              margin: const EdgeInsets.only(bottom: 6, right: 24),
-              padding: const EdgeInsets.all(8),
-              constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.8),
-              decoration: BoxDecoration(
-                color: cs.errorContainer,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Icon(Icons.warning_amber_rounded,
-                    size: 18, color: cs.onErrorContainer),
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Text(t.contactWarning,
-                      style: TextStyle(
-                          fontSize: 12, color: cs.onErrorContainer)),
-                ),
-              ]),
-            ),
-        ],
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.75),
+        decoration: BoxDecoration(
+          color: mine ? cs.primary : cs.surfaceContainerHigh,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Text(message.text,
+            style: TextStyle(color: mine ? cs.onPrimary : cs.onSurface)),
       ),
     );
   }

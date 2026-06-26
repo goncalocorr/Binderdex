@@ -555,5 +555,8 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get contactWarning =>
-      'Esta mensagem partilha um contacto. Tem cuidado — a Binderdex não se responsabiliza por trocas, pagamentos ou burlas.';
+      'Estás prestes a partilhar um contacto teu (email ou telemóvel). A Binderdex não se responsabiliza por trocas, pagamentos ou burlas.';
+
+  @override
+  String get sendAnyway => 'Enviar à mesma';
 }
