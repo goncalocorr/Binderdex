@@ -117,7 +117,7 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
   Widget _buildPrompt(AppLocalizations t) {
     final cs = Theme.of(context).colorScheme;
     return Align(
-      alignment: const Alignment(0, -0.25),
+      alignment: const Alignment(0, -0.45),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
         child: Column(
