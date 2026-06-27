@@ -50,10 +50,11 @@ class _TierCard extends ConsumerWidget {
         color: cs.surface,
         borderRadius: BorderRadius.circular(DexRadii.lg),
         border: Border.all(
-          // Nos premium, o anel do glow faz de moldura (salvo o plano atual).
-          color: isCurrent
-              ? DexColors.gold500
-              : (premium ? Colors.transparent : cs.outlineVariant),
+          // Nos premium o anel do glow faz de moldura (sem dourado por cima);
+          // o plano atual distingue-se pelo glow reforçado + selo no botão.
+          color: premium
+              ? Colors.transparent
+              : (isCurrent ? DexColors.gold500 : cs.outlineVariant),
           width: isCurrent ? 2 : 1,
         ),
       ),
@@ -104,7 +105,8 @@ class _TierCard extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: premium
-          ? PremiumGlow(tier: tier, radius: DexRadii.lg, child: card)
+          ? PremiumGlow(
+              tier: tier, radius: DexRadii.lg, strong: isCurrent, child: card)
           : card,
     );
   }

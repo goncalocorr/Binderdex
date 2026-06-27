@@ -50,11 +50,16 @@ class PremiumGlow extends StatefulWidget {
   final int tier;
   final double radius;
   final Widget child;
+
+  /// Glow reforçado (anel mais grosso + auréola mais intensa) — usado no plano
+  /// atual/selecionado, em vez de uma moldura estática por cima.
+  final bool strong;
   const PremiumGlow({
     super.key,
     required this.tier,
     required this.child,
     this.radius = 16,
+    this.strong = false,
   });
 
   @override
@@ -76,7 +81,7 @@ class _PremiumGlowState extends State<PremiumGlow>
 
   @override
   Widget build(BuildContext context) {
-    const ring = 2.0;
+    final ring = widget.strong ? 3.0 : 2.0;
     final colors = PremiumBadge.colorsFor(widget.tier);
     return RepaintBoundary(
       child: AnimatedBuilder(
@@ -87,8 +92,9 @@ class _PremiumGlowState extends State<PremiumGlow>
           // Auréola "respira" ao longo do gradiente (0→1→0).
           final t = (math.sin(_c.value * 2 * math.pi) + 1) / 2;
           final glow = Color.lerp(colors[1], colors[2], t)!;
+          final base = widget.strong ? 0.7 : 0.45;
           return Container(
-            padding: const EdgeInsets.all(ring),
+            padding: EdgeInsets.all(ring),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(widget.radius + ring),
               gradient: LinearGradient(
@@ -99,9 +105,9 @@ class _PremiumGlowState extends State<PremiumGlow>
               ),
               boxShadow: [
                 BoxShadow(
-                  color: glow.withValues(alpha: 0.45 + 0.2 * t),
-                  blurRadius: 14 + 8 * t,
-                  spreadRadius: 1 + 1.5 * t,
+                  color: glow.withValues(alpha: base + 0.2 * t),
+                  blurRadius: (widget.strong ? 22 : 14) + 8 * t,
+                  spreadRadius: (widget.strong ? 2.5 : 1) + 1.5 * t,
                 ),
               ],
             ),
