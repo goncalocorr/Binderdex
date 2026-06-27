@@ -1148,6 +1148,66 @@ abstract class AppLocalizations {
   /// **'Exclusive avatars'**
   String get perkAvatars;
 
+  /// No description provided for @perkTradeMatchesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'See {n} perfect trades'**
+  String perkTradeMatchesCount(Object n);
+
+  /// No description provided for @perkTradeMatchesUnlimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlimited perfect trades'**
+  String get perkTradeMatchesUnlimited;
+
+  /// No description provided for @tradeMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'Perfect trades'**
+  String get tradeMatches;
+
+  /// No description provided for @tradeMatchesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} perfect trades'**
+  String tradeMatchesFound(Object count);
+
+  /// No description provided for @noTradeMatches.
+  ///
+  /// In en, this message translates to:
+  /// **'No perfect trades yet. Add cards to your wishlist and mark your duplicates!'**
+  String get noTradeMatches;
+
+  /// No description provided for @tradeReceive.
+  ///
+  /// In en, this message translates to:
+  /// **'You get'**
+  String get tradeReceive;
+
+  /// No description provided for @tradeGive.
+  ///
+  /// In en, this message translates to:
+  /// **'You give'**
+  String get tradeGive;
+
+  /// No description provided for @tradeMatchesLockedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Premium to see your perfect trades.'**
+  String get tradeMatchesLockedBody;
+
+  /// No description provided for @tradeMatchesSeeMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Showing {shown} of {total} · upgrade to see them all'**
+  String tradeMatchesSeeMore(Object shown, Object total);
+
+  /// No description provided for @seePlans.
+  ///
+  /// In en, this message translates to:
+  /// **'See Premium plans'**
+  String get seePlans;
+
   /// No description provided for @perMonth.
   ///
   /// In en, this message translates to:

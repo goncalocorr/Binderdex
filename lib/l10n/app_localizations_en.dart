@@ -584,6 +584,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get perkAvatars => 'Exclusive avatars';
 
   @override
+  String perkTradeMatchesCount(Object n) {
+    return 'See $n perfect trades';
+  }
+
+  @override
+  String get perkTradeMatchesUnlimited => 'Unlimited perfect trades';
+
+  @override
+  String get tradeMatches => 'Perfect trades';
+
+  @override
+  String tradeMatchesFound(Object count) {
+    return '$count perfect trades';
+  }
+
+  @override
+  String get noTradeMatches =>
+      'No perfect trades yet. Add cards to your wishlist and mark your duplicates!';
+
+  @override
+  String get tradeReceive => 'You get';
+
+  @override
+  String get tradeGive => 'You give';
+
+  @override
+  String get tradeMatchesLockedBody =>
+      'Unlock Premium to see your perfect trades.';
+
+  @override
+  String tradeMatchesSeeMore(Object shown, Object total) {
+    return 'Showing $shown of $total · upgrade to see them all';
+  }
+
+  @override
+  String get seePlans => 'See Premium plans';
+
+  @override
   String get perMonth => '/month';
 
   @override

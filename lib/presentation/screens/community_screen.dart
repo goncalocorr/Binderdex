@@ -90,6 +90,7 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
             ),
           ),
         ),
+        if (!searching) _tradeMatchesBanner(t),
         if (!searching)
           Align(
             alignment: Alignment.centerRight,
@@ -109,6 +110,42 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
           child: searching ? _buildSearchResults(t) : _buildPrompt(t),
         ),
       ]),
+    );
+  }
+
+  /// Banner de entrada para as "trocas perfeitas" (premium), com o contador.
+  Widget _tradeMatchesBanner(AppLocalizations t) {
+    final cs = Theme.of(context).colorScheme;
+    final count = ref.watch(tradeMatchCountProvider);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 4),
+      child: Material(
+        color: cs.primaryContainer,
+        borderRadius: BorderRadius.circular(14),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(14),
+          onTap: () {
+            if (!requireSignIn(context, ref)) return;
+            context.push('/trades');
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            child: Row(children: [
+              Icon(Icons.swap_horiz, color: cs.onPrimaryContainer),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(t.tradeMatches,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: cs.onPrimaryContainer)),
+              ),
+              if (count > 0) Badge(label: Text('$count')),
+              const SizedBox(width: 8),
+              Icon(Icons.chevron_right, color: cs.onPrimaryContainer),
+            ]),
+          ),
+        ),
+      ),
     );
   }
 

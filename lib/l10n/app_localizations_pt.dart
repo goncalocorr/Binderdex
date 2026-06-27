@@ -588,6 +588,44 @@ class AppLocalizationsPt extends AppLocalizations {
   String get perkAvatars => 'Avatares exclusivos';
 
   @override
+  String perkTradeMatchesCount(Object n) {
+    return 'Vê $n trocas perfeitas';
+  }
+
+  @override
+  String get perkTradeMatchesUnlimited => 'Trocas perfeitas ilimitadas';
+
+  @override
+  String get tradeMatches => 'Trocas perfeitas';
+
+  @override
+  String tradeMatchesFound(Object count) {
+    return '$count trocas perfeitas';
+  }
+
+  @override
+  String get noTradeMatches =>
+      'Ainda não há trocas perfeitas. Adiciona cartas à wishlist e marca as tuas repetidas!';
+
+  @override
+  String get tradeReceive => 'Recebes';
+
+  @override
+  String get tradeGive => 'Dás';
+
+  @override
+  String get tradeMatchesLockedBody =>
+      'Desbloqueia o Premium para veres as tuas trocas perfeitas.';
+
+  @override
+  String tradeMatchesSeeMore(Object shown, Object total) {
+    return 'Vês $shown de $total · sobe de nível para ver todas';
+  }
+
+  @override
+  String get seePlans => 'Ver planos Premium';
+
+  @override
   String get perMonth => '/mês';
 
   @override

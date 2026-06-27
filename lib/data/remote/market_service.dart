@@ -40,6 +40,23 @@ class MarketService {
         .map(_map);
   }
 
+  /// Como [watchListingsForCards] mas SEM o limite de 30 — faz a busca em
+  /// lotes de 30 (limite do `whereIn`) e junta. Usado nas trocas perfeitas.
+  Future<List<Listing>> fetchListingsForCards(List<String> cardIds) async {
+    final ids = cardIds.toSet().toList(); // sem repetidos
+    if (ids.isEmpty) return const [];
+    final out = <Listing>[];
+    for (var i = 0; i < ids.length; i += 30) {
+      final chunk = ids.sublist(i, (i + 30 > ids.length) ? ids.length : i + 30);
+      final snap = await _listings
+          .where('status', isEqualTo: 'active')
+          .where('cardId', whereIn: chunk)
+          .get();
+      out.addAll(_map(snap));
+    }
+    return out;
+  }
+
   Stream<List<Listing>> watchMine(String uid) => _listings
       .where('ownerUid', isEqualTo: uid)
       .where('status', isEqualTo: 'active')

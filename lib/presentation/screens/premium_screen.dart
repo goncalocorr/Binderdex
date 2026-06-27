@@ -76,6 +76,7 @@ class _TierCard extends ConsumerWidget {
           ]),
           const SizedBox(height: 10),
           _perk(context, t.perkSlots(MarketTier.slotsFor(tier))),
+          if (premium) _perk(context, _tradeMatchesPerk(t, tier)),
           if (premium) _perk(context, t.perkBadge),
           if (premium) _perk(context, t.perkAvatars),
           const SizedBox(height: 12),
@@ -122,6 +123,12 @@ class _TierCard extends ConsumerWidget {
       );
 }
 
+/// Texto do perk "trocas perfeitas" para um nível (número ou ilimitado).
+String _tradeMatchesPerk(AppLocalizations t, int tier) {
+  final n = MarketTier.tradeMatchViewsFor(tier);
+  return n < 0 ? t.perkTradeMatchesUnlimited : t.perkTradeMatchesCount(n);
+}
+
 /// Popup de "desbloqueado com sucesso" com as vantagens do nível.
 void _showUnlocked(BuildContext context, AppLocalizations t, int tier) {
   showDialog<void>(
@@ -138,6 +145,7 @@ void _showUnlocked(BuildContext context, AppLocalizations t, int tier) {
               style: const TextStyle(fontWeight: FontWeight.w700)),
           const SizedBox(height: 8),
           _unlockPerk(ctx, t.perkSlots(MarketTier.slotsFor(tier))),
+          _unlockPerk(ctx, _tradeMatchesPerk(t, tier)),
           _unlockPerk(ctx, t.perkBadge),
           _unlockPerk(ctx, t.perkAvatars),
         ],

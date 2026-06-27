@@ -19,6 +19,7 @@ import '../../presentation/screens/listing_detail_screen.dart';
 import '../../presentation/screens/login_screen.dart';
 import '../../presentation/screens/messages_screen.dart';
 import '../../presentation/screens/notifications_screen.dart';
+import '../../presentation/screens/trade_matches_screen.dart';
 import '../../presentation/screens/my_binder_screen.dart';
 import '../../presentation/screens/my_cards_screen.dart';
 import '../../presentation/screens/my_listings_screen.dart';
@@ -250,6 +251,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       builder: (_, s) => CardListingsScreen(cardId: s.pathParameters['id']!),
     ),
     GoRoute(path: '/premium', builder: (_, __) => const PremiumScreen()),
+    GoRoute(
+        path: '/trades', builder: (_, __) => const TradeMatchesScreen()),
     GoRoute(path: '/messages', builder: (_, __) => const MessagesScreen()),
     GoRoute(
         path: '/notifications',

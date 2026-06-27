@@ -6,6 +6,19 @@ class MarketTier {
   static const List<String> names = ['Grátis', 'Treinador', 'Mestre', 'Lendário'];
   static const List<String> prices = ['', '1,99 €', '3,99 €', '6,99 €'];
 
+  /// Quantas "trocas perfeitas" cada nível pode ver. -1 = ilimitado.
+  /// Grátis vê 0 (só o número, como teaser).
+  static const List<int> tradeMatchViews = [0, 20, 75, -1];
+
+  /// Nº de trocas visíveis para o nível (-1 = ilimitado).
+  static int tradeMatchViewsFor(int tier) => tradeMatchViews[_clamp(tier)];
+
+  /// Aplica o limite do nível a uma lista (devolve-a inteira se ilimitado).
+  static List<T> limitTradeMatches<T>(List<T> all, int tier) {
+    final n = tradeMatchViewsFor(tier);
+    return n < 0 ? all : all.take(n).toList();
+  }
+
   static int slotsFor(int tier) => slots[_clamp(tier)];
   static String nameFor(int tier) => names[_clamp(tier)];
   static String priceFor(int tier) => prices[_clamp(tier)];

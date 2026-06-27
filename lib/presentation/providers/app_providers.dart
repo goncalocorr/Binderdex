@@ -23,6 +23,7 @@ import '../../domain/entities/chat.dart';
 import '../../domain/entities/listing.dart';
 import '../../domain/entities/progress.dart';
 import '../../domain/entities/tcg_card.dart';
+import '../../domain/entities/trade_match.dart';
 import '../../domain/entities/user_card_entry.dart';
 
 // --- Infra ---
@@ -150,6 +151,39 @@ final wishlistProvider = StreamProvider<List<CardItem>>(
     (ref) => ref.watch(cardsRepositoryProvider).watchWishlist());
 final wishlistCountProvider = StreamProvider<int>(
     (ref) => ref.watch(cardsRepositoryProvider).wishlistCount());
+
+// --- Trocas perfeitas (premium, limitadas por nível) ---
+/// Ids das minhas cartas repetidas — o que posso DAR numa troca.
+final myDuplicateIdsProvider = FutureProvider<Set<String>>((ref) async {
+  final dupes = await ref.watch(ownedCardsProvider(true).future);
+  return dupes.map((o) => o.card.id).toSet();
+});
+
+/// Trocas perfeitas (instantâneo): anúncios que oferecem o que quero (wishlist)
+/// e cujo dono quer algo que tenho repetido. Ver [perfectTradesFrom].
+final tradeMatchesProvider = FutureProvider<List<TradeMatch>>((ref) async {
+  final me = _uid(ref);
+  if (me == null) return const [];
+  final wishlist = ref.watch(wishlistProvider).valueOrNull ?? const [];
+  final wishIds = wishlist.map((c) => c.card.id).toList();
+  if (wishIds.isEmpty) return const [];
+  final dupes = await ref.watch(myDuplicateIdsProvider.future);
+  if (dupes.isEmpty) return const [];
+  final blocked =
+      ref.watch(blockedUidsProvider).valueOrNull ?? const <String>{};
+  final listings =
+      await ref.watch(marketServiceProvider).fetchListingsForCards(wishIds);
+  return perfectTradesFrom(
+    wishlistListings: listings,
+    myDuplicateIds: dupes,
+    meUid: me,
+    blocked: blocked,
+  );
+});
+
+/// Nº total de trocas perfeitas (teaser/contador — independente do limite).
+final tradeMatchCountProvider = Provider<int>((ref) =>
+    ref.watch(tradeMatchesProvider).valueOrNull?.length ?? 0);
 
 // --- Progresso / Estatísticas ---
 final globalProgressProvider = FutureProvider<ProgressStats>((ref) {
