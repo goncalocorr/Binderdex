@@ -177,6 +177,8 @@
   "perkAvatars": "Avatares exclusivos",
   "perMonth": "/mês",
   "premiumOnly": "Só premium",
+  "premiumUnlocked": "{name} desbloqueado!",
+  "youUnlocked": "Desbloqueaste:",
   "archive": "Arquivar",
   "unarchive": "Desarquivar",
   "archivedTitle": "Arquivadas",

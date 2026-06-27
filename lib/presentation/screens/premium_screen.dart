@@ -82,12 +82,12 @@ class _TierCard extends ConsumerWidget {
                 ? OutlinedButton(
                     onPressed: null, child: Text(t.currentPlanTag))
                 : FilledButton(
-                    onPressed: () {
+                    onPressed: () async {
                       final uid =
                           ref.read(authStateProvider).valueOrNull?.uid;
-                      if (uid != null) {
-                        ref.read(marketServiceProvider).setTier(uid, tier);
-                      }
+                      if (uid == null) return;
+                      await ref.read(marketServiceProvider).setTier(uid, tier);
+                      if (context.mounted) _showUnlocked(context, t, tier);
                     },
                     child: Text(t.unlock),
                   ),
@@ -107,3 +107,43 @@ class _TierCard extends ConsumerWidget {
         ]),
       );
 }
+
+/// Popup de "desbloqueado com sucesso" com as vantagens do nível.
+void _showUnlocked(BuildContext context, AppLocalizations t, int tier) {
+  showDialog<void>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      icon: PremiumBadge(size: 44, tier: tier),
+      title: Text(t.premiumUnlocked(MarketTier.nameFor(tier)),
+          textAlign: TextAlign.center),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(t.youUnlocked,
+              style: const TextStyle(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 8),
+          _unlockPerk(ctx, t.perkSlots(MarketTier.slotsFor(tier))),
+          _unlockPerk(ctx, t.perkBadge),
+          _unlockPerk(ctx, t.perkAvatars),
+        ],
+      ),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.of(ctx).pop(),
+          child: Text(t.continueLabel),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _unlockPerk(BuildContext context, String text) => Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(children: [
+        Icon(Icons.check_circle,
+            size: 18, color: Theme.of(context).colorScheme.primary),
+        const SizedBox(width: 8),
+        Expanded(child: Text(text)),
+      ]),
+    );

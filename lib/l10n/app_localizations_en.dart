@@ -590,6 +590,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get premiumOnly => 'Premium only';
 
   @override
+  String premiumUnlocked(Object name) {
+    return '$name unlocked!';
+  }
+
+  @override
+  String get youUnlocked => 'You unlocked:';
+
+  @override
   String get archive => 'Archive';
 
   @override

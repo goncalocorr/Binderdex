@@ -1160,6 +1160,18 @@ abstract class AppLocalizations {
   /// **'Premium only'**
   String get premiumOnly;
 
+  /// No description provided for @premiumUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} unlocked!'**
+  String premiumUnlocked(Object name);
+
+  /// No description provided for @youUnlocked.
+  ///
+  /// In en, this message translates to:
+  /// **'You unlocked:'**
+  String get youUnlocked;
+
   /// No description provided for @archive.
   ///
   /// In en, this message translates to:
