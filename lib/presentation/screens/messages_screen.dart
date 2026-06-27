@@ -28,10 +28,21 @@ class _MessagesScreenState extends ConsumerState<MessagesScreen> {
       appBar: AppBar(
         title: Text(_showArchived ? t.archivedTitle : t.messages),
         actions: [
-          IconButton(
-            tooltip: _showArchived ? t.messages : t.archivedTitle,
-            icon: Icon(_showArchived ? Icons.inbox_outlined : Icons.archive_outlined),
-            onPressed: () => setState(() => _showArchived = !_showArchived),
+          PopupMenuButton<String>(
+            onSelected: (v) {
+              if (v == 'archived') {
+                setState(() => _showArchived = !_showArchived);
+              } else if (v == 'blocked') {
+                context.push('/blocked');
+              }
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: 'archived',
+                child: Text(_showArchived ? t.messages : t.archivedTitle),
+              ),
+              PopupMenuItem(value: 'blocked', child: Text(t.blockedUsers)),
+            ],
           ),
         ],
       ),

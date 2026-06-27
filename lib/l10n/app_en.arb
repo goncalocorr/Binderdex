@@ -229,5 +229,7 @@
   "deleteConversation": "Delete chat",
   "deleteConversationConfirm": "Delete this chat? It comes back if you get a new message.",
   "noArchived": "No archived chats.",
-  "tabBinderShort": "Binder"
+  "tabBinderShort": "Binder",
+  "blockedUsers": "Blocked people",
+  "noBlockedUsers": "No blocked people."
 }

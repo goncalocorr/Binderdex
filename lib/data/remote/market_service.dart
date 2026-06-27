@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../domain/entities/listing.dart';
 import '../../domain/entities/market_tier.dart';
 
+/// Um utilizador bloqueado (com nome/avatar desnormalizados).
+typedef BlockedUser = ({String uid, String name, String avatar});
+
 class SlotLimitException implements Exception {
   final int limit;
   SlotLimitException(this.limit);
@@ -38,6 +41,20 @@ class MarketService {
       .collection('blocks')
       .snapshots()
       .map((s) => s.docs.map((d) => d.id).toSet());
+
+  /// Utilizadores bloqueados (com nome/avatar) — para o ecrã de bloqueados.
+  Stream<List<BlockedUser>> watchBlockedUsers(String uid) => _db
+      .collection('users')
+      .doc(uid)
+      .collection('blocks')
+      .snapshots()
+      .map((s) => s.docs
+          .map((d) => (
+                uid: d.id,
+                name: (d.data()['name'] ?? '') as String,
+                avatar: (d.data()['avatar'] ?? '') as String,
+              ))
+          .toList());
 
   Future<void> publish({
     required List<CardRef> cards,
@@ -129,12 +146,13 @@ class MarketService {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-  Future<void> block(String uid, String blockedUid) => _db
-      .collection('users')
-      .doc(uid)
-      .collection('blocks')
-      .doc(blockedUid)
-      .set({'createdAt': FieldValue.serverTimestamp()});
+  Future<void> block(String uid, String blockedUid,
+          {String name = '', String avatar = ''}) =>
+      _db.collection('users').doc(uid).collection('blocks').doc(blockedUid).set({
+        'name': name,
+        'avatar': avatar,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
 
   Future<void> unblock(String uid, String blockedUid) => _db
       .collection('users')

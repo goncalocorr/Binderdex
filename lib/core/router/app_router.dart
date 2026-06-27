@@ -8,6 +8,7 @@ import '../../domain/entities/listing.dart';
 import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../../presentation/providers/app_providers.dart';
+import '../../presentation/screens/blocked_users_screen.dart';
 import '../../presentation/screens/card_detail_screen.dart';
 import '../../presentation/screens/card_listings_screen.dart';
 import '../../presentation/screens/community_screen.dart';
@@ -222,6 +223,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     ),
     GoRoute(path: '/premium', builder: (_, __) => const PremiumScreen()),
     GoRoute(path: '/messages', builder: (_, __) => const MessagesScreen()),
+    GoRoute(
+        path: '/blocked', builder: (_, __) => const BlockedUsersScreen()),
     GoRoute(
       path: '/chat',
       builder: (_, s) => ChatScreen(conversation: s.extra as Conversation),

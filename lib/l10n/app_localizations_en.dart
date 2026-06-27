@@ -625,4 +625,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tabBinderShort => 'Binder';
+
+  @override
+  String get blockedUsers => 'Blocked people';
+
+  @override
+  String get noBlockedUsers => 'No blocked people.';
 }

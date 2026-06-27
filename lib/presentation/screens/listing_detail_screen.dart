@@ -85,7 +85,8 @@ class ListingDetailScreen extends ConsumerWidget {
                       SnackBar(content: Text(t.report)));
                 }
               } else if (v == 'block') {
-                await svc.block(uid, listing.ownerUid);
+                await svc.block(uid, listing.ownerUid,
+                    name: listing.ownerName, avatar: listing.ownerAvatar);
                 if (context.mounted) Navigator.of(context).pop();
               }
             },

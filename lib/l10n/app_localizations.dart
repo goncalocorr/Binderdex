@@ -1225,6 +1225,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Binder'**
   String get tabBinderShort;
+
+  /// No description provided for @blockedUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Blocked people'**
+  String get blockedUsers;
+
+  /// No description provided for @noBlockedUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'No blocked people.'**
+  String get noBlockedUsers;
 }
 
 class _AppLocalizationsDelegate

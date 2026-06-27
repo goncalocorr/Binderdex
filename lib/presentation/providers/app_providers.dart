@@ -191,6 +191,13 @@ final blockedUidsProvider = StreamProvider<Set<String>>((ref) {
   return ref.watch(marketServiceProvider).watchBlocked(uid);
 });
 
+/// Lista de utilizadores bloqueados (com nome/avatar) — para o ecrã de gestão.
+final blockedUsersProvider = StreamProvider<List<BlockedUser>>((ref) {
+  final uid = _uid(ref);
+  if (uid == null) return Stream.value(const <BlockedUser>[]);
+  return ref.watch(marketServiceProvider).watchBlockedUsers(uid);
+});
+
 final listingsForCardProvider =
     StreamProvider.family<List<Listing>, String>((ref, cardId) {
   final blocked = ref.watch(blockedUidsProvider).valueOrNull ?? const <String>{};

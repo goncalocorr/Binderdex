@@ -187,5 +187,7 @@
   "deleteConversation": "Apagar conversa",
   "deleteConversationConfirm": "Apagar esta conversa? Volta a aparecer se receberes uma mensagem nova.",
   "noArchived": "Sem conversas arquivadas.",
-  "tabBinderShort": "Binder"
+  "tabBinderShort": "Binder",
+  "blockedUsers": "Pessoas bloqueadas",
+  "noBlockedUsers": "Sem pessoas bloqueadas."
 }

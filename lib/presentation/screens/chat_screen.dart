@@ -105,9 +105,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
     if (ok != true) return;
     try {
-      await ref
-          .read(marketServiceProvider)
-          .block(meUid, widget.conversation.otherUid);
+      await ref.read(marketServiceProvider).block(
+            meUid,
+            widget.conversation.otherUid,
+            name: widget.conversation.otherName,
+            avatar: widget.conversation.otherAvatar,
+          );
       if (mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(t.userBlocked)));
