@@ -232,8 +232,8 @@ class SettingsScreen extends ConsumerWidget {
     final avatar = ref.watch(avatarProvider);
     final user = ref.watch(authStateProvider).valueOrNull;
     final signedIn = user != null && !user.isAnonymous;
-    final isPremium =
-        MarketTier.isPremium(ref.watch(marketTierProvider).valueOrNull ?? 0);
+    final myTier = ref.watch(marketTierProvider).valueOrNull ?? 0;
+    final isPremium = MarketTier.isPremium(myTier);
     final owned = ref.watch(globalProgressProvider).valueOrNull?.owned ?? 0;
     final mySets = ref
             .watch(setsListProvider)
@@ -287,9 +287,9 @@ class SettingsScreen extends ConsumerWidget {
                             style: Theme.of(context).textTheme.titleLarge),
                       ),
                       if (isPremium)
-                        const Padding(
-                          padding: EdgeInsets.only(left: 6),
-                          child: PremiumBadge(size: 20),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: PremiumBadge(size: 20, tier: myTier),
                         ),
                     ]),
                     const SizedBox(height: 2),

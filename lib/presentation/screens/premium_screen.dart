@@ -5,6 +5,7 @@ import '../../core/theme/dex_tokens.dart';
 import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import '../widgets/premium_badge.dart';
 
 /// Ecrã de subscrição premium. Mostra os níveis e desbloqueia via marcador
 /// (`setTier`). O botão "Desbloquear" fica pronto para ligar ao Play Billing.
@@ -58,9 +59,7 @@ class _TierCard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(children: [
-            if (premium)
-              const Icon(Icons.workspace_premium,
-                  size: 20, color: DexColors.gold500),
+            if (premium) PremiumBadge(size: 22, tier: tier),
             if (premium) const SizedBox(width: 6),
             Text(MarketTier.nameFor(tier),
                 style: Theme.of(context).textTheme.titleLarge),

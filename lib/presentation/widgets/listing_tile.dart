@@ -41,9 +41,9 @@ class ListingTile extends StatelessWidget {
               maxLines: 1, overflow: TextOverflow.ellipsis),
         ),
         if (MarketTier.isPremium(listing.ownerTier))
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: PremiumBadge(size: 14),
+          Padding(
+            padding: const EdgeInsets.only(left: 4),
+            child: PremiumBadge(size: 14, tier: listing.ownerTier),
           ),
       ]),
       trailing: Chip(

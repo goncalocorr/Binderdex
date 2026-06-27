@@ -111,9 +111,9 @@ class ListingDetailScreen extends ConsumerWidget {
           title: Row(children: [
             Flexible(child: Text(listing.ownerName)),
             if (MarketTier.isPremium(listing.ownerTier))
-              const Padding(
-                padding: EdgeInsets.only(left: 6),
-                child: PremiumBadge(size: 16),
+              Padding(
+                padding: const EdgeInsets.only(left: 6),
+                child: PremiumBadge(size: 16, tier: listing.ownerTier),
               ),
           ]),
           subtitle: Text(_modeLabel(t)),
