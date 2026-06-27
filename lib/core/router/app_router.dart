@@ -148,7 +148,12 @@ class _ShellState extends ConsumerState<_Shell> {
           NavigationDestination(
               icon: _tabIcon('binder'), label: t.tabBinderShort),
           NavigationDestination(
-              icon: _tabIcon('comunidade'), label: t.tabCommunity),
+              icon: Badge(
+                label: Text('${ref.watch(unreadTotalProvider)}'),
+                isLabelVisible: ref.watch(unreadTotalProvider) > 0,
+                child: _tabIcon('comunidade'),
+              ),
+              label: t.tabCommunity),
           NavigationDestination(icon: _tabIcon('perfil'), label: t.tabProfile),
         ],
       ),
