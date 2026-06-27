@@ -141,5 +141,6 @@ exports.onNewListing = onDocumentCreated("listings/{id}", async (event) => {
   );
 });
 
-// 3) Anúncio de coleção nova (manual) → ver functions/announce_new_set.js.
-//    Está separado por precisar do Secret Manager; liga-o quando quiseres.
+// 3) Anúncio de coleção nova (manual, HTTP) → functions/announce_new_set.js.
+//    Usa o segredo ANNOUNCE_SECRET (Secret Manager).
+require("./announce_new_set")(exports);
