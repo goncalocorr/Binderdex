@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/dex_tokens.dart';
 
-/// Selo (coroa) que marca um utilizador premium. O brilho distingue o nível:
-/// - Treinador (1): dourado estático
-/// - Mestre (2): gradiente azul com movimento
-/// - Lendário (3): gradiente holográfico com movimento
+/// Selo (coroa) que marca um utilizador premium. O brilho distingue o nível
+/// (todos com movimento):
+/// - Treinador (1): gradiente prata
+/// - Mestre (2): gradiente azul
+/// - Lendário (3): gradiente holográfico
 class PremiumBadge extends StatelessWidget {
   final double size;
   final int tier;
   const PremiumBadge({super.key, this.size = 16, this.tier = 1});
+
+  static const _silver = [
+    Color(0xFFEDEFF2),
+    Color(0xFFAEB4BE),
+    Color(0xFFFFFFFF),
+    Color(0xFFC2C8D0),
+    Color(0xFFEDEFF2),
+  ];
 
   static const _blues = [
     Color(0xFF93C5FD),
@@ -23,8 +32,8 @@ class PremiumBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     if (tier >= 3) return _AnimatedCrown(size: size, colors: DexSheens.holo);
     if (tier == 2) return _AnimatedCrown(size: size, colors: _blues);
-    // Treinador (1) — coroa dourada estática.
-    return Icon(Icons.workspace_premium, size: size, color: DexColors.gold500);
+    // Treinador (1) — prata com movimento.
+    return _AnimatedCrown(size: size, colors: _silver);
   }
 }
 
