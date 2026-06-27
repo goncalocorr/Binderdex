@@ -468,9 +468,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noteOptional => 'Note (optional)';
 
   @override
-  String get contactSoon => 'Contact (coming soon)';
-
-  @override
   String get report => 'Report';
 
   @override

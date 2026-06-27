@@ -472,9 +472,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noteOptional => 'Nota (opcional)';
 
   @override
-  String get contactSoon => 'Contactar (em breve)';
-
-  @override
   String get report => 'Denunciar';
 
   @override

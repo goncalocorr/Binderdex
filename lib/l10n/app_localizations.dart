@@ -944,12 +944,6 @@ abstract class AppLocalizations {
   /// **'Note (optional)'**
   String get noteOptional;
 
-  /// No description provided for @contactSoon.
-  ///
-  /// In en, this message translates to:
-  /// **'Contact (coming soon)'**
-  String get contactSoon;
-
   /// No description provided for @report.
   ///
   /// In en, this message translates to:
