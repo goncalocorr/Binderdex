@@ -178,5 +178,11 @@
   "perkBadge": "Selo premium",
   "perkAvatars": "Avatares exclusivos",
   "perMonth": "/mês",
-  "premiumOnly": "Só premium"
+  "premiumOnly": "Só premium",
+  "archive": "Arquivar",
+  "unarchive": "Desarquivar",
+  "archivedTitle": "Arquivadas",
+  "deleteConversation": "Apagar conversa",
+  "deleteConversationConfirm": "Apagar esta conversa? Volta a aparecer se receberes uma mensagem nova.",
+  "noArchived": "Sem conversas arquivadas."
 }

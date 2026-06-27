@@ -225,13 +225,24 @@ final communityDisclaimerSeenProvider = StateProvider<bool>(
 // --- Chat (Fase 2) ---
 final chatServiceProvider = Provider<ChatService>((ref) => ChatService());
 
-final conversationsProvider = StreamProvider<List<Conversation>>((ref) {
+final _allConversationsProvider = StreamProvider<List<Conversation>>((ref) {
   final uid = _uid(ref);
   if (uid == null) return Stream.value(const <Conversation>[]);
   final blocked = ref.watch(blockedUidsProvider).valueOrNull ?? const <String>{};
   return ref.watch(chatServiceProvider).watchConversations(uid).map(
       (list) => list.where((c) => !blocked.contains(c.otherUid)).toList());
 });
+
+/// Caixa principal: exclui arquivadas e apagadas (por mim).
+final conversationsProvider = Provider<AsyncValue<List<Conversation>>>((ref) =>
+    ref.watch(_allConversationsProvider).whenData((list) =>
+        list.where((c) => !c.archived && !c.isCleared).toList()));
+
+/// Conversas arquivadas (por mim).
+final archivedConversationsProvider =
+    Provider<AsyncValue<List<Conversation>>>((ref) =>
+        ref.watch(_allConversationsProvider).whenData((list) =>
+            list.where((c) => c.archived && !c.isCleared).toList()));
 
 final messagesProvider =
     StreamProvider.family<List<ChatMessage>, String>((ref, convId) =>

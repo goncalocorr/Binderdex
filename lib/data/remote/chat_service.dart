@@ -89,4 +89,18 @@ class ChatService {
         },
         SetOptions(merge: true),
       );
+
+  /// Arquiva/desarquiva a conversa só para este utilizador.
+  Future<void> setArchived(String convId, String uid, bool archived) =>
+      _convos.doc(convId).set({
+        'archived': {uid: archived}
+      }, SetOptions(merge: true));
+
+  /// "Apaga" a conversa só para este utilizador (esconde-a até chegar uma
+  /// mensagem mais recente). Não destrói a conversa do outro participante.
+  Future<void> clearConversation(String convId, String uid) =>
+      _convos.doc(convId).set({
+        'clearedAt': {uid: FieldValue.serverTimestamp()},
+        'archived': {uid: false},
+      }, SetOptions(merge: true));
 }

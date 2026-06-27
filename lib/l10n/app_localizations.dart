@@ -1165,6 +1165,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Premium only'**
   String get premiumOnly;
+
+  /// No description provided for @archive.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
+
+  /// No description provided for @unarchive.
+  ///
+  /// In en, this message translates to:
+  /// **'Unarchive'**
+  String get unarchive;
+
+  /// No description provided for @archivedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get archivedTitle;
+
+  /// No description provided for @deleteConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete chat'**
+  String get deleteConversation;
+
+  /// No description provided for @deleteConversationConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this chat? It comes back if you get a new message.'**
+  String get deleteConversationConfirm;
+
+  /// No description provided for @noArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'No archived chats.'**
+  String get noArchived;
 }
 
 class _AppLocalizationsDelegate

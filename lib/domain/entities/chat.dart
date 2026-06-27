@@ -27,7 +27,13 @@ class Conversation {
   final int unread;
   final DateTime updatedAt;
 
-  const Conversation({
+  /// Estado por-utilizador (do utilizador atual). `archived` = movida para
+  /// Arquivadas; `clearedAt` = momento em que apaguei a conversa (reaparece se
+  /// houver mensagem mais recente).
+  final bool archived;
+  final DateTime clearedAt;
+
+  Conversation({
     required this.id,
     required this.otherUid,
     required this.otherName,
@@ -39,7 +45,15 @@ class Conversation {
     this.cardId = '',
     this.cardName = '',
     this.cardImage = '',
-  });
+    this.archived = false,
+    DateTime? clearedAt,
+  }) : clearedAt = clearedAt ?? _epoch;
+
+  static final DateTime _epoch = DateTime.fromMillisecondsSinceEpoch(0);
+
+  /// Apagada por mim e sem mensagens novas desde então → esconder da caixa.
+  bool get isCleared =>
+      clearedAt.isAfter(_epoch) && !updatedAt.isAfter(clearedAt);
 
   factory Conversation.fromMap(String id, Map<String, dynamic> m, String meUid) {
     final parts = List<String>.from((m['participants'] ?? const []) as List);
@@ -47,6 +61,8 @@ class Conversation {
     final names = Map<String, dynamic>.from((m['names'] ?? const {}) as Map);
     final avatars = Map<String, dynamic>.from((m['avatars'] ?? const {}) as Map);
     final unread = Map<String, dynamic>.from((m['unread'] ?? const {}) as Map);
+    final archived = Map<String, dynamic>.from((m['archived'] ?? const {}) as Map);
+    final cleared = Map<String, dynamic>.from((m['clearedAt'] ?? const {}) as Map);
     return Conversation(
       id: id,
       otherUid: other,
@@ -59,6 +75,8 @@ class Conversation {
       cardImage: (m['cardImage'] ?? '') as String,
       unread: (unread[meUid] ?? 0) as int,
       updatedAt: _ts(m['updatedAt']),
+      archived: (archived[meUid] ?? false) as bool,
+      clearedAt: _ts(cleared[meUid]),
     );
   }
 }

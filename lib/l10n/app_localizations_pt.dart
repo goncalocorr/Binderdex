@@ -595,4 +595,23 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get premiumOnly => 'Só premium';
+
+  @override
+  String get archive => 'Arquivar';
+
+  @override
+  String get unarchive => 'Desarquivar';
+
+  @override
+  String get archivedTitle => 'Arquivadas';
+
+  @override
+  String get deleteConversation => 'Apagar conversa';
+
+  @override
+  String get deleteConversationConfirm =>
+      'Apagar esta conversa? Volta a aparecer se receberes uma mensagem nova.';
+
+  @override
+  String get noArchived => 'Sem conversas arquivadas.';
 }

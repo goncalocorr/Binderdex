@@ -219,5 +219,11 @@
   "perkBadge": "Premium badge",
   "perkAvatars": "Exclusive avatars",
   "perMonth": "/month",
-  "premiumOnly": "Premium only"
+  "premiumOnly": "Premium only",
+  "archive": "Archive",
+  "unarchive": "Unarchive",
+  "archivedTitle": "Archived",
+  "deleteConversation": "Delete chat",
+  "deleteConversationConfirm": "Delete this chat? It comes back if you get a new message.",
+  "noArchived": "No archived chats."
 }

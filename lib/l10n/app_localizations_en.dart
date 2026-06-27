@@ -591,4 +591,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get premiumOnly => 'Premium only';
+
+  @override
+  String get archive => 'Archive';
+
+  @override
+  String get unarchive => 'Unarchive';
+
+  @override
+  String get archivedTitle => 'Archived';
+
+  @override
+  String get deleteConversation => 'Delete chat';
+
+  @override
+  String get deleteConversationConfirm =>
+      'Delete this chat? It comes back if you get a new message.';
+
+  @override
+  String get noArchived => 'No archived chats.';
 }
