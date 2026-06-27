@@ -93,8 +93,14 @@ class _PremiumGlowState extends State<PremiumGlow>
           final shift = _c.value * 2;
           // Auréola "respira" ao longo do gradiente (0→1→0).
           final t = (math.sin(_c.value * 2 * math.pi) + 1) / 2;
-          final glow = Color.lerp(colors[1], colors[2], t)!;
-          final base = widget.strong ? 0.7 : 0.45;
+          // O prata (achromático) quase não contrasta no branco → usa um tom
+          // steel mais escuro e intenso, para a auréola se ler.
+          final isSilver = widget.tier == 1;
+          final glow = isSilver
+              ? Color.lerp(const Color(0xFF64748B), const Color(0xFF334155), t)!
+              : Color.lerp(colors[1], colors[2], t)!;
+          final base =
+              (widget.strong ? 0.7 : 0.5) + (isSilver ? 0.15 : 0.0);
           return Container(
             padding: EdgeInsets.all(ring),
             decoration: BoxDecoration(
@@ -108,8 +114,8 @@ class _PremiumGlowState extends State<PremiumGlow>
               boxShadow: [
                 BoxShadow(
                   color: glow.withValues(alpha: base + 0.2 * t),
-                  blurRadius: (widget.strong ? 22 : 14) + 8 * t,
-                  spreadRadius: (widget.strong ? 2.5 : 1) + 1.5 * t,
+                  blurRadius: (widget.strong ? 22 : 16) + 8 * t,
+                  spreadRadius: (widget.strong ? 2.5 : 1.2) + 1.6 * t,
                 ),
               ],
             ),
