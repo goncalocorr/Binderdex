@@ -73,7 +73,8 @@ class _PremiumGlowState extends State<PremiumGlow>
   late final AnimationController _c = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 8500),
-  )..repeat();
+    // Vai-e-volta (ping-pong) em vez de reiniciar → sem salto/corte no loop.
+  )..repeat(reverse: true);
 
   @override
   void dispose() {
@@ -142,7 +143,8 @@ class _AnimatedCrownState extends State<_AnimatedCrown>
   late final AnimationController _c = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 8500),
-  )..repeat();
+    // Vai-e-volta (ping-pong) em vez de reiniciar → sem salto/corte no loop.
+  )..repeat(reverse: true);
 
   @override
   void dispose() {
