@@ -650,6 +650,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get mostValuable => 'Mais valiosa';
 
   @override
+  String get showValue => 'Mostrar valor';
+
+  @override
+  String get hideValue => 'Ocultar valor';
+
+  @override
   String get perMonth => '/mês';
 
   @override

@@ -198,6 +198,18 @@ class _ValueCard extends ConsumerStatefulWidget {
 
 class _ValueCardState extends ConsumerState<_ValueCard> {
   bool _refreshing = false;
+  bool _hidden = true; // valor oculto por defeito (revela-se com o botão)
+
+  @override
+  void initState() {
+    super.initState();
+    _hidden = ref.read(prefsProvider).getBool('hideCollectionValue') ?? true;
+  }
+
+  void _toggleHidden() {
+    setState(() => _hidden = !_hidden);
+    ref.read(prefsProvider).setBool('hideCollectionValue', _hidden);
+  }
 
   Future<void> _refresh() async {
     setState(() => _refreshing = true);
@@ -264,6 +276,12 @@ class _ValueCardState extends ConsumerState<_ValueCard> {
                 .titleMedium
                 ?.copyWith(fontWeight: FontWeight.w700)),
         const Spacer(),
+        // Mostrar/ocultar o valor.
+        IconButton(
+          tooltip: _hidden ? t.showValue : t.hideValue,
+          icon: Icon(_hidden ? Icons.visibility_off : Icons.visibility),
+          onPressed: _toggleHidden,
+        ),
         _refreshing
             ? const SizedBox(
                 width: 18,
@@ -279,12 +297,12 @@ class _ValueCardState extends ConsumerState<_ValueCard> {
             padding: EdgeInsets.symmetric(vertical: 4), child: Text('…')),
         error: (e, _) => const Text('—'),
         data: (v) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(euro(v.value),
+          Text(_hidden ? '••••••' : euro(v.value),
               style: Theme.of(context)
                   .textTheme
                   .headlineMedium
                   ?.copyWith(fontWeight: FontWeight.w800)),
-          if (v.priced < v.total)
+          if (!_hidden && v.priced < v.total)
             Text(t.valueCoverage(v.priced, v.total),
                 style: Theme.of(context)
                     .textTheme
@@ -292,7 +310,7 @@ class _ValueCardState extends ConsumerState<_ValueCard> {
                     ?.copyWith(color: cs.onSurfaceVariant)),
         ]),
       ),
-      if (mvp != null)
+      if (!_hidden && mvp != null)
         Padding(
           padding: const EdgeInsets.only(top: 6),
           child: Text('${t.mostValuable}: ${mvp.card.name} · ${euro(mvp.price)}',

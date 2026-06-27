@@ -646,6 +646,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mostValuable => 'Most valuable';
 
   @override
+  String get showValue => 'Show value';
+
+  @override
+  String get hideValue => 'Hide value';
+
+  @override
   String get perMonth => '/month';
 
   @override

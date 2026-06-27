@@ -192,6 +192,8 @@
   "updatePrices": "Atualizar preços",
   "pricesUpdated": "Preços atualizados",
   "mostValuable": "Mais valiosa",
+  "showValue": "Mostrar valor",
+  "hideValue": "Ocultar valor",
   "perMonth": "/mês",
   "premiumOnly": "Só premium",
   "premiumUnlocked": "{name} desbloqueado!",

@@ -1250,6 +1250,18 @@ abstract class AppLocalizations {
   /// **'Most valuable'**
   String get mostValuable;
 
+  /// No description provided for @showValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Show value'**
+  String get showValue;
+
+  /// No description provided for @hideValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide value'**
+  String get hideValue;
+
   /// No description provided for @perMonth.
   ///
   /// In en, this message translates to:

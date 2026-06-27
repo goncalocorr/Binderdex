@@ -237,6 +237,8 @@
   "updatePrices": "Update prices",
   "pricesUpdated": "Prices updated",
   "mostValuable": "Most valuable",
+  "showValue": "Show value",
+  "hideValue": "Hide value",
   "perMonth": "/month",
   "premiumOnly": "Premium only",
   "premiumUnlocked": "{name} unlocked!",
