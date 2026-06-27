@@ -35,8 +35,8 @@ final databaseProvider = Provider<AppDatabase>((ref) {
 
 final tcgApiProvider = Provider<TcgApi>((ref) => TcgApi());
 
-final setsRepositoryProvider =
-    Provider((ref) => SetsRepository(ref.watch(databaseProvider)));
+final setsRepositoryProvider = Provider((ref) =>
+    SetsRepository(ref.watch(databaseProvider), ref.watch(tcgApiProvider)));
 final cardsRepositoryProvider = Provider((ref) =>
     CardsRepository(ref.watch(databaseProvider), ref.watch(tcgApiProvider)));
 final collectionRepositoryProvider =
@@ -105,6 +105,23 @@ final pushServiceProvider = Provider<PushService>((ref) {
 // --- Sets (ecrã inicial) ---
 final setsListProvider =
     StreamProvider<List<SetProgress>>((ref) => ref.watch(setsRepositoryProvider).watchSets());
+
+/// Atualiza o catálogo de sets a partir da API (apanha coleções novas lançadas
+/// depois do build). Estrangulado a 1x por 6h. Devolve o nº de sets novos.
+/// Os novos aparecem nas Coleções e como notificação "nova coleção".
+final setsRefreshProvider = FutureProvider<int>((ref) async {
+  final prefs = ref.read(prefsProvider);
+  final now = DateTime.now().millisecondsSinceEpoch;
+  final last = prefs.getInt('setsRefreshedAt') ?? 0;
+  if (now - last < const Duration(hours: 6).inMilliseconds) return 0;
+  try {
+    final added = await ref.read(setsRepositoryProvider).refreshSets();
+    await prefs.setInt('setsRefreshedAt', now);
+    return added;
+  } catch (_) {
+    return 0; // sem rede — fica com o catálogo atual
+  }
+});
 
 /// Pesquisa de sets (filtrada em memória — a lista de sets é pequena, ~160).
 final setSearchProvider = StateProvider<String>((_) => '');

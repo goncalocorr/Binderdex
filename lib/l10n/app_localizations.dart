@@ -1262,6 +1262,24 @@ abstract class AppLocalizations {
   /// **'Hide value'**
   String get hideValue;
 
+  /// No description provided for @setsAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new collections!'**
+  String setsAdded(Object count);
+
+  /// No description provided for @setsUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Catalogue up to date'**
+  String get setsUpToDate;
+
+  /// No description provided for @refreshFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t update'**
+  String get refreshFailed;
+
   /// No description provided for @perMonth.
   ///
   /// In en, this message translates to:

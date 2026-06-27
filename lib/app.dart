@@ -18,6 +18,7 @@ class PokedexApp extends ConsumerWidget {
     ref.watch(pushServiceProvider);
     ref.watch(wishlistWatchSyncProvider); // wishlist → notifyCards (push)
     ref.watch(ensureOwnedSetsSyncedProvider); // sets possuídos → cache (binder)
+    ref.watch(setsRefreshProvider); // apanha coleções novas da API (6h)
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(

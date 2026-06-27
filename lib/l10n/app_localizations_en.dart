@@ -652,6 +652,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hideValue => 'Hide value';
 
   @override
+  String setsAdded(Object count) {
+    return '$count new collections!';
+  }
+
+  @override
+  String get setsUpToDate => 'Catalogue up to date';
+
+  @override
+  String get refreshFailed => 'Couldn\'t update';
+
+  @override
   String get perMonth => '/month';
 
   @override

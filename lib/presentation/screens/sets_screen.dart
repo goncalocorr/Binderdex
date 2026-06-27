@@ -9,6 +9,28 @@ import '../providers/app_providers.dart';
 import '../widgets/completion_ring.dart';
 import '../widgets/set_tile.dart';
 
+/// Puxar para atualizar o catálogo de sets a partir da API (apanha coleções
+/// novas). Mostra quantas foram adicionadas.
+Future<void> _refreshCatalog(
+    BuildContext context, WidgetRef ref, AppLocalizations t) async {
+  try {
+    final added = await ref.read(setsRepositoryProvider).refreshSets();
+    await ref
+        .read(prefsProvider)
+        .setInt('setsRefreshedAt', DateTime.now().millisecondsSinceEpoch);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(
+          content: Text(added > 0 ? t.setsAdded(added) : t.setsUpToDate)));
+  } catch (_) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text(t.refreshFailed)));
+  }
+}
+
 /// Ecrã inicial: cartão "hero" de progresso global + lista de coleções (sets).
 class SetsScreen extends ConsumerWidget {
   const SetsScreen({super.key});
@@ -62,17 +84,21 @@ class SetsScreen extends ConsumerWidget {
                     child: Center(child: Text(t.noSets)),
                   ),
               ];
-              return ListView.builder(
-                padding: const EdgeInsets.only(bottom: 16),
-                itemCount: header.length + filtered.length,
-                itemBuilder: (context, i) {
-                  if (i < header.length) return header[i];
-                  final s = filtered[i - header.length];
-                  return SetTile(
-                    data: s,
-                    onTap: () => context.push('/set/${s.set.id}'),
-                  );
-                },
+              return RefreshIndicator(
+                onRefresh: () => _refreshCatalog(context, ref, t),
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: header.length + filtered.length,
+                  itemBuilder: (context, i) {
+                    if (i < header.length) return header[i];
+                    final s = filtered[i - header.length];
+                    return SetTile(
+                      data: s,
+                      onTap: () => context.push('/set/${s.set.id}'),
+                    );
+                  },
+                ),
               );
             },
           ),

@@ -656,6 +656,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get hideValue => 'Ocultar valor';
 
   @override
+  String setsAdded(Object count) {
+    return '$count novas coleções!';
+  }
+
+  @override
+  String get setsUpToDate => 'Catálogo atualizado';
+
+  @override
+  String get refreshFailed => 'Não foi possível atualizar';
+
+  @override
   String get perMonth => '/mês';
 
   @override

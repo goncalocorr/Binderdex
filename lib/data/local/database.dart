@@ -157,6 +157,36 @@ class AppDatabase extends _$AppDatabase {
         (b) => b.insertAll(cardSets, rows, mode: InsertMode.insertOrReplace));
   }
 
+  /// Ids de todos os sets já em cache (para detetar quais são novos).
+  Future<Set<String>> existingSetIds() async {
+    final rows = await (selectOnly(cardSets)..addColumns([cardSets.id])).get();
+    return rows.map((r) => r.read(cardSets.id)!).toSet();
+  }
+
+  /// Junta sets vindos da API: insere os novos e atualiza os metadados dos
+  /// existentes SEM tocar no `cardsSynced` (não força re-download das cartas).
+  Future<void> upsertSetsMeta(List<CardSetsCompanion> rows) async {
+    await batch((b) {
+      for (final r in rows) {
+        b.insert(
+          cardSets,
+          r,
+          // Atualiza só os metadados (a partir da linha nova), sem mexer no
+          // cardsSynced.
+          onConflict: DoUpdate((_) => CardSetsCompanion(
+                name: r.name,
+                series: r.series,
+                printedTotal: r.printedTotal,
+                total: r.total,
+                releaseDate: r.releaseDate,
+                symbolUrl: r.symbolUrl,
+                logoUrl: r.logoUrl,
+              )),
+        );
+      }
+    });
+  }
+
   Future<CardSetRow?> setById(String id) =>
       (select(cardSets)..where((t) => t.id.equals(id))).getSingleOrNull();
 
