@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../core/router/root_navigator.dart';
 import '../../data/local/database.dart';
 import '../../data/remote/auth_service.dart';
 import '../../data/remote/chat_service.dart';
 import '../../data/remote/market_service.dart';
 import '../../data/remote/profile_service.dart';
+import '../../data/remote/push_service.dart';
 import '../../data/remote/sync_service.dart';
 import '../../data/remote/tcg_api.dart';
 import '../../data/repositories/cards_repository.dart';
@@ -62,6 +65,33 @@ final syncServiceProvider = Provider<SyncService>((ref) {
     final user = next.valueOrNull;
     // Convidados anónimos não sincronizam — evita criar dados na nuvem
     // para sessões que existem só para poder LER a Comunidade.
+    if (user != null && !user.isAnonymous) {
+      svc.start(user.uid);
+    } else {
+      svc.stop();
+    }
+  }, fireImmediately: true);
+  return svc;
+});
+
+/// Push (FCM): regista o token e encaminha as notificações. Arranca ao iniciar
+/// sessão com conta (convidados anónimos não recebem push). Ver push_service.dart.
+final pushServiceProvider = Provider<PushService>((ref) {
+  void open(String route) {
+    final ctx = rootNavigatorKey.currentContext;
+    if (ctx != null) {
+      try {
+        ctx.push(route);
+      } catch (_) {/* rota inexistente — ignora */}
+    }
+  }
+
+  // Liga a navegação global (toque numa notificação de primeiro plano).
+  pushNavigate = open;
+
+  final svc = PushService(profile: ref.watch(profileServiceProvider), onOpen: open);
+  ref.listen<AsyncValue<User?>>(authStateProvider, (_, next) {
+    final user = next.valueOrNull;
     if (user != null && !user.isAnonymous) {
       svc.start(user.uid);
     } else {

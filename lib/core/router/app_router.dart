@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../domain/entities/chat.dart';
 import '../../domain/entities/listing.dart';
 import '../../domain/entities/market_tier.dart';
+import 'root_navigator.dart';
 import '../../l10n/app_localizations.dart';
 import '../../presentation/providers/app_providers.dart';
 import '../../presentation/screens/blocked_users_screen.dart';
@@ -203,6 +204,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   ref.onDispose(refresh.dispose);
 
   return GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: initial,
     refreshListenable: refresh,
     redirect: (context, state) {

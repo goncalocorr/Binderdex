@@ -34,5 +34,28 @@ class ProfileService {
     await _doc(uid).set(m, SetOptions(merge: true));
   }
 
+  /// Regista o token FCM deste dispositivo na conta (para push). Vários
+  /// dispositivos → vários tokens, por isso é uma lista (arrayUnion).
+  Future<void> addFcmToken(String uid, String token) async {
+    if (token.isEmpty) return;
+    await _doc(uid).set(
+      {'fcmTokens': FieldValue.arrayUnion([token])},
+      SetOptions(merge: true),
+    );
+  }
+
+  /// Remove o token deste dispositivo (ex.: ao terminar sessão).
+  Future<void> removeFcmToken(String uid, String token) async {
+    if (token.isEmpty) return;
+    try {
+      await _doc(uid).set(
+        {'fcmTokens': FieldValue.arrayRemove([token])},
+        SetOptions(merge: true),
+      );
+    } catch (_) {
+      // Sem rede / sem permissão — ignora.
+    }
+  }
+
   Future<void> delete(String uid) => _doc(uid).delete();
 }
