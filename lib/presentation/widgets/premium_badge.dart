@@ -51,7 +51,7 @@ class _AnimatedCrownState extends State<_AnimatedCrown>
     with SingleTickerProviderStateMixin {
   late final AnimationController _c = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 5200),
+    duration: const Duration(milliseconds: 8500),
   )..repeat();
 
   @override
