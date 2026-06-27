@@ -165,19 +165,20 @@ class CardDetailScreen extends ConsumerWidget {
                             label: card.supertype!,
                             color: cs.onSurfaceVariant,
                             outlined: true),
-                      // Valor (premium): chip de preço; o grátis vê um cadeado.
+                      // Valor raw (premium): chip de preço; o grátis vê cadeado.
                       if (!MarketTier.isPremium(
                           ref.watch(marketTierProvider).valueOrNull ?? 0))
                         GestureDetector(
                           onTap: () => context.push('/premium'),
-                          child: _Badge(
-                              label: '🔒 ${t.value}',
+                          child: const _Badge(
+                              label: '🔒 Raw',
                               color: DexColors.gold500,
                               outlined: true),
                         )
                       else if (card.price != null)
                         _Badge(
-                            label: euro(card.price!), color: DexColors.gold500),
+                            label: 'Raw ${euro(card.price!)}',
+                            color: DexColors.gold500),
                     ],
                   ),
                   const SizedBox(height: 14),
