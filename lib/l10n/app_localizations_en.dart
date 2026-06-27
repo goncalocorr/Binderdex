@@ -631,4 +631,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noBlockedUsers => 'No blocked people.';
+
+  @override
+  String get noNotifications => 'No notifications.';
+
+  @override
+  String get notifNewMessage => 'New message';
+
+  @override
+  String get notifWishlistAvailable => 'Wishlist card available';
+
+  @override
+  String get notifNewCollection => 'New collection';
 }

@@ -17,6 +17,7 @@ import '../../presentation/screens/chat_screen.dart';
 import '../../presentation/screens/listing_detail_screen.dart';
 import '../../presentation/screens/login_screen.dart';
 import '../../presentation/screens/messages_screen.dart';
+import '../../presentation/screens/notifications_screen.dart';
 import '../../presentation/screens/my_binder_screen.dart';
 import '../../presentation/screens/my_cards_screen.dart';
 import '../../presentation/screens/my_listings_screen.dart';
@@ -109,6 +110,17 @@ class _ShellState extends ConsumerState<_Shell> {
       }
     });
 
+    // 1.ª vez: marca todos os sets atuais como "vistos" (senão as 173 coleções
+    // apareceriam como novas). A partir daí, só sets adicionados depois são novos.
+    ref.listen(setsListProvider, (_, next) {
+      if (ref.read(seenSetsProvider) != null) return;
+      final sets = next.valueOrNull;
+      if (sets == null || sets.isEmpty) return;
+      final ids = sets.map((s) => s.set.id).toSet();
+      ref.read(seenSetsProvider.notifier).state = ids;
+      ref.read(prefsProvider).setStringList('seenSets', ids.toList());
+    });
+
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 52,
@@ -118,6 +130,15 @@ class _ShellState extends ConsumerState<_Shell> {
         ),
         title: Text(titles[index]),
         actions: [
+          IconButton(
+            tooltip: t.notifications,
+            icon: () {
+              final n = ref.watch(notifUnseenCountProvider);
+              const ic = Icon(Icons.notifications_outlined);
+              return n > 0 ? Badge(label: Text('$n'), child: ic) : ic;
+            }(),
+            onPressed: () => context.push('/notifications'),
+          ),
           if (index == 3)
             IconButton(
               tooltip: t.messages,
@@ -228,6 +249,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     ),
     GoRoute(path: '/premium', builder: (_, __) => const PremiumScreen()),
     GoRoute(path: '/messages', builder: (_, __) => const MessagesScreen()),
+    GoRoute(
+        path: '/notifications',
+        builder: (_, __) => const NotificationsScreen()),
     GoRoute(
         path: '/blocked', builder: (_, __) => const BlockedUsersScreen()),
     GoRoute(

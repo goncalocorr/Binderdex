@@ -231,5 +231,9 @@
   "noArchived": "No archived chats.",
   "tabBinderShort": "Binder",
   "blockedUsers": "Blocked people",
-  "noBlockedUsers": "No blocked people."
+  "noBlockedUsers": "No blocked people.",
+  "noNotifications": "No notifications.",
+  "notifNewMessage": "New message",
+  "notifWishlistAvailable": "Wishlist card available",
+  "notifNewCollection": "New collection"
 }

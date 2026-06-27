@@ -29,6 +29,17 @@ class MarketService {
       .snapshots()
       .map(_map);
 
+  /// Anúncios ativos de qualquer carta da lista (para notificações de wishlist).
+  /// Limitado a 30 cartas (limite do `whereIn` do Firestore).
+  Stream<List<Listing>> watchListingsForCards(List<String> cardIds) {
+    if (cardIds.isEmpty) return Stream.value(const []);
+    return _listings
+        .where('status', isEqualTo: 'active')
+        .where('cardId', whereIn: cardIds.take(30).toList())
+        .snapshots()
+        .map(_map);
+  }
+
   Stream<List<Listing>> watchMine(String uid) => _listings
       .where('ownerUid', isEqualTo: uid)
       .where('status', isEqualTo: 'active')

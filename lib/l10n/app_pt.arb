@@ -189,5 +189,9 @@
   "noArchived": "Sem conversas arquivadas.",
   "tabBinderShort": "Binder",
   "blockedUsers": "Pessoas bloqueadas",
-  "noBlockedUsers": "Sem pessoas bloqueadas."
+  "noBlockedUsers": "Sem pessoas bloqueadas.",
+  "noNotifications": "Sem notificações.",
+  "notifNewMessage": "Nova mensagem",
+  "notifWishlistAvailable": "Carta da wishlist disponível",
+  "notifNewCollection": "Nova coleção"
 }

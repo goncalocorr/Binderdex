@@ -14,6 +14,7 @@ import '../../data/repositories/cards_repository.dart';
 import '../../data/repositories/collection_repository.dart';
 import '../../data/repositories/sets_repository.dart';
 import '../../domain/entities/card_filter.dart';
+import '../../domain/entities/app_notification.dart';
 import '../../domain/entities/card_set.dart';
 import '../../domain/entities/chat.dart';
 import '../../domain/entities/listing.dart';
@@ -259,6 +260,57 @@ final messagesProvider =
 final unreadTotalProvider = Provider<int>((ref) {
   final convos = ref.watch(conversationsProvider).valueOrNull ?? const [];
   return convos.fold<int>(0, (a, c) => a + c.unread);
+});
+
+// --- Notificações (no-app) ---
+/// Anúncios ativos das cartas da minha wishlist.
+final wishlistListingsProvider = StreamProvider<List<Listing>>((ref) {
+  final wish = ref.watch(wishlistProvider).valueOrNull ?? const [];
+  final ids = wish.map((c) => c.card.id).toList();
+  if (ids.isEmpty) return Stream.value(const <Listing>[]);
+  return ref.watch(marketServiceProvider).watchListingsForCards(ids);
+});
+
+/// Sets já vistos (para detetar coleções novas). null = não inicializado.
+final seenSetsProvider = StateProvider<Set<String>?>((ref) {
+  final l = ref.read(prefsProvider).getStringList('seenSets');
+  return l?.toSet();
+});
+
+/// Última vez que o utilizador abriu o centro de notificações.
+final lastSeenNotifProvider = StateProvider<DateTime>((ref) =>
+    DateTime.fromMillisecondsSinceEpoch(
+        ref.read(prefsProvider).getInt('lastSeenNotif') ?? 0));
+
+/// Lista unificada de notificações, mais recentes primeiro (derivada).
+final notificationsProvider = Provider<List<AppNotification>>((ref) {
+  final me = _uid(ref);
+  final blocked = ref.watch(blockedUidsProvider).valueOrNull ?? const <String>{};
+  final out = <AppNotification>[];
+  for (final c in (ref.watch(conversationsProvider).valueOrNull ?? const [])
+      .where((c) => c.unread > 0)) {
+    out.add(AppNotification.message(c));
+  }
+  for (final l in wishlistMatchesFrom(
+      ref.watch(wishlistListingsProvider).valueOrNull ?? const [], me, blocked)) {
+    out.add(AppNotification.wishlist(l));
+  }
+  final sets = (ref.watch(setsListProvider).valueOrNull ?? const [])
+      .map((s) => s.set)
+      .toList();
+  for (final s in newSetsFrom(sets, ref.watch(seenSetsProvider))) {
+    out.add(AppNotification.newSet(s));
+  }
+  out.sort((a, b) => b.at.compareTo(a.at));
+  return out;
+});
+
+/// Nº de notificações ainda não vistas (badge do sino).
+final notifUnseenCountProvider = Provider<int>((ref) {
+  final lastSeen = ref.watch(lastSeenNotifProvider);
+  return ref.watch(notificationsProvider).where((n) {
+    return n.type == NotifType.newSet || n.at.isAfter(lastSeen);
+  }).length;
 });
 
 /// Query de pesquisa de cartas DENTRO da Comunidade (estado local, separado

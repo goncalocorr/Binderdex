@@ -1237,6 +1237,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No blocked people.'**
   String get noBlockedUsers;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications.'**
+  String get noNotifications;
+
+  /// No description provided for @notifNewMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'New message'**
+  String get notifNewMessage;
+
+  /// No description provided for @notifWishlistAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Wishlist card available'**
+  String get notifWishlistAvailable;
+
+  /// No description provided for @notifNewCollection.
+  ///
+  /// In en, this message translates to:
+  /// **'New collection'**
+  String get notifNewCollection;
 }
 
 class _AppLocalizationsDelegate

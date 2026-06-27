@@ -635,4 +635,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noBlockedUsers => 'Sem pessoas bloqueadas.';
+
+  @override
+  String get noNotifications => 'Sem notificações.';
+
+  @override
+  String get notifNewMessage => 'Nova mensagem';
+
+  @override
+  String get notifWishlistAvailable => 'Carta da wishlist disponível';
+
+  @override
+  String get notifNewCollection => 'Nova coleção';
 }
