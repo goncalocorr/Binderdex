@@ -129,7 +129,8 @@ class _ShellState extends ConsumerState<_Shell> {
         destinations: [
           NavigationDestination(icon: _tabIcon('inicio'), label: t.tabHome),
           NavigationDestination(icon: _tabIcon('colecoes'), label: t.tabSets),
-          NavigationDestination(icon: _tabIcon('binder'), label: t.tabBinder),
+          NavigationDestination(
+              icon: _tabIcon('binder'), label: t.tabBinderShort),
           NavigationDestination(
               icon: _tabIcon('comunidade'), label: t.tabCommunity),
           NavigationDestination(icon: _tabIcon('perfil'), label: t.tabProfile),

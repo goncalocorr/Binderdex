@@ -1201,6 +1201,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No archived chats.'**
   String get noArchived;
+
+  /// No description provided for @tabBinderShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Binder'**
+  String get tabBinderShort;
 }
 
 class _AppLocalizationsDelegate

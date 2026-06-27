@@ -614,4 +614,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get noArchived => 'Sem conversas arquivadas.';
+
+  @override
+  String get tabBinderShort => 'Binder';
 }

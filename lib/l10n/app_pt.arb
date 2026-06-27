@@ -184,5 +184,6 @@
   "archivedTitle": "Arquivadas",
   "deleteConversation": "Apagar conversa",
   "deleteConversationConfirm": "Apagar esta conversa? Volta a aparecer se receberes uma mensagem nova.",
-  "noArchived": "Sem conversas arquivadas."
+  "noArchived": "Sem conversas arquivadas.",
+  "tabBinderShort": "Binder"
 }

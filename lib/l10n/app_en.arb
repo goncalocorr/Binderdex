@@ -225,5 +225,6 @@
   "archivedTitle": "Archived",
   "deleteConversation": "Delete chat",
   "deleteConversationConfirm": "Delete this chat? It comes back if you get a new message.",
-  "noArchived": "No archived chats."
+  "noArchived": "No archived chats.",
+  "tabBinderShort": "Binder"
 }

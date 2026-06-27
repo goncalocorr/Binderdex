@@ -610,4 +610,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noArchived => 'No archived chats.';
+
+  @override
+  String get tabBinderShort => 'Binder';
 }
