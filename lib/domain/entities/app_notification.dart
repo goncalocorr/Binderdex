@@ -33,6 +33,19 @@ class AppNotification {
         conversation = null,
         listing = null,
         at = _parseDate(s.releaseDate);
+
+  /// Id estável para "limpar" (dispensar). Na mensagem inclui o `updatedAt` da
+  /// conversa → se chegar mensagem nova, a notificação reaparece (id muda).
+  String get id {
+    switch (type) {
+      case NotifType.message:
+        return 'msg:${conversation!.id}:${conversation!.updatedAt.millisecondsSinceEpoch}';
+      case NotifType.wishlist:
+        return 'wish:${listing!.id}';
+      case NotifType.newSet:
+        return 'set:${set!.id}';
+    }
+  }
 }
 
 DateTime _parseDate(String s) {

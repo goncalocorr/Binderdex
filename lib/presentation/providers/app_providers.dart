@@ -316,6 +316,12 @@ final lastSeenNotifProvider = StateProvider<DateTime>((ref) =>
     DateTime.fromMillisecondsSinceEpoch(
         ref.read(prefsProvider).getInt('lastSeenNotif') ?? 0));
 
+/// Ids de notificações que o utilizador "limpou" (arrastou). Persistido em
+/// prefs; filtradas da lista e do badge. Ver AppNotification.id.
+final dismissedNotifsProvider = StateProvider<Set<String>>((ref) =>
+    (ref.read(prefsProvider).getStringList('dismissedNotifs') ?? const [])
+        .toSet());
+
 /// Lista unificada de notificações, mais recentes primeiro (derivada).
 final notificationsProvider = Provider<List<AppNotification>>((ref) {
   final me = _uid(ref);
@@ -338,7 +344,11 @@ final notificationsProvider = Provider<List<AppNotification>>((ref) {
     out.add(AppNotification.newSet(s));
   }
   out.sort((a, b) => b.at.compareTo(a.at));
-  return out;
+  // Remove as que o utilizador limpou (arrastou).
+  final dismissed = ref.watch(dismissedNotifsProvider);
+  return dismissed.isEmpty
+      ? out
+      : out.where((n) => !dismissed.contains(n.id)).toList();
 });
 
 /// Nº de notificações ainda não vistas (badge do sino).

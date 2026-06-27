@@ -640,6 +640,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noNotifications => 'Sem notificações.';
 
   @override
+  String get notifCleared => 'Notificação limpa';
+
+  @override
   String get notifNewMessage => 'Nova mensagem';
 
   @override

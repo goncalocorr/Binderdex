@@ -1244,6 +1244,12 @@ abstract class AppLocalizations {
   /// **'No notifications.'**
   String get noNotifications;
 
+  /// No description provided for @notifCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification cleared'**
+  String get notifCleared;
+
   /// No description provided for @notifNewMessage.
   ///
   /// In en, this message translates to:

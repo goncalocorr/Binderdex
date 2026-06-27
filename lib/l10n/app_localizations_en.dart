@@ -636,6 +636,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noNotifications => 'No notifications.';
 
   @override
+  String get notifCleared => 'Notification cleared';
+
+  @override
   String get notifNewMessage => 'New message';
 
   @override

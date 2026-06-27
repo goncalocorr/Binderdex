@@ -64,9 +64,51 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               : ListView.separated(
                   itemCount: items.length,
                   separatorBuilder: (_, __) => const Divider(height: 1),
-                  itemBuilder: (_, i) => _tile(context, t, items[i]),
+                  itemBuilder: (_, i) {
+                    final n = items[i];
+                    return Dismissible(
+                      key: ValueKey(n.id),
+                      direction: DismissDirection.horizontal,
+                      background: _swipeBg(Alignment.centerLeft),
+                      secondaryBackground: _swipeBg(Alignment.centerRight),
+                      onDismissed: (_) => _dismiss(t, n),
+                      child: _tile(context, t, n),
+                    );
+                  },
                 ),
     );
+  }
+
+  Widget _swipeBg(Alignment a) => Container(
+        color: Colors.blueGrey,
+        alignment: a,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: const Icon(Icons.delete_sweep_outlined, color: Colors.white),
+      );
+
+  /// "Limpa" (dispensa) uma notificação: guarda o id e tira-a da lista.
+  void _dismiss(AppLocalizations t, AppNotification n) {
+    final set = {...ref.read(dismissedNotifsProvider), n.id};
+    _persistDismissed(set);
+    setState(() => _items = [...?_items]..removeWhere((x) => x.id == n.id));
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(
+        content: Text(t.notifCleared),
+        action: SnackBarAction(label: t.undo, onPressed: () => _undo(n.id)),
+      ));
+  }
+
+  void _undo(String id) {
+    final set = {...ref.read(dismissedNotifsProvider)}..remove(id);
+    _persistDismissed(set);
+    // Volta a tirar o instantâneo (a lista ao vivo já a inclui de novo).
+    setState(() => _items = ref.read(notificationsProvider));
+  }
+
+  void _persistDismissed(Set<String> set) {
+    ref.read(dismissedNotifsProvider.notifier).state = set;
+    ref.read(prefsProvider).setStringList('dismissedNotifs', set.toList());
   }
 
   Widget _tile(BuildContext context, AppLocalizations t, AppNotification n) {
