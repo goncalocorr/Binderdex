@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../domain/entities/chat.dart';
 import '../../domain/entities/listing.dart';
+import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../../presentation/providers/app_providers.dart';
 import '../../presentation/screens/card_detail_screen.dart';
@@ -26,6 +27,7 @@ import '../../presentation/screens/sets_screen.dart';
 import '../../presentation/screens/settings_screen.dart';
 import '../../presentation/screens/wishlist_screen.dart';
 import '../../presentation/widgets/auth_guard.dart';
+import '../../presentation/widgets/avatar.dart';
 
 /// Ícone (imagem) de um separador da barra inferior (assets/tabs/<name>.png).
 Widget _tabIcon(String name) => Image.asset(
@@ -91,6 +93,19 @@ class _ShellState extends ConsumerState<_Shell> {
     // Após login (mudança de sessão), pede o nome se faltar.
     ref.listen(authStateProvider, (_, __) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _maybeAskName());
+    });
+
+    // Se o premium expirar (tier deixa de ser premium) e o avatar atual for
+    // premium, repõe o avatar por omissão — perde-se o acesso aos avatares.
+    ref.listen(marketTierProvider, (_, next) {
+      if (MarketTier.isPremium(next.valueOrNull ?? 0)) return;
+      if (!isPremiumAvatar(ref.read(avatarProvider))) return;
+      ref.read(avatarProvider.notifier).state = '';
+      ref.read(prefsProvider).setString('avatar', '');
+      final uid = ref.read(authStateProvider).valueOrNull?.uid;
+      if (uid != null) {
+        ref.read(profileServiceProvider).save(uid, avatar: '').catchError((_) {});
+      }
     });
 
     return Scaffold(
