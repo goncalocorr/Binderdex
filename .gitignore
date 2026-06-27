@@ -28,3 +28,8 @@ Thumbs.db
 
 # Scratch da execucao SDD (subagentes)
 .superpowers/
+
+# Firebase
+firebase-debug.log
+*-debug.log
+.firebase/
