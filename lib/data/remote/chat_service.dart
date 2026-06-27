@@ -41,7 +41,7 @@ class ChatService {
     String? cardName,
     String? cardImage,
   }) async {
-    final id = conversationIdFor(meUid, otherUid);
+    final id = conversationIdFor(meUid, otherUid, cardId ?? '');
     await _convos.doc(id).set({
       'participants': [meUid, otherUid],
       'names': {meUid: meName, otherUid: otherName},

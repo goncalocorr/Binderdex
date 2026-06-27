@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -146,12 +147,28 @@ class _ConvTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = conversation;
     final hasUnread = c.unread > 0;
+    final subtitle = c.cardName.isEmpty
+        ? c.lastMessage
+        : '${c.cardName} · ${c.lastMessage}';
     return ListTile(
-      leading: _Avatar(avatar: c.otherAvatar),
+      // Imagem da carta em negociação (distingue chats com a mesma pessoa);
+      // sem carta, recai no avatar.
+      leading: c.cardImage.isEmpty
+          ? _Avatar(avatar: c.otherAvatar)
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: CachedNetworkImage(
+                imageUrl: c.cardImage,
+                width: 40,
+                height: 40,
+                fit: BoxFit.cover,
+                memCacheWidth: 120,
+                errorWidget: (_, __, ___) => _Avatar(avatar: c.otherAvatar),
+              ),
+            ),
       title: Text(c.otherName.isEmpty ? '—' : c.otherName,
           maxLines: 1, overflow: TextOverflow.ellipsis),
-      subtitle: Text(c.lastMessage,
-          maxLines: 1, overflow: TextOverflow.ellipsis),
+      subtitle: Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
       trailing: hasUnread ? Badge(label: Text('${c.unread}')) : null,
       onTap: () => context.push('/chat', extra: c),
     );

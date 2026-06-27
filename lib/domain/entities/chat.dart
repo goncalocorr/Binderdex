@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Id determinístico de uma conversa entre dois utilizadores (1 por par).
-/// Simétrico: `conversationIdFor(a,b) == conversationIdFor(b,a)`.
-String conversationIdFor(String a, String b) {
+/// Id determinístico de uma conversa entre dois utilizadores, por carta
+/// (1 chat por par + carta). Simétrico nos utilizadores. Sem carta, recai no
+/// id por par (compatibilidade).
+String conversationIdFor(String a, String b, [String cardId = '']) {
   final pair = [a, b]..sort();
-  return '${pair[0]}_${pair[1]}';
+  final base = '${pair[0]}_${pair[1]}';
+  return cardId.isEmpty ? base : '${base}_$cardId';
 }
 
 final _emailRe = RegExp(r'[\w.+\-]+@[\w\-]+\.[\w.\-]+');

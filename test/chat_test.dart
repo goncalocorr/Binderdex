@@ -2,9 +2,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pokedex/domain/entities/chat.dart';
 
 void main() {
-  test('conversationIdFor é determinístico e simétrico', () {
-    expect(conversationIdFor('rui', 'ana'), conversationIdFor('ana', 'rui'));
-    expect(conversationIdFor('ana', 'rui'), 'ana_rui'); // ordenado
+  test('conversationIdFor é determinístico e simétrico (por carta)', () {
+    // simétrico nos utilizadores
+    expect(conversationIdFor('rui', 'ana', 'base1-4'),
+        conversationIdFor('ana', 'rui', 'base1-4'));
+    // inclui a carta → 1 chat por carta
+    expect(conversationIdFor('ana', 'rui', 'base1-4'), 'ana_rui_base1-4');
+    // cartas diferentes → conversas diferentes
+    expect(conversationIdFor('ana', 'rui', 'base1-4') !=
+        conversationIdFor('ana', 'rui', 'base1-58'), true);
+    // sem carta → recai no id por par
+    expect(conversationIdFor('ana', 'rui'), 'ana_rui');
   });
 
   group('messageHasContact', () {
