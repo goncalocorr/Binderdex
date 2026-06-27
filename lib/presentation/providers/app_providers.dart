@@ -263,10 +263,14 @@ final unreadTotalProvider = Provider<int>((ref) {
 });
 
 // --- Notificações (no-app) ---
-/// Anúncios ativos das cartas da minha wishlist.
-final wishlistListingsProvider = StreamProvider<List<Listing>>((ref) {
-  final wish = ref.watch(wishlistProvider).valueOrNull ?? const [];
-  final ids = wish.map((c) => c.card.id).toList();
+/// Cartas que o utilizador escolheu seguir (sino) — ids guardados em prefs.
+/// Notifica quando aparecem à venda/troca na Comunidade.
+final notifyCardsProvider = StateProvider<Set<String>>((ref) =>
+    (ref.read(prefsProvider).getStringList('notifyCards') ?? const []).toSet());
+
+/// Anúncios ativos das cartas que sigo.
+final watchedCardListingsProvider = StreamProvider<List<Listing>>((ref) {
+  final ids = ref.watch(notifyCardsProvider).toList();
   if (ids.isEmpty) return Stream.value(const <Listing>[]);
   return ref.watch(marketServiceProvider).watchListingsForCards(ids);
 });
@@ -292,7 +296,9 @@ final notificationsProvider = Provider<List<AppNotification>>((ref) {
     out.add(AppNotification.message(c));
   }
   for (final l in wishlistMatchesFrom(
-      ref.watch(wishlistListingsProvider).valueOrNull ?? const [], me, blocked)) {
+      ref.watch(watchedCardListingsProvider).valueOrNull ?? const [],
+      me,
+      blocked)) {
     out.add(AppNotification.wishlist(l));
   }
   final sets = (ref.watch(setsListProvider).valueOrNull ?? const [])

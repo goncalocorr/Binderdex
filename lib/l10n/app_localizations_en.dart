@@ -639,8 +639,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifNewMessage => 'New message';
 
   @override
-  String get notifWishlistAvailable => 'Wishlist card available';
+  String get notifWishlistAvailable => 'Tracked card available';
 
   @override
   String get notifNewCollection => 'New collection';
+
+  @override
+  String get notifyCardOn => 'Sale notifications for this card are on.';
+
+  @override
+  String get notifyCardOff => 'Notifications for this card are off.';
 }

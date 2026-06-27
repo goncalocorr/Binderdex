@@ -643,8 +643,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get notifNewMessage => 'Nova mensagem';
 
   @override
-  String get notifWishlistAvailable => 'Carta da wishlist disponível';
+  String get notifWishlistAvailable => 'Carta seguida disponível';
 
   @override
   String get notifNewCollection => 'Nova coleção';
+
+  @override
+  String get notifyCardOn => 'Notificações de venda desta carta ativadas.';
+
+  @override
+  String get notifyCardOff => 'Notificações desta carta desativadas.';
 }

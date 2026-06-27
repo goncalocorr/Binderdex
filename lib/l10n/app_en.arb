@@ -234,6 +234,8 @@
   "noBlockedUsers": "No blocked people.",
   "noNotifications": "No notifications.",
   "notifNewMessage": "New message",
-  "notifWishlistAvailable": "Wishlist card available",
-  "notifNewCollection": "New collection"
+  "notifWishlistAvailable": "Tracked card available",
+  "notifNewCollection": "New collection",
+  "notifyCardOn": "Sale notifications for this card are on.",
+  "notifyCardOff": "Notifications for this card are off."
 }

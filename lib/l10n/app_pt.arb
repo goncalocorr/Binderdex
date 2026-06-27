@@ -192,6 +192,8 @@
   "noBlockedUsers": "Sem pessoas bloqueadas.",
   "noNotifications": "Sem notificações.",
   "notifNewMessage": "Nova mensagem",
-  "notifWishlistAvailable": "Carta da wishlist disponível",
-  "notifNewCollection": "Nova coleção"
+  "notifWishlistAvailable": "Carta seguida disponível",
+  "notifNewCollection": "Nova coleção",
+  "notifyCardOn": "Notificações de venda desta carta ativadas.",
+  "notifyCardOff": "Notificações desta carta desativadas."
 }
