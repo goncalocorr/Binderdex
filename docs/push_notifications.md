@@ -1,60 +1,71 @@
 # Notificações push (FCM)
 
-A **app já está pronta** para receber push. Falta só a parte do servidor — as
-**Cloud Functions** que enviam a notificação quando algo acontece no Firestore.
-Isto exige o plano **Blaze** (pay-as-you-go) no Firebase.
+Tem **duas partes, ambas já escritas**:
 
-## O que a app já faz (lado do cliente)
+- **App (cliente)** — pede permissão, guarda o token, mostra/encaminha as
+  notificações. Ver [`lib/data/remote/push_service.dart`](../lib/data/remote/push_service.dart).
+- **Servidor (Cloud Functions)** — envia o push quando algo acontece no
+  Firestore. Ver [`functions/index.js`](../functions/index.js).
+
+Falta só **ativar o plano Blaze** e fazer **deploy** das functions.
+
+## O que a app faz (cliente)
 
 - Pede permissão de notificações ao iniciar sessão com conta (não convidado).
-- Obtém o **token FCM** do dispositivo e guarda-o em `users/{uid}.fcmTokens`
-  (lista — vários dispositivos = vários tokens). Atualiza no refresh do token.
-- Em primeiro plano, mostra a notificação (via `flutter_local_notifications`).
-- Ao tocar na notificação, abre o ecrã certo (ver convenção abaixo).
-- Ao terminar sessão, remove o token deste dispositivo da conta.
-
-Código: [`lib/data/remote/push_service.dart`](../lib/data/remote/push_service.dart).
+- Guarda o **token FCM** em `users/{uid}.fcmTokens` (lista). Atualiza no refresh.
+- "Seguir carta" (sino) guarda também em `users/{uid}.notifyCards` (lista).
+- Em primeiro plano mostra a notificação; ao tocar abre o ecrã certo.
+- Ao terminar sessão, remove o token deste dispositivo.
 
 ## Convenção do payload (`data`)
 
-As Functions devem enviar `notification` (título/corpo) **e** `data` com `type`:
+| `data.type` | Campos extra | Abre na app                          |
+|-------------|--------------|--------------------------------------|
+| `message`   | —            | `/messages` (caixa de mensagens)     |
+| `listing`   | `cardId`     | `/community/card/<cardId>` (ofertas) |
+| `newSet`    | `setId`      | `/notifications` (centro)            |
 
-| `data.type` | Campos extra      | Abre na app                         |
-|-------------|-------------------|-------------------------------------|
-| `message`   | —                 | `/messages` (caixa de mensagens)    |
-| `listing`   | `cardId`          | `/community/card/<cardId>` (ofertas)|
-| `newSet`    | `setId`           | `/notifications` (centro)           |
+## Cloud Functions (já implementadas em `functions/index.js`)
 
-## Cloud Functions a implementar (3 gatilhos)
+Região **europe-west1** (perto do Firestore `eur3`).
 
-Pré-requisitos: `firebase init functions` (Node), plano **Blaze**, depois
-`firebase deploy --only functions`. Lógica (pseudocódigo):
+1. **`onNewMessage`** — `conversations/{cid}/messages/{mid}` onCreate → notifica o
+   destinatário (o participante que não é o remetente). Salta quem bloqueou o
+   remetente.
+2. **`onNewListing`** — `listings/{id}` onCreate → notifica quem segue essa carta
+   (`users` com `notifyCards array-contains cardId`), exceto o próprio dono e
+   quem o bloqueou.
+3. **`announceNewSet`** — HTTP **manual** (os sets não estão no Firestore). Disparas
+   tu quando sair uma coleção. Protegida por segredo `ANNOUNCE_SECRET`.
 
-### 1. Nova mensagem no chat
-`onCreate` em `conversations/{cid}/messages/{mid}`:
-1. Ler a conversa `cid` → `participants`, `names`.
-2. Destinatário = participante que **não** é `senderUid`.
-3. Ler `users/{destinatario}.fcmTokens`.
-4. `sendEachForMulticast` com `notification {title: nome do remetente, body: texto}`
-   e `data {type: 'message'}`.
+Limpeza automática: tokens inválidos são removidos de `users/{uid}.fcmTokens`.
 
-### 2. Carta seguida posta à venda/troca
-`onCreate` em `listings/{id}`:
-1. `cardId = listing.cardId`.
-2. Procurar utilizadores que seguem essa carta. **Nota:** hoje o "seguir carta"
-   (`notifyCards`) está só em `SharedPreferences` no cliente. Para o servidor
-   saber, é preciso passar a guardar também no Firestore (ex.: coleção
-   `cardWatchers/{cardId}/users/{uid}` ou `users/{uid}.notifyCards`).
-3. Para cada seguidor (≠ `ownerUid`, e que não tenha bloqueado o dono): enviar
-   `data {type: 'listing', cardId}`.
+## Como pôr a funcionar (uma vez)
 
-### 3. Coleção (set) nova
-`onCreate` em `sets/{setId}` (se/quando os sets forem escritos no Firestore) ou
-uma função agendada que compara com o catálogo: enviar a todos os tokens
-`data {type: 'newSet', setId}`.
+```bash
+# 1. Ativar o plano Blaze na consola Firebase (Definições → Uso e faturação).
+#    Recomendado: definir um alerta/limite de orçamento.
 
-## Por fazer antes de ligar isto
-- [ ] Ativar o plano **Blaze** na consola Firebase.
-- [ ] Persistir o "seguir carta" (`notifyCards`) no Firestore (gatilho 2).
-- [ ] (iOS) Configurar **APNs** no Firebase (certificado/chave) — Android não precisa.
-- [ ] Ícone branco de notificação dedicado (`drawable`), senão usa o do launcher.
+# 2. (opcional, só para o anúncio de coleções) definir o segredo:
+firebase functions:secrets:set ANNOUNCE_SECRET   # escolhe uma password
+
+# 3. Deploy das functions:
+firebase deploy --only functions
+```
+
+Disparar um anúncio de coleção nova (gatilho 3, manual):
+```
+https://europe-west1-binderdex-b1908.cloudfunctions.net/announceNewSet?key=SEGREDO&setId=sv8&name=Surging%20Sparks
+```
+
+## Testar
+- **Sem deploy:** Consola Firebase → Cloud Messaging → "Enviar mensagem de teste"
+  → cola um token (vê-o em `users/{uid}.fcmTokens`). Confirma que chega.
+- **Com deploy:** envia uma mensagem de chat de uma conta para outra — a outra
+  deve receber push (app fechada/2.º plano) ou o aviso local (1.º plano).
+- Logs: `firebase functions:log`.
+
+## Notas
+- **iOS:** falta configurar **APNs** no Firebase (certificado/chave). Android não precisa.
+- Ícone de notificação: usa o do launcher por agora; um `drawable` branco dedicado
+  fica melhor na barra de estado.

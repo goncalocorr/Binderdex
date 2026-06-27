@@ -57,6 +57,11 @@ class CardDetailScreen extends ConsumerWidget {
               on ? set.add(id) : set.remove(id);
               ref.read(notifyCardsProvider.notifier).state = set;
               ref.read(prefsProvider).setStringList('notifyCards', set.toList());
+              // Espelha no Firestore para o servidor enviar push (só contas).
+              final user = ref.read(authStateProvider).valueOrNull;
+              if (user != null && !user.isAnonymous) {
+                ref.read(profileServiceProvider).setCardWatch(user.uid, id, on);
+              }
               ScaffoldMessenger.of(context)
                 ..clearSnackBars()
                 ..showSnackBar(SnackBar(

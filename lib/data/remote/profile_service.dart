@@ -57,5 +57,21 @@ class ProfileService {
     }
   }
 
+  /// Segue/deixa de seguir uma carta (sino). Guarda em `users/{uid}.notifyCards`
+  /// para o servidor (Cloud Functions) saber a quem enviar push quando essa
+  /// carta for posta à venda/troca.
+  Future<void> setCardWatch(String uid, String cardId, bool on) async {
+    if (cardId.isEmpty) return;
+    try {
+      await _doc(uid).set({
+        'notifyCards': on
+            ? FieldValue.arrayUnion([cardId])
+            : FieldValue.arrayRemove([cardId]),
+      }, SetOptions(merge: true));
+    } catch (_) {
+      // Sem rede / sem permissão — o estado local (prefs) fica na mesma.
+    }
+  }
+
   Future<void> delete(String uid) => _doc(uid).delete();
 }
