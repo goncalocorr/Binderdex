@@ -403,16 +403,6 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const Divider(),
-
-        // ⭐ PREMIUM: secção de subscrição — preparada para a Etapa 3.
-        ListTile(
-          leading: const Icon(Icons.workspace_premium),
-          title: Text(t.premium),
-          subtitle: Text(t.comingSoon),
-          enabled: false,
-        ),
-
         // Zona de perigo — só com sessão iniciada (RGPD: direito ao esquecimento).
         if (signedIn) ...[
           const Divider(),
