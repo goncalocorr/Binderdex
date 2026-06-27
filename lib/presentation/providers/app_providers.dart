@@ -327,16 +327,27 @@ final unreadTotalProvider = Provider<int>((ref) {
 });
 
 // --- Notificações (no-app) ---
-/// Cartas que o utilizador escolheu seguir (sino) — ids guardados em prefs.
-/// Notifica quando aparecem à venda/troca na Comunidade.
-final notifyCardsProvider = StateProvider<Set<String>>((ref) =>
-    (ref.read(prefsProvider).getStringList('notifyCards') ?? const []).toSet());
-
-/// Anúncios ativos das cartas que sigo.
+/// Anúncios ativos das cartas da minha wishlist (para a notificação in-app de
+/// "carta disponível"). A wishlist (coração) é a fonte única.
 final watchedCardListingsProvider = StreamProvider<List<Listing>>((ref) {
-  final ids = ref.watch(notifyCardsProvider).toList();
+  final wishlist = ref.watch(wishlistProvider).valueOrNull ?? const [];
+  final ids = wishlist.map((c) => c.card.id).toList();
   if (ids.isEmpty) return Stream.value(const <Listing>[]);
   return ref.watch(marketServiceProvider).watchListingsForCards(ids);
+});
+
+/// Mantém `users/{uid}.notifyCards` igual à wishlist, para o servidor enviar
+/// push quando uma carta desejada é anunciada. Espelha sempre que a wishlist
+/// muda (e ao arrancar, fazendo o backfill). Só contas (não anónimos).
+final wishlistWatchSyncProvider = Provider<void>((ref) {
+  ref.listen<AsyncValue<List<CardItem>>>(wishlistProvider, (_, next) {
+    final user = ref.read(authStateProvider).valueOrNull;
+    if (user == null || user.isAnonymous) return;
+    final ids = (next.valueOrNull ?? const <CardItem>[])
+        .map((c) => c.card.id)
+        .toSet();
+    ref.read(profileServiceProvider).setNotifyCards(user.uid, ids);
+  }, fireImmediately: true);
 });
 
 /// Sets já vistos (para detetar coleções novas). null = não inicializado.

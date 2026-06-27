@@ -1327,18 +1327,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New collection'**
   String get notifNewCollection;
-
-  /// No description provided for @notifyCardOn.
-  ///
-  /// In en, this message translates to:
-  /// **'Sale notifications for this card are on.'**
-  String get notifyCardOn;
-
-  /// No description provided for @notifyCardOff.
-  ///
-  /// In en, this message translates to:
-  /// **'Notifications for this card are off.'**
-  String get notifyCardOff;
 }
 
 class _AppLocalizationsDelegate

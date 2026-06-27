@@ -204,7 +204,5 @@
   "notifCleared": "Notificação limpa",
   "notifNewMessage": "Nova mensagem",
   "notifWishlistAvailable": "Carta seguida disponível",
-  "notifNewCollection": "Nova coleção",
-  "notifyCardOn": "Notificações de venda desta carta ativadas.",
-  "notifyCardOff": "Notificações desta carta desativadas."
+  "notifNewCollection": "Nova coleção"
 }

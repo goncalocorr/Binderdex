@@ -688,10 +688,4 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get notifNewCollection => 'Nova coleção';
-
-  @override
-  String get notifyCardOn => 'Notificações de venda desta carta ativadas.';
-
-  @override
-  String get notifyCardOff => 'Notificações desta carta desativadas.';
 }

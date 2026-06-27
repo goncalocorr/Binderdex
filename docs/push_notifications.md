@@ -13,7 +13,8 @@ Falta só **ativar o plano Blaze** e fazer **deploy** das functions.
 
 - Pede permissão de notificações ao iniciar sessão com conta (não convidado).
 - Guarda o **token FCM** em `users/{uid}.fcmTokens` (lista). Atualiza no refresh.
-- "Seguir carta" (sino) guarda também em `users/{uid}.notifyCards` (lista).
+- Espelha a **wishlist** (coração) em `users/{uid}.notifyCards` (lista) → push
+  quando uma carta desejada é anunciada.
 - Em primeiro plano mostra a notificação; ao tocar abre o ecrã certo.
 - Ao terminar sessão, remove o token deste dispositivo.
 
@@ -32,9 +33,10 @@ Região **europe-west1** (perto do Firestore `eur3`).
 1. **`onNewMessage`** — `conversations/{cid}/messages/{mid}` onCreate → notifica o
    destinatário (o participante que não é o remetente). Salta quem bloqueou o
    remetente.
-2. **`onNewListing`** — `listings/{id}` onCreate → notifica quem segue essa carta
-   (`users` com `notifyCards array-contains cardId`), exceto o próprio dono e
-   quem o bloqueou.
+2. **`onNewListing`** — `listings/{id}` onCreate → notifica quem tem essa carta na
+   **wishlist** (`users` com `notifyCards array-contains cardId`), exceto o
+   próprio dono e quem o bloqueou. O array `notifyCards` é espelhado da wishlist
+   (coração) pelo cliente (`wishlistWatchSyncProvider`).
 3. **`announceNewSet`** — HTTP **manual** (os sets não estão no Firestore). Disparas
    tu quando sair uma coleção. Protegida por segredo `ANNOUNCE_SECRET`.
 

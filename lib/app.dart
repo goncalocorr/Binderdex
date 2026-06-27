@@ -16,6 +16,7 @@ class PokedexApp extends ConsumerWidget {
     // Liga a sincronização e o push ao ciclo de vida da sessão.
     ref.watch(syncServiceProvider);
     ref.watch(pushServiceProvider);
+    ref.watch(wishlistWatchSyncProvider); // wishlist → notifyCards (push)
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(

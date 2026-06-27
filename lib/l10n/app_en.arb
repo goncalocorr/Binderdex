@@ -249,7 +249,5 @@
   "notifCleared": "Notification cleared",
   "notifNewMessage": "New message",
   "notifWishlistAvailable": "Tracked card available",
-  "notifNewCollection": "New collection",
-  "notifyCardOn": "Sale notifications for this card are on.",
-  "notifyCardOff": "Notifications for this card are off."
+  "notifNewCollection": "New collection"
 }

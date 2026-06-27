@@ -39,35 +39,13 @@ class CardDetailScreen extends ConsumerWidget {
     final entryAsync = ref.watch(entryProvider(id));
 
     final wished = entryAsync.valueOrNull?.wishlisted ?? false;
-    final notifyOn = ref.watch(notifyCardsProvider).contains(id);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(cardAsync.valueOrNull?.name ?? ''),
         actions: [
-          IconButton(
-            tooltip: t.notifications,
-            icon: Icon(
-              notifyOn ? Icons.notifications_active : Icons.notifications_none,
-              color: notifyOn ? DexColors.gold500 : null,
-            ),
-            onPressed: () {
-              final set = {...ref.read(notifyCardsProvider)};
-              final on = !set.contains(id);
-              on ? set.add(id) : set.remove(id);
-              ref.read(notifyCardsProvider.notifier).state = set;
-              ref.read(prefsProvider).setStringList('notifyCards', set.toList());
-              // Espelha no Firestore para o servidor enviar push (só contas).
-              final user = ref.read(authStateProvider).valueOrNull;
-              if (user != null && !user.isAnonymous) {
-                ref.read(profileServiceProvider).setCardWatch(user.uid, id, on);
-              }
-              ScaffoldMessenger.of(context)
-                ..clearSnackBars()
-                ..showSnackBar(SnackBar(
-                    content: Text(on ? t.notifyCardOn : t.notifyCardOff)));
-            },
-          ),
+          // O coração (wishlist) é a fonte única: alimenta as trocas perfeitas
+          // E o push de "carta anunciada" (ver wishlistWatchSyncProvider).
           IconButton(
             tooltip: t.wishlist,
             icon: Icon(wished ? Icons.favorite : Icons.favorite_border,
