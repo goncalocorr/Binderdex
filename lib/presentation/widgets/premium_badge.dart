@@ -14,12 +14,14 @@ class PremiumBadge extends StatelessWidget {
   final int tier;
   const PremiumBadge({super.key, this.size = 16, this.tier = 1});
 
+  // Prata metálico com contraste: tons médios/escuros (leem-se no tema claro)
+  // + um brilho claro que "varre" (lê-se no tema escuro).
   static const _silver = [
-    Color(0xFFEDEFF2),
-    Color(0xFFAEB4BE),
-    Color(0xFFFFFFFF),
-    Color(0xFFC2C8D0),
-    Color(0xFFEDEFF2),
+    Color(0xFF64748B), // slate-500 (escuro, contraste no claro)
+    Color(0xFFE2E8F0), // slate-200 (brilho)
+    Color(0xFF94A3B8), // slate-400
+    Color(0xFF475569), // slate-600 (sombra metálica)
+    Color(0xFF64748B),
   ];
 
   static const _blues = [
