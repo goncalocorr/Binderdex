@@ -1,0 +1,420 @@
+[debug] [2026-06-27T13:10:23.727Z] ----------------------------------------------------------------------
+[debug] [2026-06-27T13:10:23.730Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\saloc\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions --non-interactive --force
+[debug] [2026-06-27T13:10:23.731Z] CLI Version:   15.22.3
+[debug] [2026-06-27T13:10:23.731Z] Platform:      win32
+[debug] [2026-06-27T13:10:23.731Z] Node Version:  v24.14.1
+[debug] [2026-06-27T13:10:23.731Z] Detected Agent: claude-code_2-1-187_agent
+[debug] [2026-06-27T13:10:23.731Z] Time:          Sat Jun 27 2026 14:10:23 GMT+0100 (Hora de verão da Europa Ocidental)
+[debug] [2026-06-27T13:10:23.731Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-06-27T13:10:27.831Z] Object "" in "firebase.json" has unknown property: {"additionalProperty":"flutter"}
+[debug] [2026-06-27T13:10:27.837Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-06-27T13:10:27.838Z] > authorizing via signed-in user (hivecode.comercial@gmail.com)
+[debug] [2026-06-27T13:10:27.838Z] [iam] checking project binderdex-b1908 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2026-06-27T13:10:27.839Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:27.840Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:27.842Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908:testIamPermissions [none]
+[debug] [2026-06-27T13:10:27.842Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908:testIamPermissions  x-goog-user-project=binderdex-b1908
+[debug] [2026-06-27T13:10:27.842Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-06-27T13:10:28.085Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908:testIamPermissions 200
+[debug] [2026-06-27T13:10:28.085Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2026-06-27T13:10:28.086Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:28.086Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:28.086Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/binderdex-b1908/serviceAccounts/binderdex-b1908@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2026-06-27T13:10:28.086Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/binderdex-b1908/serviceAccounts/binderdex-b1908@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2026-06-27T13:10:28.755Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/binderdex-b1908/serviceAccounts/binderdex-b1908@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2026-06-27T13:10:28.755Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/binderdex-b1908/serviceAccounts/binderdex-b1908@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'binderdex-b1908'...
+[info] 
+[info] i  deploying functions 
+[debug] [2026-06-27T13:10:28.759Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:28.759Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:28.759Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908 [none]
+[debug] [2026-06-27T13:10:28.957Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908 200
+[debug] [2026-06-27T13:10:28.957Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908 {"projectNumber":"1002246218437","projectId":"binderdex-b1908","lifecycleState":"ACTIVE","name":"Binderdex","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2026-06-23T02:15:46.053Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2026-06-27T13:10:28.963Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:28.963Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:28.963Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/binderdex-b1908/adminSdkConfig [none]
+[debug] [2026-06-27T13:10:29.377Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/binderdex-b1908/adminSdkConfig 200
+[debug] [2026-06-27T13:10:29.377Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/binderdex-b1908/adminSdkConfig {"projectId":"binderdex-b1908","storageBucket":"binderdex-b1908.firebasestorage.app"}
+[debug] [2026-06-27T13:10:29.377Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:29.378Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:29.378Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/binderdex-b1908/configs [none]
+[debug] [2026-06-27T13:10:30.203Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/binderdex-b1908/configs 200
+[debug] [2026-06-27T13:10:30.204Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/binderdex-b1908/configs {}
+[debug] [2026-06-27T13:10:30.204Z] Validating nodejs source
+[warn] !  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[warn] !  functions: Please note that there will be breaking changes when you upgrade. 
+[debug] [2026-06-27T13:10:31.512Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions do Binderdex (notificações push)",
+  "engines": {
+    "node": "22"
+  },
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0",
+    "firebase-functions": "^6.1.0"
+  }
+}
+[debug] [2026-06-27T13:10:31.512Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2026-06-27T13:10:31.513Z] Could not find functions.yaml. Must use http discovery
+[debug] [2026-06-27T13:10:31.526Z] Found firebase-functions binary at 'C:\Users\saloc\Documents\Pokedex\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8024
+
+[debug] [2026-06-27T13:10:32.637Z] Got response from /__/functions.yaml {"endpoints":{"onNewMessage":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":10,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west1"],"labels":{},"eventTrigger":{"eventType":"google.cloud.firestore.document.v1.created","eventFilters":{"database":"(default)","namespace":"(default)"},"eventFilterPathPatterns":{"document":"conversations/{cid}/messages/{mid}"},"retry":false},"entryPoint":"onNewMessage"},"onNewListing":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":10,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","region":["europe-west1"],"labels":{},"eventTrigger":{"eventType":"google.cloud.firestore.document.v1.created","eventFilters":{"database":"(default)","namespace":"(default)"},"eventFilterPathPatterns":{"document":"listings/{id}"},"retry":false},"entryPoint":"onNewListing"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[debug] [2026-06-27T13:10:36.713Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:36.713Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:36.713Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/binderdex-b1908/locations/-/functions [none]
+[debug] [2026-06-27T13:10:37.347Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/binderdex-b1908/locations/-/functions 200
+[debug] [2026-06-27T13:10:37.347Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/binderdex-b1908/locations/-/functions {}
+[debug] [2026-06-27T13:10:37.348Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:37.348Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:37.348Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2026-06-27T13:10:38.424Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/-/functions 200
+[debug] [2026-06-27T13:10:38.424Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/-/functions {}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2026-06-27T13:10:38.428Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-06-27T13:10:38.428Z] > authorizing via signed-in user (hivecode.comercial@gmail.com)
+[debug] [2026-06-27T13:10:38.428Z] [iam] checking project binderdex-b1908 for permissions ["firebase.projects.get","firebaseextensions.instances.list"]
+[debug] [2026-06-27T13:10:38.429Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:38.429Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:38.429Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908:testIamPermissions [none]
+[debug] [2026-06-27T13:10:38.429Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908:testIamPermissions  x-goog-user-project=binderdex-b1908
+[debug] [2026-06-27T13:10:38.429Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2026-06-27T13:10:39.086Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908:testIamPermissions 200
+[debug] [2026-06-27T13:10:39.086Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2026-06-27T13:10:39.086Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:39.086Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:39.086Z] >>> [apiv2][query] GET https://firebaseextensions.googleapis.com/v1beta/projects/binderdex-b1908/instances pageSize=100&pageToken=
+[debug] [2026-06-27T13:10:39.842Z] <<< [apiv2][status] GET https://firebaseextensions.googleapis.com/v1beta/projects/binderdex-b1908/instances 200
+[debug] [2026-06-27T13:10:39.842Z] <<< [apiv2][body] GET https://firebaseextensions.googleapis.com/v1beta/projects/binderdex-b1908/instances {}
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged C:\Users\saloc\Documents\Pokedex\functions (34.42 KB) for uploading 
+[debug] [2026-06-27T13:10:39.906Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:39.906Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:39.906Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/binderdex-b1908/databases/(default) [none]
+[debug] [2026-06-27T13:10:40.227Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/binderdex-b1908/databases/(default) 200
+[debug] [2026-06-27T13:10:40.227Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/binderdex-b1908/databases/(default) {"name":"projects/binderdex-b1908/databases/(default)","uid":"b1c907ef-d938-4f95-8a6b-76bc26b18750","createTime":"2026-06-23T02:21:12.739675Z","updateTime":"2026-06-23T02:21:12.739675Z","locationId":"eur3","type":"FIRESTORE_NATIVE","concurrencyMode":"PESSIMISTIC","versionRetentionPeriod":"3600s","earliestVersionTime":"2026-06-27T12:10:19.547222Z","appEngineIntegrationMode":"DISABLED","keyPrefix":"e","pointInTimeRecoveryEnablement":"POINT_IN_TIME_RECOVERY_DISABLED","deleteProtectionState":"DELETE_PROTECTION_DISABLED","databaseEdition":"STANDARD","freeTier":true,"realtimeUpdatesMode":"REALTIME_UPDATES_MODE_ENABLED","etag":"IMH32ZO/p5UDMNjlobuunJUD"}
+[info] i  functions: ensuring required API run.googleapis.com is enabled... 
+[debug] [2026-06-27T13:10:40.229Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:40.229Z] Checked if tokens are valid: true, expires at: 1782569287854
+[info] i  functions: ensuring required API eventarc.googleapis.com is enabled... 
+[debug] [2026-06-27T13:10:40.230Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:40.230Z] Checked if tokens are valid: true, expires at: 1782569287854
+[info] i  functions: ensuring required API pubsub.googleapis.com is enabled... 
+[debug] [2026-06-27T13:10:40.231Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:40.231Z] Checked if tokens are valid: true, expires at: 1782569287854
+[info] i  functions: ensuring required API storage.googleapis.com is enabled... 
+[debug] [2026-06-27T13:10:40.232Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:40.232Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:40.232Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/run.googleapis.com [none]
+[debug] [2026-06-27T13:10:40.232Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/run.googleapis.com  x-goog-user-project=1002246218437
+[debug] [2026-06-27T13:10:40.233Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/eventarc.googleapis.com [none]
+[debug] [2026-06-27T13:10:40.233Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/eventarc.googleapis.com  x-goog-user-project=1002246218437
+[debug] [2026-06-27T13:10:40.235Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/pubsub.googleapis.com [none]
+[debug] [2026-06-27T13:10:40.235Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/pubsub.googleapis.com  x-goog-user-project=1002246218437
+[debug] [2026-06-27T13:10:40.236Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/storage.googleapis.com [none]
+[debug] [2026-06-27T13:10:40.236Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/storage.googleapis.com  x-goog-user-project=1002246218437
+[debug] [2026-06-27T13:10:41.089Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/eventarc.googleapis.com 200
+[debug] [2026-06-27T13:10:41.089Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/eventarc.googleapis.com [omitted]
+[warn] !  functions: missing required API eventarc.googleapis.com. Enabling now... 
+[debug] [2026-06-27T13:10:41.091Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:41.091Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:41.091Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/1002246218437/services/eventarc.googleapis.com:enable [none]
+[debug] [2026-06-27T13:10:41.091Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/1002246218437/services/eventarc.googleapis.com:enable  x-goog-user-project=1002246218437
+[debug] [2026-06-27T13:10:41.095Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/run.googleapis.com 200
+[debug] [2026-06-27T13:10:41.095Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/run.googleapis.com [omitted]
+[warn] !  functions: missing required API run.googleapis.com. Enabling now... 
+[debug] [2026-06-27T13:10:41.096Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:41.096Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:41.096Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/1002246218437/services/run.googleapis.com:enable [none]
+[debug] [2026-06-27T13:10:41.096Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/1002246218437/services/run.googleapis.com:enable  x-goog-user-project=1002246218437
+[debug] [2026-06-27T13:10:41.105Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/storage.googleapis.com 200
+[debug] [2026-06-27T13:10:41.105Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/storage.googleapis.com [omitted]
+[info] +  functions: required API storage.googleapis.com is enabled 
+[debug] [2026-06-27T13:10:41.123Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/pubsub.googleapis.com 200
+[debug] [2026-06-27T13:10:41.123Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/1002246218437/services/pubsub.googleapis.com [omitted]
+[info] +  functions: required API pubsub.googleapis.com is enabled 
+[debug] [2026-06-27T13:10:41.863Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/1002246218437/services/run.googleapis.com:enable 200
+[debug] [2026-06-27T13:10:41.863Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/1002246218437/services/run.googleapis.com:enable [omitted]
+[debug] [2026-06-27T13:10:41.884Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/1002246218437/services/eventarc.googleapis.com:enable 200
+[debug] [2026-06-27T13:10:41.885Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/1002246218437/services/eventarc.googleapis.com:enable [omitted]
+[info] i  functions: generating the service identity for pubsub.googleapis.com... 
+[debug] [2026-06-27T13:10:51.901Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:51.901Z] Checked if tokens are valid: true, expires at: 1782569287854
+[info] i  functions: generating the service identity for eventarc.googleapis.com... 
+[debug] [2026-06-27T13:10:51.901Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:51.901Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:51.901Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1beta1/projects/1002246218437/services/pubsub.googleapis.com:generateServiceIdentity [none]
+[debug] [2026-06-27T13:10:51.901Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1beta1/projects/1002246218437/services/pubsub.googleapis.com:generateServiceIdentity  x-goog-user-project=1002246218437
+[debug] [2026-06-27T13:10:51.901Z] >>> [apiv2][body] POST https://serviceusage.googleapis.com/v1beta1/projects/1002246218437/services/pubsub.googleapis.com:generateServiceIdentity {}
+[debug] [2026-06-27T13:10:51.904Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1beta1/projects/1002246218437/services/eventarc.googleapis.com:generateServiceIdentity [none]
+[debug] [2026-06-27T13:10:51.904Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1beta1/projects/1002246218437/services/eventarc.googleapis.com:generateServiceIdentity  x-goog-user-project=1002246218437
+[debug] [2026-06-27T13:10:51.904Z] >>> [apiv2][body] POST https://serviceusage.googleapis.com/v1beta1/projects/1002246218437/services/eventarc.googleapis.com:generateServiceIdentity {}
+[debug] [2026-06-27T13:10:53.212Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1beta1/projects/1002246218437/services/eventarc.googleapis.com:generateServiceIdentity 200
+[debug] [2026-06-27T13:10:53.212Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1beta1/projects/1002246218437/services/eventarc.googleapis.com:generateServiceIdentity {"name":"operations/finished.DONE_OPERATION","done":true,"response":{"@type":"type.googleapis.com/google.api.serviceusage.v1beta1.ServiceIdentity","email":"service-1002246218437@gcp-sa-eventarc.iam.gserviceaccount.com","uniqueId":"111451703255475384479"}}
+[debug] [2026-06-27T13:10:53.263Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1beta1/projects/1002246218437/services/pubsub.googleapis.com:generateServiceIdentity 200
+[debug] [2026-06-27T13:10:53.263Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1beta1/projects/1002246218437/services/pubsub.googleapis.com:generateServiceIdentity {"name":"operations/finished.DONE_OPERATION","done":true,"response":{"@type":"type.googleapis.com/google.api.serviceusage.v1beta1.ServiceIdentity","email":"service-1002246218437@gcp-sa-pubsub.iam.gserviceaccount.com","uniqueId":"102986271709576748125"}}
+[debug] [2026-06-27T13:10:53.266Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:53.266Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:53.266Z] >>> [apiv2][query] GET https://compute.googleapis.com/compute/v1/projects/1002246218437 [none]
+[debug] [2026-06-27T13:10:53.609Z] <<< [apiv2][status] GET https://compute.googleapis.com/compute/v1/projects/1002246218437 403
+[debug] [2026-06-27T13:10:53.609Z] <<< [apiv2][body] GET https://compute.googleapis.com/compute/v1/projects/1002246218437 {"error":{"code":403,"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","errors":[{"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","domain":"usageLimits","reason":"accessNotConfigured","extendedHelp":"https://console.developers.google.com"}],"status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"SERVICE_DISABLED","domain":"googleapis.com","metadata":{"activationUrl":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437","serviceTitle":"Compute Engine API","containerInfo":"1002246218437","consumer":"projects/1002246218437","service":"compute.googleapis.com"}},{"@type":"type.googleapis.com/google.rpc.LocalizedMessage","locale":"en-US","message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Google developers console API activation","url":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437"}]}]}}
+[debug] [2026-06-27T13:10:53.609Z] unable to look up default compute service account. Falling back to 1002246218437-compute@developer.gserviceaccount.com. Error: {"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","errors":[{"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","domain":"usageLimits","reason":"accessNotConfigured","extendedHelp":"https://console.developers.google.com"}],"status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"SERVICE_DISABLED","domain":"googleapis.com","metadata":{"activationUrl":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437","serviceTitle":"Compute Engine API","containerInfo":"1002246218437","consumer":"projects/1002246218437","service":"compute.googleapis.com"}},{"@type":"type.googleapis.com/google.rpc.LocalizedMessage","locale":"en-US","message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Google developers console API activation","url":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437"}]}]}},"response":{"statusCode":403}},"exit":1,"message":"Request to https://compute.googleapis.com/compute/v1/projects/1002246218437 had HTTP Error: 403, Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","status":403}
+[debug] [2026-06-27T13:10:53.610Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:53.610Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:53.610Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/1002246218437:getIamPolicy [none]
+[debug] [2026-06-27T13:10:53.948Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/1002246218437:getIamPolicy 200
+[debug] [2026-06-27T13:10:53.948Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/1002246218437:getIamPolicy {"version":1,"etag":"BwZVO/LZ6SY=","bindings":[{"role":"roles/cloudbuild.builds.builder","members":["serviceAccount:1002246218437@cloudbuild.gserviceaccount.com"]},{"role":"roles/cloudbuild.serviceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-cloudbuild.iam.gserviceaccount.com"]},{"role":"roles/cloudfunctions.serviceAgent","members":["serviceAccount:service-1002246218437@gcf-admin-robot.iam.gserviceaccount.com"]},{"role":"roles/containerregistry.ServiceAgent","members":["serviceAccount:service-1002246218437@containerregistry.iam.gserviceaccount.com"]},{"role":"roles/editor","members":["serviceAccount:1002246218437-compute@developer.gserviceaccount.com","serviceAccount:1002246218437@cloudservices.gserviceaccount.com","serviceAccount:binderdex-b1908@appspot.gserviceaccount.com"]},{"role":"roles/firebase.managementServiceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-firebase.iam.gserviceaccount.com"]},{"role":"roles/firebase.sdkAdminServiceAgent","members":["serviceAccount:firebase-adminsdk-fbsvc@binderdex-b1908.iam.gserviceaccount.com"]},{"role":"roles/firebasemods.serviceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-firebasemods.iam.gserviceaccount.com"]},{"role":"roles/firebaserules.system","members":["serviceAccount:service-1002246218437@firebase-rules.iam.gserviceaccount.com"]},{"role":"roles/firestore.serviceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-firestore.iam.gserviceaccount.com"]},{"role":"roles/iam.serviceAccountTokenCreator","members":["serviceAccount:firebase-adminsdk-fbsvc@binderdex-b1908.iam.gserviceaccount.com"]},{"role":"roles/owner","members":["user:hivecode.comercial@gmail.com"]},{"role":"roles/run.serviceAgent","members":["serviceAccount:service-1002246218437@serverless-robot-prod.iam.gserviceaccount.com"]}]}
+[debug] [2026-06-27T13:10:53.949Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:53.949Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:53.949Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/1002246218437:setIamPolicy [none]
+[debug] [2026-06-27T13:10:53.949Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/1002246218437:setIamPolicy {"policy":{"version":1,"etag":"BwZVO/LZ6SY=","bindings":[{"role":"roles/cloudbuild.builds.builder","members":["serviceAccount:1002246218437@cloudbuild.gserviceaccount.com"]},{"role":"roles/cloudbuild.serviceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-cloudbuild.iam.gserviceaccount.com"]},{"role":"roles/cloudfunctions.serviceAgent","members":["serviceAccount:service-1002246218437@gcf-admin-robot.iam.gserviceaccount.com"]},{"role":"roles/containerregistry.ServiceAgent","members":["serviceAccount:service-1002246218437@containerregistry.iam.gserviceaccount.com"]},{"role":"roles/editor","members":["serviceAccount:1002246218437-compute@developer.gserviceaccount.com","serviceAccount:1002246218437@cloudservices.gserviceaccount.com","serviceAccount:binderdex-b1908@appspot.gserviceaccount.com"]},{"role":"roles/firebase.managementServiceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-firebase.iam.gserviceaccount.com"]},{"role":"roles/firebase.sdkAdminServiceAgent","members":["serviceAccount:firebase-adminsdk-fbsvc@binderdex-b1908.iam.gserviceaccount.com"]},{"role":"roles/firebasemods.serviceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-firebasemods.iam.gserviceaccount.com"]},{"role":"roles/firebaserules.system","members":["serviceAccount:service-1002246218437@firebase-rules.iam.gserviceaccount.com"]},{"role":"roles/firestore.serviceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-firestore.iam.gserviceaccount.com"]},{"role":"roles/iam.serviceAccountTokenCreator","members":["serviceAccount:firebase-adminsdk-fbsvc@binderdex-b1908.iam.gserviceaccount.com","serviceAccount:service-1002246218437@gcp-sa-pubsub.iam.gserviceaccount.com"]},{"role":"roles/owner","members":["user:hivecode.comercial@gmail.com"]},{"role":"roles/run.serviceAgent","members":["serviceAccount:service-1002246218437@serverless-robot-prod.iam.gserviceaccount.com"]},{"role":"roles/run.invoker","members":["serviceAccount:1002246218437-compute@developer.gserviceaccount.com"]},{"role":"roles/eventarc.eventReceiver","members":["serviceAccount:1002246218437-compute@developer.gserviceaccount.com"]}]},"updateMask":"bindings"}
+[debug] [2026-06-27T13:10:55.198Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/1002246218437:setIamPolicy 200
+[debug] [2026-06-27T13:10:55.198Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/1002246218437:setIamPolicy {"version":1,"etag":"BwZVO/NaEkc=","bindings":[{"role":"roles/cloudbuild.builds.builder","members":["serviceAccount:1002246218437@cloudbuild.gserviceaccount.com"]},{"role":"roles/cloudbuild.serviceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-cloudbuild.iam.gserviceaccount.com"]},{"role":"roles/cloudfunctions.serviceAgent","members":["serviceAccount:service-1002246218437@gcf-admin-robot.iam.gserviceaccount.com"]},{"role":"roles/containerregistry.ServiceAgent","members":["serviceAccount:service-1002246218437@containerregistry.iam.gserviceaccount.com"]},{"role":"roles/editor","members":["serviceAccount:1002246218437-compute@developer.gserviceaccount.com","serviceAccount:1002246218437@cloudservices.gserviceaccount.com","serviceAccount:binderdex-b1908@appspot.gserviceaccount.com"]},{"role":"roles/eventarc.eventReceiver","members":["serviceAccount:1002246218437-compute@developer.gserviceaccount.com"]},{"role":"roles/firebase.managementServiceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-firebase.iam.gserviceaccount.com"]},{"role":"roles/firebase.sdkAdminServiceAgent","members":["serviceAccount:firebase-adminsdk-fbsvc@binderdex-b1908.iam.gserviceaccount.com"]},{"role":"roles/firebasemods.serviceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-firebasemods.iam.gserviceaccount.com"]},{"role":"roles/firebaserules.system","members":["serviceAccount:service-1002246218437@firebase-rules.iam.gserviceaccount.com"]},{"role":"roles/firestore.serviceAgent","members":["serviceAccount:service-1002246218437@gcp-sa-firestore.iam.gserviceaccount.com"]},{"role":"roles/iam.serviceAccountTokenCreator","members":["serviceAccount:firebase-adminsdk-fbsvc@binderdex-b1908.iam.gserviceaccount.com","serviceAccount:service-1002246218437@gcp-sa-pubsub.iam.gserviceaccount.com"]},{"role":"roles/owner","members":["user:hivecode.comercial@gmail.com"]},{"role":"roles/run.invoker","members":["serviceAccount:1002246218437-compute@developer.gserviceaccount.com"]},{"role":"roles/run.serviceAgent","members":["serviceAccount:service-1002246218437@serverless-robot-prod.iam.gserviceaccount.com"]}]}
+[debug] [2026-06-27T13:10:55.206Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:55.207Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:55.207Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908 [none]
+[debug] [2026-06-27T13:10:55.409Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908 200
+[debug] [2026-06-27T13:10:55.410Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/binderdex-b1908 {"projectNumber":"1002246218437","projectId":"binderdex-b1908","lifecycleState":"ACTIVE","name":"Binderdex","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2026-06-23T02:15:46.053Z"}
+[debug] [2026-06-27T13:10:55.410Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:55.410Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:55.410Z] >>> [apiv2][query] GET https://compute.googleapis.com/compute/v1/projects/1002246218437 [none]
+[debug] [2026-06-27T13:10:55.586Z] <<< [apiv2][status] GET https://compute.googleapis.com/compute/v1/projects/1002246218437 403
+[debug] [2026-06-27T13:10:55.586Z] <<< [apiv2][body] GET https://compute.googleapis.com/compute/v1/projects/1002246218437 {"error":{"code":403,"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","errors":[{"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","domain":"usageLimits","reason":"accessNotConfigured","extendedHelp":"https://console.developers.google.com"}],"status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"SERVICE_DISABLED","domain":"googleapis.com","metadata":{"consumer":"projects/1002246218437","service":"compute.googleapis.com","containerInfo":"1002246218437","activationUrl":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437","serviceTitle":"Compute Engine API"}},{"@type":"type.googleapis.com/google.rpc.LocalizedMessage","locale":"en-US","message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Google developers console API activation","url":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437"}]}]}}
+[debug] [2026-06-27T13:10:55.587Z] unable to look up default compute service account. Falling back to 1002246218437-compute@developer.gserviceaccount.com. Error: {"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","errors":[{"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","domain":"usageLimits","reason":"accessNotConfigured","extendedHelp":"https://console.developers.google.com"}],"status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"SERVICE_DISABLED","domain":"googleapis.com","metadata":{"consumer":"projects/1002246218437","service":"compute.googleapis.com","containerInfo":"1002246218437","activationUrl":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437","serviceTitle":"Compute Engine API"}},{"@type":"type.googleapis.com/google.rpc.LocalizedMessage","locale":"en-US","message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Google developers console API activation","url":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437"}]}]}},"response":{"statusCode":403}},"exit":1,"message":"Request to https://compute.googleapis.com/compute/v1/projects/1002246218437 had HTTP Error: 403, Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","status":403}
+[debug] [2026-06-27T13:10:55.587Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:55.587Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:55.587Z] >>> [apiv2][query] GET https://compute.googleapis.com/compute/v1/projects/1002246218437 [none]
+[debug] [2026-06-27T13:10:55.740Z] <<< [apiv2][status] GET https://compute.googleapis.com/compute/v1/projects/1002246218437 403
+[debug] [2026-06-27T13:10:55.740Z] <<< [apiv2][body] GET https://compute.googleapis.com/compute/v1/projects/1002246218437 {"error":{"code":403,"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","errors":[{"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","domain":"usageLimits","reason":"accessNotConfigured","extendedHelp":"https://console.developers.google.com"}],"status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"SERVICE_DISABLED","domain":"googleapis.com","metadata":{"activationUrl":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437","service":"compute.googleapis.com","consumer":"projects/1002246218437","containerInfo":"1002246218437","serviceTitle":"Compute Engine API"}},{"@type":"type.googleapis.com/google.rpc.LocalizedMessage","locale":"en-US","message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Google developers console API activation","url":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437"}]}]}}
+[debug] [2026-06-27T13:10:55.740Z] unable to look up default compute service account. Falling back to 1002246218437-compute@developer.gserviceaccount.com. Error: {"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":403,"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","errors":[{"message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","domain":"usageLimits","reason":"accessNotConfigured","extendedHelp":"https://console.developers.google.com"}],"status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"SERVICE_DISABLED","domain":"googleapis.com","metadata":{"activationUrl":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437","service":"compute.googleapis.com","consumer":"projects/1002246218437","containerInfo":"1002246218437","serviceTitle":"Compute Engine API"}},{"@type":"type.googleapis.com/google.rpc.LocalizedMessage","locale":"en-US","message":"Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Google developers console API activation","url":"https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437"}]}]}},"response":{"statusCode":403}},"exit":1,"message":"Request to https://compute.googleapis.com/compute/v1/projects/1002246218437 had HTTP Error: 403, Compute Engine API has not been used in project 1002246218437 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/compute.googleapis.com/overview?project=1002246218437 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.","status":403}
+[debug] [2026-06-27T13:10:55.746Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:55.746Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:55.746Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/binderdex-b1908/services/cloudbilling.googleapis.com [none]
+[debug] [2026-06-27T13:10:55.746Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/binderdex-b1908/services/cloudbilling.googleapis.com  x-goog-user-project=binderdex-b1908
+[debug] [2026-06-27T13:10:56.071Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/binderdex-b1908/services/cloudbilling.googleapis.com 200
+[debug] [2026-06-27T13:10:56.071Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/binderdex-b1908/services/cloudbilling.googleapis.com [omitted]
+[debug] [2026-06-27T13:10:56.072Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:56.072Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:10:56.072Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1/projects/binderdex-b1908/services/cloudbilling.googleapis.com:enable [none]
+[debug] [2026-06-27T13:10:56.072Z] >>> [apiv2][(partial)header] POST https://serviceusage.googleapis.com/v1/projects/binderdex-b1908/services/cloudbilling.googleapis.com:enable  x-goog-user-project=binderdex-b1908
+[debug] [2026-06-27T13:10:56.897Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1/projects/binderdex-b1908/services/cloudbilling.googleapis.com:enable 200
+[debug] [2026-06-27T13:10:56.897Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1/projects/binderdex-b1908/services/cloudbilling.googleapis.com:enable [omitted]
+[debug] [2026-06-27T13:11:06.917Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:11:06.917Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:11:06.917Z] >>> [apiv2][query] GET https://cloudbilling.googleapis.com/v1/projects/binderdex-b1908/billingInfo [none]
+[debug] [2026-06-27T13:11:06.917Z] >>> [apiv2][(partial)header] GET https://cloudbilling.googleapis.com/v1/projects/binderdex-b1908/billingInfo  x-goog-user-project=binderdex-b1908
+[debug] [2026-06-27T13:11:07.691Z] <<< [apiv2][status] GET https://cloudbilling.googleapis.com/v1/projects/binderdex-b1908/billingInfo 200
+[debug] [2026-06-27T13:11:07.692Z] <<< [apiv2][body] GET https://cloudbilling.googleapis.com/v1/projects/binderdex-b1908/billingInfo {"name":"projects/binderdex-b1908/billingInfo","projectId":"binderdex-b1908","billingAccountName":"billingAccounts/01105A-D7A668-161DF7","billingEnabled":true}
+[debug] [2026-06-27T13:11:07.694Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:11:07.694Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:11:07.694Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions:generateUploadUrl [none]
+[debug] [2026-06-27T13:11:09.587Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions:generateUploadUrl 200
+[debug] [2026-06-27T13:11:09.587Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions:generateUploadUrl {"uploadUrl":"https://storage.googleapis.com/gcf-v2-uploads-1002246218437.europe-west1.cloudfunctions.appspot.com/a42e86fd-5299-4896-923d-e0522546a304.zip?GoogleAccessId=service-1002246218437@gcf-admin-robot.iam.gserviceaccount.com&Expires=1782567648&Signature=rQoZxCAqzdBZy8N%2Bp1f8UYOqDYnc8eEAwzZWSznqU7TIbHlHya1oYGcG%2BeEf8GSMABGqwYW37AjRTJTT7JVFJQBICAApKF3Syg%2Bgk7M1e8UCY8HRyx2IDog4oZiFoblVqpvoWOwwZswv%2Fb%2BXWoaboAE3WywhuRi27trFcdHCF%2BVZsND0tXZhaq7urfYFdscwxnjz4scQSwNZA9eg9J2hgjbmuAkqJaD3Y0iKEeGl78QcQ6Y2c4oe2o6YE31K9laVD632c3SGUq9hFWkRp7ulPKyAKCC4BwQ1MnH8tue2%2BhVdX11qT%2BzL%2Be6a1gZJ6wkLiXhwedfHCDFgTjbEccfIpQ%3D%3D","storageSource":{"bucket":"gcf-v2-uploads-1002246218437.europe-west1.cloudfunctions.appspot.com","object":"a42e86fd-5299-4896-923d-e0522546a304.zip"}}
+[debug] [2026-06-27T13:11:09.587Z] >>> [apiv2][query] PUT https://storage.googleapis.com/gcf-v2-uploads-1002246218437.europe-west1.cloudfunctions.appspot.com/a42e86fd-5299-4896-923d-e0522546a304.zip GoogleAccessId=service-1002246218437%40gcf-admin-robot.iam.gserviceaccount.com&Expires=1782567648&Signature=rQoZxCAqzdBZy8N%2Bp1f8UYOqDYnc8eEAwzZWSznqU7TIbHlHya1oYGcG%2BeEf8GSMABGqwYW37AjRTJTT7JVFJQBICAApKF3Syg%2Bgk7M1e8UCY8HRyx2IDog4oZiFoblVqpvoWOwwZswv%2Fb%2BXWoaboAE3WywhuRi27trFcdHCF%2BVZsND0tXZhaq7urfYFdscwxnjz4scQSwNZA9eg9J2hgjbmuAkqJaD3Y0iKEeGl78QcQ6Y2c4oe2o6YE31K9laVD632c3SGUq9hFWkRp7ulPKyAKCC4BwQ1MnH8tue2%2BhVdX11qT%2BzL%2Be6a1gZJ6wkLiXhwedfHCDFgTjbEccfIpQ%3D%3D
+[debug] [2026-06-27T13:11:09.587Z] >>> [apiv2][body] PUT https://storage.googleapis.com/gcf-v2-uploads-1002246218437.europe-west1.cloudfunctions.appspot.com/a42e86fd-5299-4896-923d-e0522546a304.zip [stream]
+[debug] [2026-06-27T13:11:09.955Z] <<< [apiv2][status] PUT https://storage.googleapis.com/gcf-v2-uploads-1002246218437.europe-west1.cloudfunctions.appspot.com/a42e86fd-5299-4896-923d-e0522546a304.zip 200
+[debug] [2026-06-27T13:11:09.955Z] <<< [apiv2][body] PUT https://storage.googleapis.com/gcf-v2-uploads-1002246218437.europe-west1.cloudfunctions.appspot.com/a42e86fd-5299-4896-923d-e0522546a304.zip [omitted]
+[info] +  functions: functions source uploaded successfully 
+[info] i  functions: creating Node.js 22 (2nd Gen) function onNewMessage(europe-west1)... 
+[info] i  functions: creating Node.js 22 (2nd Gen) function onNewListing(europe-west1)... 
+[debug] [2026-06-27T13:11:09.961Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:11:09.961Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:11:09.962Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions functionId=onNewMessage
+[debug] [2026-06-27T13:11:09.962Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions {"name":"projects/binderdex-b1908/locations/europe-west1/functions/onNewMessage","buildConfig":{"runtime":"nodejs22","entryPoint":"onNewMessage","source":{"storageSource":{"bucket":"gcf-v2-uploads-1002246218437.europe-west1.cloudfunctions.appspot.com","object":"a42e86fd-5299-4896-923d-e0522546a304.zip"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}},"serviceConfig":{"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"binderdex-b1908\",\"storageBucket\":\"binderdex-b1908.firebasestorage.app\"}","GCLOUD_PROJECT":"binderdex-b1908","EVENTARC_CLOUD_EVENT_SOURCE":"projects/binderdex-b1908/locations/europe-west1/services/onNewMessage","FUNCTION_SIGNATURE_TYPE":"cloudevent","FUNCTION_TARGET":"onNewMessage","LOG_EXECUTION_ID":"true"},"ingressSettings":null,"timeoutSeconds":null,"serviceAccountEmail":null,"availableMemory":"256Mi","minInstanceCount":null,"maxInstanceCount":10,"maxInstanceRequestConcurrency":80,"availableCpu":"1","vpcConnector":null,"vpcConnectorEgressSettings":null,"directVpcNetworkInterface":null,"directVpcEgress":null},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"2e60bee450a6da63e1cf37a89710c710bc80ba97"},"eventTrigger":{"eventType":"google.cloud.firestore.document.v1.created","retryPolicy":"RETRY_POLICY_DO_NOT_RETRY","eventFilters":[{"attribute":"database","value":"(default)"},{"attribute":"namespace","value":"(default)"},{"attribute":"document","value":"conversations/{cid}/messages/{mid}","operator":"match-path-pattern"}],"triggerRegion":"eur3"}}
+[debug] [2026-06-27T13:11:27.891Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions 400
+[debug] [2026-06-27T13:11:27.891Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions {"error":{"code":400,"message":"Validation failed for trigger projects/binderdex-b1908/locations/eur3/triggers/onnewmessage-942751: Invalid resource state for \"\": Permission denied while using the Eventarc Service Agent. If you recently started to use Eventarc, it may take a few minutes before all necessary permissions are propagated to the Service Agent. Otherwise, verify that it has Eventarc Service Agent role.","status":"FAILED_PRECONDITION"}}
+[warn] !  functions: Request to https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions?functionId=onNewMessage had HTTP Error: 400, Validation failed for trigger projects/binderdex-b1908/locations/eur3/triggers/onnewmessage-942751: Invalid resource state for "": Permission denied while using the Eventarc Service Agent. If you recently started to use Eventarc, it may take a few minutes before all necessary permissions are propagated to the Service Agent. Otherwise, verify that it has Eventarc Service Agent role. 
+[warn] !  functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes. 
+[warn] !  functions:  failed to create function projects/binderdex-b1908/locations/europe-west1/functions/onNewMessage 
+[error] Failed to create function projects/binderdex-b1908/locations/europe-west1/functions/onNewMessage
+[debug] [2026-06-27T13:11:27.892Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:11:27.892Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:11:27.892Z] >>> [apiv2][query] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions functionId=onNewListing
+[debug] [2026-06-27T13:11:27.892Z] >>> [apiv2][body] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions {"name":"projects/binderdex-b1908/locations/europe-west1/functions/onNewListing","buildConfig":{"runtime":"nodejs22","entryPoint":"onNewListing","source":{"storageSource":{"bucket":"gcf-v2-uploads-1002246218437.europe-west1.cloudfunctions.appspot.com","object":"a42e86fd-5299-4896-923d-e0522546a304.zip"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""}},"serviceConfig":{"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"binderdex-b1908\",\"storageBucket\":\"binderdex-b1908.firebasestorage.app\"}","GCLOUD_PROJECT":"binderdex-b1908","EVENTARC_CLOUD_EVENT_SOURCE":"projects/binderdex-b1908/locations/europe-west1/services/onNewListing","FUNCTION_SIGNATURE_TYPE":"cloudevent","FUNCTION_TARGET":"onNewListing","LOG_EXECUTION_ID":"true"},"ingressSettings":null,"timeoutSeconds":null,"serviceAccountEmail":null,"availableMemory":"256Mi","minInstanceCount":null,"maxInstanceCount":10,"maxInstanceRequestConcurrency":80,"availableCpu":"1","vpcConnector":null,"vpcConnectorEgressSettings":null,"directVpcNetworkInterface":null,"directVpcEgress":null},"labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"2e60bee450a6da63e1cf37a89710c710bc80ba97"},"eventTrigger":{"eventType":"google.cloud.firestore.document.v1.created","retryPolicy":"RETRY_POLICY_DO_NOT_RETRY","eventFilters":[{"attribute":"database","value":"(default)"},{"attribute":"namespace","value":"(default)"},{"attribute":"document","value":"listings/{id}","operator":"match-path-pattern"}],"triggerRegion":"eur3"}}
+[debug] [2026-06-27T13:11:43.352Z] <<< [apiv2][status] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions 400
+[debug] [2026-06-27T13:11:43.352Z] <<< [apiv2][body] POST https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions {"error":{"code":400,"message":"Validation failed for trigger projects/binderdex-b1908/locations/eur3/triggers/onnewlisting-469932: Invalid resource state for \"\": Permission denied while using the Eventarc Service Agent. If you recently started to use Eventarc, it may take a few minutes before all necessary permissions are propagated to the Service Agent. Otherwise, verify that it has Eventarc Service Agent role.","status":"FAILED_PRECONDITION"}}
+[warn] !  functions: Request to https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions?functionId=onNewListing had HTTP Error: 400, Validation failed for trigger projects/binderdex-b1908/locations/eur3/triggers/onnewlisting-469932: Invalid resource state for "": Permission denied while using the Eventarc Service Agent. If you recently started to use Eventarc, it may take a few minutes before all necessary permissions are propagated to the Service Agent. Otherwise, verify that it has Eventarc Service Agent role. 
+[warn] !  functions: Since this is your first time using 2nd gen functions, we need a little bit longer to finish setting everything up. Retry the deployment in a few minutes. 
+[warn] !  functions:  failed to create function projects/binderdex-b1908/locations/europe-west1/functions/onNewListing 
+[error] Failed to create function projects/binderdex-b1908/locations/europe-west1/functions/onNewListing
+[warn] !  functions: Deploys failed. Skipping deletes. 
+[debug] [2026-06-27T13:11:43.362Z] Total Function Deployment time: 33395
+[debug] [2026-06-27T13:11:43.362Z] 2 Functions Deployed
+[debug] [2026-06-27T13:11:43.362Z] 2 Functions Errored
+[debug] [2026-06-27T13:11:43.362Z] 0 Function Deployments Aborted
+[debug] [2026-06-27T13:11:43.362Z] Average Function Deployment time: 25662
+[info] 
+[info] Functions deploy had errors with the following functions:
+	onNewListing(europe-west1)
+	onNewMessage(europe-west1)
+[debug] [2026-06-27T13:11:43.509Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:11:43.509Z] Checked if tokens are valid: true, expires at: 1782569287854
+[debug] [2026-06-27T13:11:43.509Z] >>> [apiv2][query] GET https://artifactregistry.googleapis.com/v1/projects/binderdex-b1908/locations/europe-west1/repositories/gcf-artifacts [none]
+[debug] [2026-06-27T13:11:43.724Z] <<< [apiv2][status] GET https://artifactregistry.googleapis.com/v1/projects/binderdex-b1908/locations/europe-west1/repositories/gcf-artifacts 404
+[debug] [2026-06-27T13:11:43.724Z] <<< [apiv2][body] GET https://artifactregistry.googleapis.com/v1/projects/binderdex-b1908/locations/europe-west1/repositories/gcf-artifacts {"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}}
+[debug] [2026-06-27T13:11:43.724Z] Failed to check artifact cleanup policy for region europe-west1: Request to https://artifactregistry.googleapis.com/v1/projects/binderdex-b1908/locations/europe-west1/repositories/gcf-artifacts had HTTP Error: 404, Requested entity was not found. {"name":"FirebaseError","children":[],"context":{"body":{"error":{"code":404,"message":"Requested entity was not found.","status":"NOT_FOUND"}},"response":{"statusCode":404}},"exit":1,"message":"Request to https://artifactregistry.googleapis.com/v1/projects/binderdex-b1908/locations/europe-west1/repositories/gcf-artifacts had HTTP Error: 404, Requested entity was not found.","status":404}
+[debug] [2026-06-27T13:11:43.724Z] Functions deploy failed.
+[debug] [2026-06-27T13:11:43.724Z] {
+  "endpoint": {
+    "id": "onNewMessage",
+    "project": "binderdex-b1908",
+    "region": "europe-west1",
+    "entryPoint": "onNewMessage",
+    "platform": "gcfv2",
+    "runtime": "nodejs22",
+    "eventTrigger": {
+      "eventType": "google.cloud.firestore.document.v1.created",
+      "retry": false,
+      "eventFilters": {
+        "database": "(default)",
+        "namespace": "(default)"
+      },
+      "eventFilterPathPatterns": {
+        "document": "conversations/{cid}/messages/{mid}"
+      },
+      "region": "eur3"
+    },
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "serviceAccount": null,
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "timeoutSeconds": null,
+    "maxInstances": 10,
+    "minInstances": null,
+    "concurrency": 80,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"binderdex-b1908\",\"storageBucket\":\"binderdex-b1908.firebasestorage.app\"}",
+      "GCLOUD_PROJECT": "binderdex-b1908",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/binderdex-b1908/locations/europe-west1/services/onNewMessage"
+    },
+    "codebase": "default",
+    "cpu": 1,
+    "targetedByOnly": false,
+    "hash": "2e60bee450a6da63e1cf37a89710c710bc80ba97"
+  },
+  "op": "create",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "context": {
+      "function": "projects/binderdex-b1908/locations/europe-west1/functions/onNewMessage"
+    },
+    "exit": 1,
+    "message": "Failed to create function projects/binderdex-b1908/locations/europe-west1/functions/onNewMessage",
+    "original": {
+      "name": "FirebaseError",
+      "children": [],
+      "context": {
+        "body": {
+          "error": {
+            "code": 400,
+            "message": "Validation failed for trigger projects/binderdex-b1908/locations/eur3/triggers/onnewmessage-942751: Invalid resource state for \"\": Permission denied while using the Eventarc Service Agent. If you recently started to use Eventarc, it may take a few minutes before all necessary permissions are propagated to the Service Agent. Otherwise, verify that it has Eventarc Service Agent role.",
+            "status": "FAILED_PRECONDITION"
+          }
+        },
+        "response": {
+          "statusCode": 400
+        }
+      },
+      "exit": 1,
+      "message": "Request to https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions?functionId=onNewMessage had HTTP Error: 400, Validation failed for trigger projects/binderdex-b1908/locations/eur3/triggers/onnewmessage-942751: Invalid resource state for \"\": Permission denied while using the Eventarc Service Agent. If you recently started to use Eventarc, it may take a few minutes before all necessary permissions are propagated to the Service Agent. Otherwise, verify that it has Eventarc Service Agent role.",
+      "status": 400
+    },
+    "status": 400,
+    "code": 400
+  }
+}
+[debug] [2026-06-27T13:11:43.725Z] {
+  "endpoint": {
+    "id": "onNewListing",
+    "project": "binderdex-b1908",
+    "region": "europe-west1",
+    "entryPoint": "onNewListing",
+    "platform": "gcfv2",
+    "runtime": "nodejs22",
+    "eventTrigger": {
+      "eventType": "google.cloud.firestore.document.v1.created",
+      "retry": false,
+      "eventFilters": {
+        "database": "(default)",
+        "namespace": "(default)"
+      },
+      "eventFilterPathPatterns": {
+        "document": "listings/{id}"
+      },
+      "region": "eur3"
+    },
+    "labels": {
+      "deployment-tool": "cli-firebase"
+    },
+    "serviceAccount": null,
+    "ingressSettings": null,
+    "availableMemoryMb": null,
+    "timeoutSeconds": null,
+    "maxInstances": 10,
+    "minInstances": null,
+    "concurrency": 80,
+    "vpc": null,
+    "environmentVariables": {
+      "FIREBASE_CONFIG": "{\"projectId\":\"binderdex-b1908\",\"storageBucket\":\"binderdex-b1908.firebasestorage.app\"}",
+      "GCLOUD_PROJECT": "binderdex-b1908",
+      "EVENTARC_CLOUD_EVENT_SOURCE": "projects/binderdex-b1908/locations/europe-west1/services/onNewListing"
+    },
+    "codebase": "default",
+    "cpu": 1,
+    "targetedByOnly": false,
+    "hash": "2e60bee450a6da63e1cf37a89710c710bc80ba97"
+  },
+  "op": "create",
+  "original": {
+    "name": "FirebaseError",
+    "children": [],
+    "context": {
+      "function": "projects/binderdex-b1908/locations/europe-west1/functions/onNewListing"
+    },
+    "exit": 1,
+    "message": "Failed to create function projects/binderdex-b1908/locations/europe-west1/functions/onNewListing",
+    "original": {
+      "name": "FirebaseError",
+      "children": [],
+      "context": {
+        "body": {
+          "error": {
+            "code": 400,
+            "message": "Validation failed for trigger projects/binderdex-b1908/locations/eur3/triggers/onnewlisting-469932: Invalid resource state for \"\": Permission denied while using the Eventarc Service Agent. If you recently started to use Eventarc, it may take a few minutes before all necessary permissions are propagated to the Service Agent. Otherwise, verify that it has Eventarc Service Agent role.",
+            "status": "FAILED_PRECONDITION"
+          }
+        },
+        "response": {
+          "statusCode": 400
+        }
+      },
+      "exit": 1,
+      "message": "Request to https://cloudfunctions.googleapis.com/v2/projects/binderdex-b1908/locations/europe-west1/functions?functionId=onNewListing had HTTP Error: 400, Validation failed for trigger projects/binderdex-b1908/locations/eur3/triggers/onnewlisting-469932: Invalid resource state for \"\": Permission denied while using the Eventarc Service Agent. If you recently started to use Eventarc, it may take a few minutes before all necessary permissions are propagated to the Service Agent. Otherwise, verify that it has Eventarc Service Agent role.",
+      "status": 400
+    },
+    "status": 400,
+    "code": 400
+  }
+}
+[error] Error: There was an error deploying functions:
+[error] - Error Failed to create function onNewMessage in region europe-west1
+[error] - Error Failed to create function onNewListing in region europe-west1

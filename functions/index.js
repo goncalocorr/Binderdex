@@ -10,9 +10,7 @@
  * users/{uid}.notifyCards. Ver docs/push_notifications.md.
  */
 const { onDocumentCreated } = require("firebase-functions/v2/firestore");
-const { onRequest } = require("firebase-functions/v2/https");
 const { setGlobalOptions } = require("firebase-functions/v2");
-const { defineSecret } = require("firebase-functions/params");
 const admin = require("firebase-admin");
 
 admin.initializeApp();
@@ -21,8 +19,6 @@ const messaging = admin.messaging();
 
 // europe-west1 fica perto do Firestore (eur3) → menos latência.
 setGlobalOptions({ region: "europe-west1", maxInstances: 10 });
-
-const ANNOUNCE_SECRET = defineSecret("ANNOUNCE_SECRET");
 
 /** Tokens FCM de um utilizador. */
 async function tokensOf(uid) {
@@ -145,33 +141,5 @@ exports.onNewListing = onDocumentCreated("listings/{id}", async (event) => {
   );
 });
 
-// 3) Anúncio de coleção nova (manual, protegido por segredo). Os sets não estão
-//    no Firestore, por isso isto é disparado por ti quando sair um set:
-//    https://<regiao>-<proj>.cloudfunctions.net/announceNewSet?key=SEGREDO&setId=sv8&name=Surging%20Sparks
-exports.announceNewSet = onRequest(
-  { secrets: [ANNOUNCE_SECRET] },
-  async (req, res) => {
-    const secret = ANNOUNCE_SECRET.value();
-    if (!secret || req.query.key !== secret) {
-      res.status(403).send("forbidden");
-      return;
-    }
-    const setId = String(req.query.setId || "");
-    const name = String(req.query.name || "Nova coleção");
-
-    const usersSnap = await db.collection("users").get();
-    let sent = 0;
-    for (const doc of usersSnap.docs) {
-      const data = doc.data() || {};
-      const tokens = Array.isArray(data.fcmTokens) ? data.fcmTokens : [];
-      if (!tokens.length) continue;
-      sent += await sendToTokens(
-        doc.id,
-        tokens,
-        { title: "Nova coleção!", body: name },
-        { type: "newSet", setId }
-      );
-    }
-    res.json({ ok: true, delivered: sent });
-  }
-);
+// 3) Anúncio de coleção nova (manual) → ver functions/announce_new_set.js.
+//    Está separado por precisar do Secret Manager; liga-o quando quiseres.
