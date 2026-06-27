@@ -449,3 +449,21 @@ final mostValuableCardProvider = FutureProvider((ref) {
   ref.watch(setsListProvider);
   return ref.watch(databaseProvider).mostValuableOwned();
 });
+
+/// Garante que os sets onde tenho cartas estão sincronizados localmente. Após
+/// login num dispositivo novo, as ENTRADAS chegam por sync mas as cartas do set
+/// podem não estar em cache → o binder (que conta possuídas via JOIN com as
+/// cartas) fica vazio até abrir cada set. Isto fecha esse buraco e, de caminho,
+/// traz os preços. Converge (só busca sets ainda não sincronizados).
+final ensureOwnedSetsSyncedProvider = FutureProvider<void>((ref) async {
+  ref.watch(setsListProvider); // re-corre quando a coleção/sets mudam
+  final db = ref.watch(databaseProvider);
+  final repo = ref.read(cardsRepositoryProvider);
+  for (final id in await db.ownedSetIdsFromEntries()) {
+    if (!await db.isSetSynced(id)) {
+      try {
+        await repo.ensureSetSynced(id);
+      } catch (_) {/* set isolado falhou — continua */}
+    }
+  }
+});

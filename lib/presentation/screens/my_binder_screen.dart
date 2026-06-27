@@ -202,7 +202,7 @@ class _ValueCardState extends ConsumerState<_ValueCard> {
   Future<void> _refresh() async {
     setState(() => _refreshing = true);
     try {
-      final sets = await ref.read(databaseProvider).ownedSetIds();
+      final sets = await ref.read(databaseProvider).ownedSetIdsFromEntries();
       await ref.read(cardsRepositoryProvider).refreshPricesFor(sets);
       ref.invalidate(mostValuableCardProvider);
     } catch (_) {/* ignora — mantém o que tinha */}

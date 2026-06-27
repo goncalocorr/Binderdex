@@ -468,6 +468,19 @@ class AppDatabase extends _$AppDatabase {
     return rows.map((r) => r.read<String>('sid')).toList();
   }
 
+  /// Como [ownedSetIds] mas derivado das ENTRADAS (não precisa das cartas em
+  /// cache): liga cada `card_id` ao set pelo prefixo `setId-`. Usado para
+  /// sincronizar os sets possuídos após login num dispositivo novo.
+  Future<List<String>> ownedSetIdsFromEntries() async {
+    final rows = await customSelect(
+      "SELECT DISTINCT s.id AS sid FROM card_sets s "
+      "JOIN user_card_entries e ON e.card_id LIKE s.id || '-%' "
+      "WHERE (e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1)",
+      readsFrom: {cardSets, userCardEntries},
+    ).get();
+    return rows.map((r) => r.read<String>('sid')).toList();
+  }
+
   Stream<List<CardRow>> watchAllCards({
     required String query,
     required List<String> types,
