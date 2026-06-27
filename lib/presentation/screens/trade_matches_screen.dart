@@ -29,6 +29,7 @@ class TradeMatchesScreen extends ConsumerWidget {
         data: (all) {
           if (all.isEmpty) {
             return EmptyState(
+              imageAsset: 'assets/trades_empty.png',
               icon: Icons.swap_horiz,
               title: t.tradeMatches,
               description: t.noTradeMatches,

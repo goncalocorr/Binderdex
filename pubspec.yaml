@@ -81,5 +81,6 @@ flutter:
     - assets/wishlist_empty.png
     - assets/binder_empty.png
     - assets/messages_empty.png
+    - assets/trades_empty.png
     - assets/avatars/
     - assets/tabs/
