@@ -344,7 +344,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'Isto elimina permanentemente a tua conta e a tua coleção — na nuvem e neste dispositivo. Não pode ser anulado.';
 
   @override
-  String get delete => 'Apagar';
+  String get delete => 'Eliminar';
 
   @override
   String get reauthNeeded =>
