@@ -44,14 +44,16 @@ class _TierCard extends ConsumerWidget {
     final isCurrent = tier == current;
     final premium = MarketTier.isPremium(tier);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+    final card = Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: cs.surface,
         borderRadius: BorderRadius.circular(DexRadii.lg),
         border: Border.all(
-          color: isCurrent ? DexColors.gold500 : cs.outlineVariant,
+          // Nos premium, o anel do glow faz de moldura (salvo o plano atual).
+          color: isCurrent
+              ? DexColors.gold500
+              : (premium ? Colors.transparent : cs.outlineVariant),
           width: isCurrent ? 2 : 1,
         ),
       ),
@@ -97,6 +99,13 @@ class _TierCard extends ConsumerWidget {
           ),
         ],
       ),
+    );
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: premium
+          ? PremiumGlow(tier: tier, radius: DexRadii.lg, child: card)
+          : card,
     );
   }
 

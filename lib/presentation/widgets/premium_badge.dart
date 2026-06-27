@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../../core/theme/dex_tokens.dart';
@@ -28,12 +30,86 @@ class PremiumBadge extends StatelessWidget {
     Color(0xFF93C5FD),
   ];
 
+  /// Cores do gradiente de cada nível (reutilizadas pelo glow do ecrã premium):
+  /// Treinador (1) prata · Mestre (2) azul · Lendário (3) holográfico.
+  static List<Color> colorsFor(int tier) {
+    if (tier >= 3) return DexSheens.holo;
+    if (tier == 2) return _blues;
+    return _silver;
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      _AnimatedCrown(size: size, colors: colorsFor(tier));
+}
+
+/// Glow animado à volta de um retângulo, com a cor do nível premium. O
+/// gradiente "varre" (movimento) e a auréola "respira". Envolve o filho com um
+/// anel de gradiente + sombra colorida.
+class PremiumGlow extends StatefulWidget {
+  final int tier;
+  final double radius;
+  final Widget child;
+  const PremiumGlow({
+    super.key,
+    required this.tier,
+    required this.child,
+    this.radius = 16,
+  });
+
+  @override
+  State<PremiumGlow> createState() => _PremiumGlowState();
+}
+
+class _PremiumGlowState extends State<PremiumGlow>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 8500),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (tier >= 3) return _AnimatedCrown(size: size, colors: DexSheens.holo);
-    if (tier == 2) return _AnimatedCrown(size: size, colors: _blues);
-    // Treinador (1) — prata com movimento.
-    return _AnimatedCrown(size: size, colors: _silver);
+    const ring = 2.0;
+    final colors = PremiumBadge.colorsFor(widget.tier);
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _c,
+        child: widget.child,
+        builder: (_, child) {
+          final shift = _c.value * 2;
+          // Auréola "respira" ao longo do gradiente (0→1→0).
+          final t = (math.sin(_c.value * 2 * math.pi) + 1) / 2;
+          final glow = Color.lerp(colors[1], colors[2], t)!;
+          return Container(
+            padding: const EdgeInsets.all(ring),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(widget.radius + ring),
+              gradient: LinearGradient(
+                begin: Alignment(-2 + shift, -0.3),
+                end: Alignment(shift, 0.3),
+                colors: colors,
+                tileMode: TileMode.mirror,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: glow.withValues(alpha: 0.45 + 0.2 * t),
+                  blurRadius: 14 + 8 * t,
+                  spreadRadius: 1 + 1.5 * t,
+                ),
+              ],
+            ),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 }
 
