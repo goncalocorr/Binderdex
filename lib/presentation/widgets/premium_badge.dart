@@ -33,7 +33,7 @@ class PremiumBadge extends StatelessWidget {
   /// Cores do gradiente de cada nível (reutilizadas pelo glow do ecrã premium):
   /// Treinador (1) prata · Mestre (2) azul · Lendário (3) holográfico.
   static List<Color> colorsFor(int tier) {
-    if (tier >= 3) return DexSheens.holo;
+    if (tier >= 3) return DexSheens.holoVivid; // vívido p/ ler no tema claro
     if (tier == 2) return _blues;
     return _silver;
   }

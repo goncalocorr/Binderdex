@@ -78,6 +78,17 @@ abstract class DexSheens {
     Color(0xFFC6FFD9),
     Color(0xFFC8F9FF),
   ];
+
+  /// Holo VÍVIDO para elementos de UI sobre fundos sólidos (selo/glow premium).
+  /// Saturado o suficiente para se ver no tema claro, sem perder o iridescente.
+  static const holoVivid = [
+    Color(0xFF06B6D4), // ciano
+    Color(0xFF8B5CF6), // violeta
+    Color(0xFFEC4899), // rosa
+    Color(0xFFF59E0B), // âmbar
+    Color(0xFF10B981), // esmeralda
+    Color(0xFF06B6D4), // ciano (fecha o ciclo)
+  ];
   static const foil = [
     Color(0xFFF6D365),
     Color(0xFFFDA085),
