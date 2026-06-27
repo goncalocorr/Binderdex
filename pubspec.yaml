@@ -80,3 +80,4 @@ flutter:
     - assets/binder_empty.png
     - assets/messages_empty.png
     - assets/avatars/
+    - assets/tabs/

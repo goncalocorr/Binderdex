@@ -27,6 +27,14 @@ import '../../presentation/screens/settings_screen.dart';
 import '../../presentation/screens/wishlist_screen.dart';
 import '../../presentation/widgets/auth_guard.dart';
 
+/// Ícone (imagem) de um separador da barra inferior (assets/tabs/<name>.png).
+Widget _tabIcon(String name) => Image.asset(
+      'assets/tabs/$name.png',
+      width: 28,
+      height: 28,
+      cacheWidth: 112,
+    );
+
 /// Casca com navegação inferior (Início, Coleções, O meu binder, Perfil).
 class _Shell extends ConsumerStatefulWidget {
   const _Shell();
@@ -119,15 +127,12 @@ class _ShellState extends ConsumerState<_Shell> {
         onDestinationSelected: (i) =>
             ref.read(navIndexProvider.notifier).state = i,
         destinations: [
-          NavigationDestination(icon: const Icon(Icons.home), label: t.tabHome),
-          NavigationDestination(icon: const Icon(Icons.style), label: t.tabSets),
+          NavigationDestination(icon: _tabIcon('inicio'), label: t.tabHome),
+          NavigationDestination(icon: _tabIcon('colecoes'), label: t.tabSets),
+          NavigationDestination(icon: _tabIcon('binder'), label: t.tabBinder),
           NavigationDestination(
-              icon: const Icon(Icons.collections_bookmark),
-              label: t.tabBinder),
-          NavigationDestination(
-              icon: const Icon(Icons.storefront), label: t.tabCommunity),
-          NavigationDestination(
-              icon: const Icon(Icons.person), label: t.tabProfile),
+              icon: _tabIcon('comunidade'), label: t.tabCommunity),
+          NavigationDestination(icon: _tabIcon('perfil'), label: t.tabProfile),
         ],
       ),
     );
