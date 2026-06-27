@@ -626,6 +626,30 @@ class AppLocalizationsPt extends AppLocalizations {
   String get seePlans => 'Ver planos Premium';
 
   @override
+  String get collectionValue => 'Valor da coleção';
+
+  @override
+  String get value => 'Valor';
+
+  @override
+  String get valueLockedBody =>
+      'Desbloqueia o Premium para veres o valor da tua coleção.';
+
+  @override
+  String valueCoverage(Object priced, Object total) {
+    return 'Baseado em $priced de $total cartas';
+  }
+
+  @override
+  String get updatePrices => 'Atualizar preços';
+
+  @override
+  String get pricesUpdated => 'Preços atualizados';
+
+  @override
+  String get mostValuable => 'Mais valiosa';
+
+  @override
   String get perMonth => '/mês';
 
   @override

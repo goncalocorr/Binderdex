@@ -36,6 +36,7 @@ class TcgCards extends Table {
   TextColumn get imageLarge => text()();
   IntColumn get hp => integer().nullable()();
   IntColumn get atk => integer().nullable()();
+  RealColumn get price => real().nullable()(); // valor estimado em € (Cardmarket)
 
   @override
   Set<Column> get primaryKey => {id};
@@ -88,7 +89,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor]) : super(executor ?? openConnection());
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -125,6 +126,13 @@ class AppDatabase extends _$AppDatabase {
           if (from < 4) {
             // Lista de desejos (wishlist).
             await m.addColumn(userCardEntries, userCardEntries.wishlisted);
+          }
+          if (from < 5) {
+            // Valor estimado por carta (€). Re-sincroniza os sets para os
+            // preços entrarem (o fetch antigo não os pedia).
+            await m.addColumn(tcgCards, tcgCards.price);
+            await (update(cardSets))
+                .write(const CardSetsCompanion(cardsSynced: Value(false)));
           }
         },
       );
@@ -413,6 +421,51 @@ class AppDatabase extends _$AppDatabase {
     return rows
         .map((r) => OwnedCard(tcgCards.map(r.data), r.read<int>('is_dupe') == 1))
         .toList();
+  }
+
+  /// Valor estimado da coleção (€) em tempo real + cobertura: soma de
+  /// `price × nº de cópias` das cartas possuídas COM preço; `priced`/`total` =
+  /// quantas das possuídas têm/não têm preço (alguns sets podem faltar).
+  Stream<({double value, int priced, int total})> watchCollectionValue() {
+    return customSelect(
+      'SELECT '
+      'COALESCE(SUM(CASE WHEN c.price IS NOT NULL THEN '
+      '  c.price * (e.qty_normal + e.qty_holo + e.qty_reverse) END), 0.0) AS val, '
+      'SUM(CASE WHEN c.price IS NOT NULL THEN 1 ELSE 0 END) AS priced, '
+      'COUNT(*) AS total '
+      'FROM tcg_cards c JOIN user_card_entries e ON e.card_id = c.id '
+      'WHERE (e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1)',
+      readsFrom: {tcgCards, userCardEntries},
+    ).watchSingle().map((r) => (
+          value: r.read<double>('val'),
+          priced: r.read<int>('priced'),
+          total: r.read<int>('total'),
+        ));
+  }
+
+  /// Carta possuída mais valiosa (para destacar no binder). Null se nenhuma
+  /// possuída tiver preço.
+  Future<({TcgCardRow card, double price})?> mostValuableOwned() async {
+    final rows = await customSelect(
+      'SELECT c.* FROM tcg_cards c JOIN user_card_entries e ON e.card_id = c.id '
+      'WHERE (e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1) '
+      'AND c.price IS NOT NULL ORDER BY c.price DESC LIMIT 1',
+      readsFrom: {tcgCards, userCardEntries},
+    ).get();
+    if (rows.isEmpty) return null;
+    final c = tcgCards.map(rows.first.data);
+    return (card: c, price: c.price ?? 0);
+  }
+
+  /// Ids dos sets onde tenho ≥1 carta possuída (para atualizar preços só desses).
+  Future<List<String>> ownedSetIds() async {
+    final rows = await customSelect(
+      'SELECT DISTINCT c.set_id AS sid FROM tcg_cards c '
+      'JOIN user_card_entries e ON e.card_id = c.id '
+      'WHERE (e.owned_normal = 1 OR e.owned_holo = 1 OR e.owned_reverse = 1)',
+      readsFrom: {tcgCards, userCardEntries},
+    ).get();
+    return rows.map((r) => r.read<String>('sid')).toList();
   }
 
   Stream<List<CardRow>> watchAllCards({

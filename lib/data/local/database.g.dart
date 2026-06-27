@@ -548,6 +548,11 @@ class $TcgCardsTable extends TcgCards
   late final GeneratedColumn<int> atk = GeneratedColumn<int>(
       'atk', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _priceMeta = const VerificationMeta('price');
+  @override
+  late final GeneratedColumn<double> price = GeneratedColumn<double>(
+      'price', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -561,7 +566,8 @@ class $TcgCardsTable extends TcgCards
         imageSmall,
         imageLarge,
         hp,
-        atk
+        atk,
+        price
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -639,6 +645,10 @@ class $TcgCardsTable extends TcgCards
       context.handle(
           _atkMeta, atk.isAcceptableOrUnknown(data['atk']!, _atkMeta));
     }
+    if (data.containsKey('price')) {
+      context.handle(
+          _priceMeta, price.isAcceptableOrUnknown(data['price']!, _priceMeta));
+    }
     return context;
   }
 
@@ -672,6 +682,8 @@ class $TcgCardsTable extends TcgCards
           .read(DriftSqlType.int, data['${effectivePrefix}hp']),
       atk: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}atk']),
+      price: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}price']),
     );
   }
 
@@ -694,6 +706,7 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
   final String imageLarge;
   final int? hp;
   final int? atk;
+  final double? price;
   const TcgCardRow(
       {required this.id,
       required this.setId,
@@ -706,7 +719,8 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
       required this.imageSmall,
       required this.imageLarge,
       this.hp,
-      this.atk});
+      this.atk,
+      this.price});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -732,6 +746,9 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
     if (!nullToAbsent || atk != null) {
       map['atk'] = Variable<int>(atk);
     }
+    if (!nullToAbsent || price != null) {
+      map['price'] = Variable<double>(price);
+    }
     return map;
   }
 
@@ -752,6 +769,8 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
       imageLarge: Value(imageLarge),
       hp: hp == null && nullToAbsent ? const Value.absent() : Value(hp),
       atk: atk == null && nullToAbsent ? const Value.absent() : Value(atk),
+      price:
+          price == null && nullToAbsent ? const Value.absent() : Value(price),
     );
   }
 
@@ -771,6 +790,7 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
       imageLarge: serializer.fromJson<String>(json['imageLarge']),
       hp: serializer.fromJson<int?>(json['hp']),
       atk: serializer.fromJson<int?>(json['atk']),
+      price: serializer.fromJson<double?>(json['price']),
     );
   }
   @override
@@ -789,6 +809,7 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
       'imageLarge': serializer.toJson<String>(imageLarge),
       'hp': serializer.toJson<int?>(hp),
       'atk': serializer.toJson<int?>(atk),
+      'price': serializer.toJson<double?>(price),
     };
   }
 
@@ -804,7 +825,8 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
           String? imageSmall,
           String? imageLarge,
           Value<int?> hp = const Value.absent(),
-          Value<int?> atk = const Value.absent()}) =>
+          Value<int?> atk = const Value.absent(),
+          Value<double?> price = const Value.absent()}) =>
       TcgCardRow(
         id: id ?? this.id,
         setId: setId ?? this.setId,
@@ -818,6 +840,7 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
         imageLarge: imageLarge ?? this.imageLarge,
         hp: hp.present ? hp.value : this.hp,
         atk: atk.present ? atk.value : this.atk,
+        price: price.present ? price.value : this.price,
       );
   TcgCardRow copyWithCompanion(TcgCardsCompanion data) {
     return TcgCardRow(
@@ -836,6 +859,7 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
           data.imageLarge.present ? data.imageLarge.value : this.imageLarge,
       hp: data.hp.present ? data.hp.value : this.hp,
       atk: data.atk.present ? data.atk.value : this.atk,
+      price: data.price.present ? data.price.value : this.price,
     );
   }
 
@@ -853,14 +877,15 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
           ..write('imageSmall: $imageSmall, ')
           ..write('imageLarge: $imageLarge, ')
           ..write('hp: $hp, ')
-          ..write('atk: $atk')
+          ..write('atk: $atk, ')
+          ..write('price: $price')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(id, setId, name, number, numberSort, rarity,
-      supertype, type, imageSmall, imageLarge, hp, atk);
+      supertype, type, imageSmall, imageLarge, hp, atk, price);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -876,7 +901,8 @@ class TcgCardRow extends DataClass implements Insertable<TcgCardRow> {
           other.imageSmall == this.imageSmall &&
           other.imageLarge == this.imageLarge &&
           other.hp == this.hp &&
-          other.atk == this.atk);
+          other.atk == this.atk &&
+          other.price == this.price);
 }
 
 class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
@@ -892,6 +918,7 @@ class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
   final Value<String> imageLarge;
   final Value<int?> hp;
   final Value<int?> atk;
+  final Value<double?> price;
   final Value<int> rowid;
   const TcgCardsCompanion({
     this.id = const Value.absent(),
@@ -906,6 +933,7 @@ class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
     this.imageLarge = const Value.absent(),
     this.hp = const Value.absent(),
     this.atk = const Value.absent(),
+    this.price = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TcgCardsCompanion.insert({
@@ -921,6 +949,7 @@ class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
     required String imageLarge,
     this.hp = const Value.absent(),
     this.atk = const Value.absent(),
+    this.price = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         setId = Value(setId),
@@ -942,6 +971,7 @@ class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
     Expression<String>? imageLarge,
     Expression<int>? hp,
     Expression<int>? atk,
+    Expression<double>? price,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -957,6 +987,7 @@ class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
       if (imageLarge != null) 'image_large': imageLarge,
       if (hp != null) 'hp': hp,
       if (atk != null) 'atk': atk,
+      if (price != null) 'price': price,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -974,6 +1005,7 @@ class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
       Value<String>? imageLarge,
       Value<int?>? hp,
       Value<int?>? atk,
+      Value<double?>? price,
       Value<int>? rowid}) {
     return TcgCardsCompanion(
       id: id ?? this.id,
@@ -988,6 +1020,7 @@ class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
       imageLarge: imageLarge ?? this.imageLarge,
       hp: hp ?? this.hp,
       atk: atk ?? this.atk,
+      price: price ?? this.price,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1031,6 +1064,9 @@ class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
     if (atk.present) {
       map['atk'] = Variable<int>(atk.value);
     }
+    if (price.present) {
+      map['price'] = Variable<double>(price.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1052,6 +1088,7 @@ class TcgCardsCompanion extends UpdateCompanion<TcgCardRow> {
           ..write('imageLarge: $imageLarge, ')
           ..write('hp: $hp, ')
           ..write('atk: $atk, ')
+          ..write('price: $price, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1869,6 +1906,7 @@ typedef $$TcgCardsTableCreateCompanionBuilder = TcgCardsCompanion Function({
   required String imageLarge,
   Value<int?> hp,
   Value<int?> atk,
+  Value<double?> price,
   Value<int> rowid,
 });
 typedef $$TcgCardsTableUpdateCompanionBuilder = TcgCardsCompanion Function({
@@ -1884,6 +1922,7 @@ typedef $$TcgCardsTableUpdateCompanionBuilder = TcgCardsCompanion Function({
   Value<String> imageLarge,
   Value<int?> hp,
   Value<int?> atk,
+  Value<double?> price,
   Value<int> rowid,
 });
 
@@ -1931,6 +1970,9 @@ class $$TcgCardsTableFilterComposer
 
   ColumnFilters<int> get atk => $composableBuilder(
       column: $table.atk, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get price => $composableBuilder(
+      column: $table.price, builder: (column) => ColumnFilters(column));
 }
 
 class $$TcgCardsTableOrderingComposer
@@ -1977,6 +2019,9 @@ class $$TcgCardsTableOrderingComposer
 
   ColumnOrderings<int> get atk => $composableBuilder(
       column: $table.atk, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get price => $composableBuilder(
+      column: $table.price, builder: (column) => ColumnOrderings(column));
 }
 
 class $$TcgCardsTableAnnotationComposer
@@ -2023,6 +2068,9 @@ class $$TcgCardsTableAnnotationComposer
 
   GeneratedColumn<int> get atk =>
       $composableBuilder(column: $table.atk, builder: (column) => column);
+
+  GeneratedColumn<double> get price =>
+      $composableBuilder(column: $table.price, builder: (column) => column);
 }
 
 class $$TcgCardsTableTableManager extends RootTableManager<
@@ -2060,6 +2108,7 @@ class $$TcgCardsTableTableManager extends RootTableManager<
             Value<String> imageLarge = const Value.absent(),
             Value<int?> hp = const Value.absent(),
             Value<int?> atk = const Value.absent(),
+            Value<double?> price = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               TcgCardsCompanion(
@@ -2075,6 +2124,7 @@ class $$TcgCardsTableTableManager extends RootTableManager<
             imageLarge: imageLarge,
             hp: hp,
             atk: atk,
+            price: price,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -2090,6 +2140,7 @@ class $$TcgCardsTableTableManager extends RootTableManager<
             required String imageLarge,
             Value<int?> hp = const Value.absent(),
             Value<int?> atk = const Value.absent(),
+            Value<double?> price = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               TcgCardsCompanion.insert(
@@ -2105,6 +2156,7 @@ class $$TcgCardsTableTableManager extends RootTableManager<
             imageLarge: imageLarge,
             hp: hp,
             atk: atk,
+            price: price,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

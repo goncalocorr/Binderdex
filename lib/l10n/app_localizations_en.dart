@@ -622,6 +622,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get seePlans => 'See Premium plans';
 
   @override
+  String get collectionValue => 'Collection value';
+
+  @override
+  String get value => 'Value';
+
+  @override
+  String get valueLockedBody =>
+      'Unlock Premium to see your collection\'s value.';
+
+  @override
+  String valueCoverage(Object priced, Object total) {
+    return 'Based on $priced of $total cards';
+  }
+
+  @override
+  String get updatePrices => 'Update prices';
+
+  @override
+  String get pricesUpdated => 'Prices updated';
+
+  @override
+  String get mostValuable => 'Most valuable';
+
+  @override
   String get perMonth => '/month';
 
   @override

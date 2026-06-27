@@ -1208,6 +1208,48 @@ abstract class AppLocalizations {
   /// **'See Premium plans'**
   String get seePlans;
 
+  /// No description provided for @collectionValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Collection value'**
+  String get collectionValue;
+
+  /// No description provided for @value.
+  ///
+  /// In en, this message translates to:
+  /// **'Value'**
+  String get value;
+
+  /// No description provided for @valueLockedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock Premium to see your collection\'s value.'**
+  String get valueLockedBody;
+
+  /// No description provided for @valueCoverage.
+  ///
+  /// In en, this message translates to:
+  /// **'Based on {priced} of {total} cards'**
+  String valueCoverage(Object priced, Object total);
+
+  /// No description provided for @updatePrices.
+  ///
+  /// In en, this message translates to:
+  /// **'Update prices'**
+  String get updatePrices;
+
+  /// No description provided for @pricesUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Prices updated'**
+  String get pricesUpdated;
+
+  /// No description provided for @mostValuable.
+  ///
+  /// In en, this message translates to:
+  /// **'Most valuable'**
+  String get mostValuable;
+
   /// No description provided for @perMonth.
   ///
   /// In en, this message translates to:

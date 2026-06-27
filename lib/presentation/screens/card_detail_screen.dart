@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/format.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
+import '../../domain/entities/market_tier.dart';
 import '../../domain/entities/tcg_card.dart';
 import '../../domain/entities/user_card_entry.dart';
 import '../../l10n/app_localizations.dart';
@@ -163,6 +165,19 @@ class CardDetailScreen extends ConsumerWidget {
                             label: card.supertype!,
                             color: cs.onSurfaceVariant,
                             outlined: true),
+                      // Valor (premium): chip de preço; o grátis vê um cadeado.
+                      if (!MarketTier.isPremium(
+                          ref.watch(marketTierProvider).valueOrNull ?? 0))
+                        GestureDetector(
+                          onTap: () => context.push('/premium'),
+                          child: _Badge(
+                              label: '🔒 ${t.value}',
+                              color: DexColors.gold500,
+                              outlined: true),
+                        )
+                      else if (card.price != null)
+                        _Badge(
+                            label: euro(card.price!), color: DexColors.gold500),
                     ],
                   ),
                   const SizedBox(height: 14),

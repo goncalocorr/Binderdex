@@ -437,3 +437,15 @@ final ownedCardsProvider =
   ref.watch(setsListProvider); // recalcula quando a coleção muda
   return ref.watch(databaseProvider).ownedCards(onlyDuplicates: onlyDuplicates);
 });
+
+// --- Valor da coleção (premium) ---
+/// Valor estimado da coleção (€) + cobertura (priced/total), em tempo real.
+final collectionValueProvider =
+    StreamProvider<({double value, int priced, int total})>(
+        (ref) => ref.watch(databaseProvider).watchCollectionValue());
+
+/// Carta possuída mais valiosa (destaque). Recalcula com a coleção.
+final mostValuableCardProvider = FutureProvider((ref) {
+  ref.watch(setsListProvider);
+  return ref.watch(databaseProvider).mostValuableOwned();
+});

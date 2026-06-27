@@ -43,6 +43,7 @@ TcgCard _toCard(TcgCardRow r) => TcgCard(
       imageLarge: r.imageLarge,
       hp: r.hp,
       atk: r.atk,
+      price: r.price,
     );
 
 class CardsRepository {
@@ -52,8 +53,8 @@ class CardsRepository {
 
   /// Garante que as cartas do set estão em cache. Busca à API só na 1ª vez
   /// (ou se ainda não tiver sido sincronizado). Lança em caso de erro de rede.
-  Future<void> ensureSetSynced(String setId) async {
-    if (await db.isSetSynced(setId)) return;
+  Future<void> ensureSetSynced(String setId, {bool force = false}) async {
+    if (!force && await db.isSetSynced(setId)) return;
     final cards = await api.fetchCardsForSet(setId);
     await db.bulkInsertCards(cards
         .map((c) => TcgCardsCompanion.insert(
@@ -69,9 +70,20 @@ class CardsRepository {
               imageLarge: c.imageLarge,
               hp: Value(c.hp),
               atk: Value(c.atk),
+              price: Value(c.price),
             ))
         .toList());
     await db.markSetSynced(setId);
+  }
+
+  /// Re-sincroniza (força) os sets indicados — usado para "atualizar preços"
+  /// dos sets onde tenho cartas. Ignora erros de um set isolado.
+  Future<void> refreshPricesFor(Iterable<String> setIds) async {
+    for (final id in setIds.toSet()) {
+      try {
+        await ensureSetSynced(id, force: true);
+      } catch (_) {/* set isolado falhou — continua */}
+    }
   }
 
   Stream<List<CardItem>> watchCards(String setId, CardFilter f) => db

@@ -48,7 +48,8 @@ class TcgApi {
         'q': 'set.id:$setId',
         'page': page,
         'pageSize': 250,
-        'select': 'id,name,number,rarity,supertype,types,images,set,hp,attacks',
+        'select':
+            'id,name,number,rarity,supertype,types,images,set,hp,attacks,cardmarket',
         'orderBy': 'number',
       });
       final data = (res.data['data'] as List).cast<Map<String, dynamic>>();
@@ -80,6 +81,11 @@ class TcgApi {
       final m = RegExp(r'\d+').firstMatch(dmg);
       if (m != null) atk = int.parse(m.group(0)!);
     }
+    // Preço Cardmarket (€): tendência → média → mínimo (o que existir).
+    final cmPrices = j['cardmarket']?['prices'] as Map<String, dynamic>?;
+    final price = _toDouble(cmPrices?['trendPrice']) ??
+        _toDouble(cmPrices?['averageSellPrice']) ??
+        _toDouble(cmPrices?['lowPrice']);
     return TcgCard(
       id: j['id'] as String,
       setId: (j['set']?['id'] as String?) ?? '',
@@ -93,6 +99,10 @@ class TcgApi {
       imageLarge: (j['images']?['large'] as String?) ?? '',
       hp: int.tryParse((j['hp'] ?? '').toString()),
       atk: atk,
+      price: price,
     );
   }
+
+  static double? _toDouble(dynamic v) =>
+      v is num ? v.toDouble() : double.tryParse('${v ?? ''}');
 }

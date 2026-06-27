@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/format.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
+import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/completion_ring.dart';
@@ -109,6 +111,9 @@ class MyBinderScreen extends ConsumerWidget {
               ),
             ),
 
+            // Valor estimado da coleção (premium).
+            const _ValueCard(),
+
             // Etiqueta + lista das minhas coleções (toca para abrir o set).
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 18, 16, 8),
@@ -181,6 +186,124 @@ class _BinderHero extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Cartão "Valor da coleção" (premium). Grátis vê bloqueado com CTA.
+class _ValueCard extends ConsumerStatefulWidget {
+  const _ValueCard();
+  @override
+  ConsumerState<_ValueCard> createState() => _ValueCardState();
+}
+
+class _ValueCardState extends ConsumerState<_ValueCard> {
+  bool _refreshing = false;
+
+  Future<void> _refresh() async {
+    setState(() => _refreshing = true);
+    try {
+      final sets = await ref.read(databaseProvider).ownedSetIds();
+      await ref.read(cardsRepositoryProvider).refreshPricesFor(sets);
+      ref.invalidate(mostValuableCardProvider);
+    } catch (_) {/* ignora — mantém o que tinha */}
+    if (!mounted) return;
+    setState(() => _refreshing = false);
+    final t = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text(t.pricesUpdated)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = AppLocalizations.of(context)!;
+    final premium = MarketTier.isPremium(ref.watch(marketTierProvider).valueOrNull ?? 0);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+      child: _Card(child: premium ? _premium(context, t) : _locked(context, t)),
+    );
+  }
+
+  Widget _locked(BuildContext context, AppLocalizations t) {
+    final cs = Theme.of(context).colorScheme;
+    return Row(children: [
+      const Icon(Icons.lock_outline, color: DexColors.gold500),
+      const SizedBox(width: 14),
+      Expanded(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(t.collectionValue,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w700)),
+          const SizedBox(height: 2),
+          Text(t.valueLockedBody,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: cs.onSurfaceVariant)),
+        ]),
+      ),
+      const SizedBox(width: 8),
+      FilledButton(
+          onPressed: () => context.push('/premium'), child: Text(t.unlock)),
+    ]);
+  }
+
+  Widget _premium(BuildContext context, AppLocalizations t) {
+    final cs = Theme.of(context).colorScheme;
+    final async = ref.watch(collectionValueProvider);
+    final mvp = ref.watch(mostValuableCardProvider).valueOrNull;
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Row(children: [
+        const Icon(Icons.savings, color: DexColors.gold500),
+        const SizedBox(width: 8),
+        Text(t.collectionValue,
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.w700)),
+        const Spacer(),
+        _refreshing
+            ? const SizedBox(
+                width: 18,
+                height: 18,
+                child: CircularProgressIndicator(strokeWidth: 2))
+            : IconButton(
+                tooltip: t.updatePrices,
+                icon: const Icon(Icons.refresh),
+                onPressed: _refresh),
+      ]),
+      async.when(
+        loading: () => const Padding(
+            padding: EdgeInsets.symmetric(vertical: 4), child: Text('…')),
+        error: (e, _) => const Text('—'),
+        data: (v) => Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(euro(v.value),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineMedium
+                  ?.copyWith(fontWeight: FontWeight.w800)),
+          if (v.priced < v.total)
+            Text(t.valueCoverage(v.priced, v.total),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: cs.onSurfaceVariant)),
+        ]),
+      ),
+      if (mvp != null)
+        Padding(
+          padding: const EdgeInsets.only(top: 6),
+          child: Text('${t.mostValuable}: ${mvp.card.name} · ${euro(mvp.price)}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: cs.onSurfaceVariant)),
+        ),
+    ]);
   }
 }
 

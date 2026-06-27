@@ -23,6 +23,7 @@ class TcgCard {
   final String imageLarge;
   final int? hp; // pontos de vida (cartas de Pokémon)
   final int? atk; // dano do primeiro ataque
+  final double? price; // valor estimado em € (Cardmarket trendPrice)
 
   const TcgCard({
     required this.id,
@@ -37,5 +38,6 @@ class TcgCard {
     required this.imageLarge,
     this.hp,
     this.atk,
+    this.price,
   });
 }
