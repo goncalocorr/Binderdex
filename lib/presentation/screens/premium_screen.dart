@@ -87,7 +87,10 @@ class _TierCard extends ConsumerWidget {
                           ref.read(authStateProvider).valueOrNull?.uid;
                       if (uid == null) return;
                       await ref.read(marketServiceProvider).setTier(uid, tier);
-                      if (context.mounted) _showUnlocked(context, t, tier);
+                      if (!context.mounted) return;
+                      tier == 0
+                          ? _showSubscriptionEnded(context, t)
+                          : _showUnlocked(context, t, tier);
                     },
                     child: Text(t.unlock),
                   ),
@@ -128,6 +131,24 @@ void _showUnlocked(BuildContext context, AppLocalizations t, int tier) {
           _unlockPerk(ctx, t.perkAvatars),
         ],
       ),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.of(ctx).pop(),
+          child: Text(t.continueLabel),
+        ),
+      ],
+    ),
+  );
+}
+
+/// Aviso ao voltar ao plano Grátis (subscrição não renovada / expirada).
+void _showSubscriptionEnded(BuildContext context, AppLocalizations t) {
+  showDialog<void>(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      icon: const Icon(Icons.info_outline, color: Colors.orange, size: 36),
+      title: Text(t.subscriptionNotRenewed, textAlign: TextAlign.center),
+      content: Text(t.backToFreeBody),
       actions: [
         FilledButton(
           onPressed: () => Navigator.of(ctx).pop(),

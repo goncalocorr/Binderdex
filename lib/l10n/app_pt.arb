@@ -179,6 +179,8 @@
   "premiumOnly": "Só premium",
   "premiumUnlocked": "{name} desbloqueado!",
   "youUnlocked": "Desbloqueaste:",
+  "subscriptionNotRenewed": "Subscrição não renovada",
+  "backToFreeBody": "Voltaste ao plano Grátis — perdeste os slots extra, o selo e os avatares premium.",
   "archive": "Arquivar",
   "unarchive": "Desarquivar",
   "archivedTitle": "Arquivadas",

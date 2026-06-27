@@ -1172,6 +1172,18 @@ abstract class AppLocalizations {
   /// **'You unlocked:'**
   String get youUnlocked;
 
+  /// No description provided for @subscriptionNotRenewed.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription not renewed'**
+  String get subscriptionNotRenewed;
+
+  /// No description provided for @backToFreeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re back on the Free plan — you lost the extra slots, the badge and premium avatars.'**
+  String get backToFreeBody;
+
   /// No description provided for @archive.
   ///
   /// In en, this message translates to:

@@ -221,6 +221,8 @@
   "premiumUnlocked": "{name} unlocked!",
   "@premiumUnlocked": { "placeholders": { "name": {} } },
   "youUnlocked": "You unlocked:",
+  "subscriptionNotRenewed": "Subscription not renewed",
+  "backToFreeBody": "You're back on the Free plan — you lost the extra slots, the badge and premium avatars.",
   "archive": "Archive",
   "unarchive": "Unarchive",
   "archivedTitle": "Archived",

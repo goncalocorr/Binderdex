@@ -598,6 +598,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get youUnlocked => 'You unlocked:';
 
   @override
+  String get subscriptionNotRenewed => 'Subscription not renewed';
+
+  @override
+  String get backToFreeBody =>
+      'You\'re back on the Free plan — you lost the extra slots, the badge and premium avatars.';
+
+  @override
   String get archive => 'Archive';
 
   @override

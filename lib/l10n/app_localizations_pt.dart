@@ -602,6 +602,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get youUnlocked => 'Desbloqueaste:';
 
   @override
+  String get subscriptionNotRenewed => 'Subscrição não renovada';
+
+  @override
+  String get backToFreeBody =>
+      'Voltaste ao plano Grátis — perdeste os slots extra, o selo e os avatares premium.';
+
+  @override
   String get archive => 'Arquivar';
 
   @override
