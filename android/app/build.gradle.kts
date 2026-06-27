@@ -27,6 +27,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // Necessário para o flutter_local_notifications (APIs java.time, etc.).
+        isCoreLibraryDesugaringEnabled = true
     }
 
     defaultConfig {
@@ -75,4 +77,6 @@ flutter {
 dependencies {
     // Splash do sistema (Android 12+) com retrocompatibilidade.
     implementation("androidx.core:core-splashscreen:1.0.1")
+    // Core library desugaring (exigido pelo flutter_local_notifications).
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
