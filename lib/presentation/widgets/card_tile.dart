@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/format.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
 import '../../data/repositories/cards_repository.dart';
+import '../../domain/entities/market_tier.dart';
+import '../providers/app_providers.dart';
 import 'dex_ui.dart';
 
 const ColorFilter _grayscale = ColorFilter.matrix(<double>[
@@ -16,7 +20,7 @@ const ColorFilter _grayscale = ColorFilter.matrix(<double>[
 /// Miniatura de carta — estilo "CardThumb" do Dex Design System.
 /// - Possuída: a cores, badge de tipo, check verde, brilho holo nas variantes.
 /// - Em falta: borda tracejada, arte a cinzento esbatida, ícone "+".
-class CardTile extends StatelessWidget {
+class CardTile extends ConsumerWidget {
   final CardItem item;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
@@ -28,8 +32,12 @@ class CardTile extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final cs = Theme.of(context).colorScheme;
+    // Preço (raw) só para premium; sem preço → não mostra nada.
+    final showPrice =
+        MarketTier.isPremium(ref.watch(marketTierProvider).valueOrNull ?? 0) &&
+            item.card.price != null;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final c = item.card;
     final owned = item.owned;
@@ -155,6 +163,20 @@ class CardTile extends StatelessWidget {
                                           fontSize: 10,
                                           fontWeight: FontWeight.w700,
                                           color: DexColors.n900)),
+                                ),
+                              ),
+                            // Preço raw (premium) — canto inferior esquerdo.
+                            if (showPrice)
+                              Positioned(
+                                bottom: 6,
+                                left: 6,
+                                child: _Pill(
+                                  color: Colors.black.withValues(alpha: 0.55),
+                                  child: Text(euro(item.card.price!),
+                                      style: AppTheme.mono(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white)),
                                 ),
                               ),
                         ],
