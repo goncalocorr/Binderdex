@@ -54,8 +54,17 @@ service cloud.firestore {
             || request.resource.data.wantText.size() <= 280)
         && (!('note' in request.resource.data)
             || request.resource.data.note.size() <= 280);
-      allow update, delete: if request.auth != null
+      allow update: if request.auth != null
         && resource.data.ownerUid == request.auth.uid;
+      // Apagar: o dono ou o admin (moderação).
+      allow delete: if isAdmin() || (request.auth != null
+        && resource.data.ownerUid == request.auth.uid);
+    }
+
+    // Anúncios globais — todos leem; só o admin escreve.
+    match /broadcasts/{id} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdmin();
     }
 
     // Denúncias — qualquer autenticado cria; só o admin lê/trata.

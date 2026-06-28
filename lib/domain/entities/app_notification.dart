@@ -2,7 +2,7 @@ import 'card_set.dart';
 import 'chat.dart';
 import 'listing.dart';
 
-enum NotifType { message, wishlist, newSet }
+enum NotifType { message, wishlist, newSet, broadcast }
 
 /// Uma notificação no centro no-app. Guarda o objeto-fonte; o ecrã formata o
 /// texto (localizado) a partir do tipo.
@@ -13,11 +13,17 @@ class AppNotification {
   final Listing? listing;
   final CardSet? set;
 
+  /// Anúncio global (admin → todos).
+  final String? broadcastId, broadcastTitle, broadcastBody;
+
   AppNotification.message(Conversation c)
       : type = NotifType.message,
         conversation = c,
         listing = null,
         set = null,
+        broadcastId = null,
+        broadcastTitle = null,
+        broadcastBody = null,
         at = c.updatedAt;
 
   AppNotification.wishlist(Listing l)
@@ -25,6 +31,9 @@ class AppNotification {
         listing = l,
         conversation = null,
         set = null,
+        broadcastId = null,
+        broadcastTitle = null,
+        broadcastBody = null,
         at = l.createdAt;
 
   AppNotification.newSet(CardSet s)
@@ -32,7 +41,23 @@ class AppNotification {
         set = s,
         conversation = null,
         listing = null,
+        broadcastId = null,
+        broadcastTitle = null,
+        broadcastBody = null,
         at = _parseDate(s.releaseDate);
+
+  AppNotification.broadcast({
+    required String id,
+    required String title,
+    required String body,
+    required this.at,
+  })  : type = NotifType.broadcast,
+        broadcastId = id,
+        broadcastTitle = title,
+        broadcastBody = body,
+        conversation = null,
+        listing = null,
+        set = null;
 
   /// Id estável para "limpar" (dispensar). Na mensagem inclui o `updatedAt` da
   /// conversa → se chegar mensagem nova, a notificação reaparece (id muda).
@@ -44,6 +69,8 @@ class AppNotification {
         return 'wish:${listing!.id}';
       case NotifType.newSet:
         return 'set:${set!.id}';
+      case NotifType.broadcast:
+        return 'bcast:$broadcastId';
     }
   }
 }

@@ -5,29 +5,74 @@ import '../../data/remote/admin_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../report_reasons.dart';
+import 'admin_broadcast_screen.dart';
 import 'admin_chat_screen.dart';
+import 'admin_users_screen.dart';
 
-/// Painel de administração (só [kAdminEmail]): denúncias + sugestões.
-class AdminScreen extends ConsumerWidget {
+/// Painel de administração (só [kAdminEmail]): menu para as várias áreas.
+class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(t.admin),
-          bottom: TabBar(tabs: [
-            Tab(text: t.adminReports),
-            Tab(text: t.adminSuggestions),
-          ]),
+    void go(Widget page) => Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => page));
+    return Scaffold(
+      appBar: AppBar(title: Text(t.admin)),
+      body: ListView(children: [
+        ListTile(
+          leading: const Icon(Icons.flag_outlined),
+          title: Text(t.adminReports),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => go(const _AdminReportsPage()),
         ),
-        body: const TabBarView(children: [_ReportsTab(), _SuggestionsTab()]),
-      ),
+        ListTile(
+          leading: const Icon(Icons.lightbulb_outline),
+          title: Text(t.adminSuggestions),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => go(const _AdminSuggestionsPage()),
+        ),
+        ListTile(
+          leading: const Icon(Icons.block),
+          title: Text(t.adminBanned),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => go(const AdminBannedScreen()),
+        ),
+        ListTile(
+          leading: const Icon(Icons.workspace_premium_outlined),
+          title: Text(t.adminPremium),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => go(const AdminPremiumScreen()),
+        ),
+        ListTile(
+          leading: const Icon(Icons.campaign_outlined),
+          title: Text(t.adminBroadcast),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => go(const AdminBroadcastScreen()),
+        ),
+      ]),
     );
   }
+}
+
+class _AdminReportsPage extends StatelessWidget {
+  const _AdminReportsPage();
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: Text(AppLocalizations.of(context)!.adminReports)),
+        body: const _ReportsTab(),
+      );
+}
+
+class _AdminSuggestionsPage extends StatelessWidget {
+  const _AdminSuggestionsPage();
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        appBar:
+            AppBar(title: Text(AppLocalizations.of(context)!.adminSuggestions)),
+        body: const _SuggestionsTab(),
+      );
 }
 
 class _ReportsTab extends ConsumerWidget {
@@ -120,6 +165,10 @@ class _ReportTile extends ConsumerWidget {
             await svc.banUser(report.reportedUid, true);
             await svc.markReportHandled(report.id);
             messenger.showSnackBar(SnackBar(content: Text(t.userBanned)));
+          } else if (v == 'delete') {
+            await svc.deleteListing(report.listingId);
+            await svc.markReportHandled(report.id);
+            messenger.showSnackBar(SnackBar(content: Text(t.listingDeleted)));
           } else if (v == 'handled') {
             await svc.markReportHandled(report.id);
           }
@@ -127,6 +176,7 @@ class _ReportTile extends ConsumerWidget {
         itemBuilder: (_) => [
           PopupMenuItem(value: 'warn', child: Text(t.warnUser)),
           PopupMenuItem(value: 'ban', child: Text(t.banUser)),
+          PopupMenuItem(value: 'delete', child: Text(t.deleteListing)),
           PopupMenuItem(value: 'handled', child: Text(t.markHandled)),
         ],
       ),

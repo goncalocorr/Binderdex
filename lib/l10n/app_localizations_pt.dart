@@ -761,6 +761,60 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noConversation => 'Sem conversa entre estes utilizadores.';
 
   @override
+  String get adminBanned => 'Utilizadores banidos';
+
+  @override
+  String get adminPremium => 'Utilizadores premium';
+
+  @override
+  String get adminBroadcast => 'Anúncio global';
+
+  @override
+  String get noBanned => 'Sem utilizadores banidos.';
+
+  @override
+  String get unban => 'Desbanir';
+
+  @override
+  String get noPremiumUsers => 'Sem utilizadores premium.';
+
+  @override
+  String get grantPremium => 'Conceder premium (uid)';
+
+  @override
+  String get uidHint => 'uid do utilizador';
+
+  @override
+  String get grant => 'Conceder';
+
+  @override
+  String get change => 'Mudar';
+
+  @override
+  String get premiumUpdated => 'Premium atualizado';
+
+  @override
+  String get broadcastTitle => 'Título';
+
+  @override
+  String get broadcastBody => 'Mensagem';
+
+  @override
+  String get broadcastSend => 'Enviar a todos';
+
+  @override
+  String get broadcastSent => 'Anúncio enviado';
+
+  @override
+  String get listingDeleted => 'Anúncio apagado';
+
+  @override
+  String get deleteListing => 'Apagar anúncio';
+
+  @override
+  String get notifBroadcast => 'Anúncio';
+
+  @override
   String get perMonth => '/mês';
 
   @override

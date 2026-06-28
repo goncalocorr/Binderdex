@@ -145,6 +145,16 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               maxLines: 1, overflow: TextOverflow.ellipsis),
           onTap: () => context.push('/set/${s.id}'),
         );
+      case NotifType.broadcast:
+        return ListTile(
+          leading: const SizedBox(
+              width: 40, height: 40, child: Icon(Icons.campaign_outlined)),
+          title: Text(n.broadcastTitle!.isEmpty
+              ? t.notifBroadcast
+              : n.broadcastTitle!),
+          subtitle: Text(n.broadcastBody ?? '',
+              maxLines: 3, overflow: TextOverflow.ellipsis),
+        );
     }
   }
 

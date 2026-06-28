@@ -26,6 +26,18 @@ typedef Suggestion = ({
   DateTime at,
 });
 
+/// Um utilizador, na perspetiva do admin (banidos / premium).
+typedef AdminUser = ({
+  String uid,
+  String name,
+  String avatar,
+  int tier,
+  bool banned,
+});
+
+/// Um anúncio global (do admin para todos).
+typedef Broadcast = ({String id, String title, String body, DateTime at});
+
 DateTime _ts(dynamic v) =>
     v is Timestamp ? v.toDate() : DateTime.fromMillisecondsSinceEpoch(0);
 
@@ -63,6 +75,61 @@ class AdminService {
       .collection('users')
       .doc(uid)
       .set({'banned': banned}, SetOptions(merge: true));
+
+  /// Apaga um anúncio (moderação — regras permitem ao admin).
+  Future<void> deleteListing(String id) =>
+      _db.collection('listings').doc(id).delete();
+
+  /// Define o nível premium de uma conta (dar/tirar premium).
+  Future<void> setUserTier(String uid, int tier) => _db
+      .collection('users')
+      .doc(uid)
+      .set({'marketTier': tier}, SetOptions(merge: true));
+
+  /// Utilizadores banidos (para a lista de gestão).
+  Stream<List<AdminUser>> watchBannedUsers() => _db
+      .collection('users')
+      .where('banned', isEqualTo: true)
+      .snapshots()
+      .map((s) => s.docs.map(_user).toList());
+
+  /// Utilizadores premium (marketTier >= 1).
+  Stream<List<AdminUser>> watchPremiumUsers() => _db
+      .collection('users')
+      .where('marketTier', isGreaterThanOrEqualTo: 1)
+      .snapshots()
+      .map((s) => s.docs.map(_user).toList());
+
+  /// Publica um anúncio global (todos os utilizadores veem nas notificações).
+  Future<void> postBroadcast(String title, String body) =>
+      _db.collection('broadcasts').add({
+        'title': title.trim(),
+        'body': body.trim(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+
+  /// Anúncios globais (qualquer utilizador lê), mais recentes primeiro.
+  Stream<List<Broadcast>> watchBroadcasts() =>
+      _db.collection('broadcasts').snapshots().map((s) => s.docs
+          .map((d) => (
+                id: d.id,
+                title: (d.data()['title'] ?? '') as String,
+                body: (d.data()['body'] ?? '') as String,
+                at: _ts(d.data()['createdAt']),
+              ))
+          .toList()
+        ..sort((a, b) => b.at.compareTo(a.at)));
+
+  AdminUser _user(QueryDocumentSnapshot<Map<String, dynamic>> d) {
+    final m = d.data();
+    return (
+      uid: d.id,
+      name: (m['name'] ?? '') as String,
+      avatar: (m['avatar'] ?? '') as String,
+      tier: (m['marketTier'] ?? 0) as int,
+      banned: (m['banned'] ?? false) as bool,
+    );
+  }
 
   // --- Sugestões ---
   /// Sugestões (admin lê todas, mais recentes primeiro).

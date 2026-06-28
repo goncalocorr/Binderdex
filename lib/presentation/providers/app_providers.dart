@@ -289,6 +289,22 @@ final suggestionsProvider = StreamProvider<List<Suggestion>>((ref) {
   return ref.watch(adminServiceProvider).watchSuggestions();
 });
 
+/// Utilizadores banidos (só admin).
+final bannedUsersAdminProvider = StreamProvider<List<AdminUser>>((ref) {
+  if (!ref.watch(isAdminProvider)) return Stream.value(const <AdminUser>[]);
+  return ref.watch(adminServiceProvider).watchBannedUsers();
+});
+
+/// Utilizadores premium (só admin).
+final premiumUsersProvider = StreamProvider<List<AdminUser>>((ref) {
+  if (!ref.watch(isAdminProvider)) return Stream.value(const <AdminUser>[]);
+  return ref.watch(adminServiceProvider).watchPremiumUsers();
+});
+
+/// Anúncios globais (todos — para o centro de notificações).
+final broadcastsProvider = StreamProvider<List<Broadcast>>(
+    (ref) => ref.watch(adminServiceProvider).watchBroadcasts());
+
 /// Estado de moderação do próprio utilizador (aviso pendente + banido).
 final selfModerationProvider =
     StreamProvider<({String? warning, bool banned})>((ref) {
@@ -440,6 +456,11 @@ final notificationsProvider = Provider<List<AppNotification>>((ref) {
       .toList();
   for (final s in newSetsFrom(sets, ref.watch(seenSetsProvider))) {
     out.add(AppNotification.newSet(s));
+  }
+  // Anúncios globais do admin (para todos).
+  for (final b in ref.watch(broadcastsProvider).valueOrNull ?? const []) {
+    out.add(AppNotification.broadcast(
+        id: b.id, title: b.title, body: b.body, at: b.at));
   }
   out.sort((a, b) => b.at.compareTo(a.at));
   // Remove as que o utilizador limpou (arrastou).

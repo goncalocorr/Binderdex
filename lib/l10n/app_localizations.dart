@@ -1466,6 +1466,114 @@ abstract class AppLocalizations {
   /// **'No conversation between these users.'**
   String get noConversation;
 
+  /// No description provided for @adminBanned.
+  ///
+  /// In en, this message translates to:
+  /// **'Banned users'**
+  String get adminBanned;
+
+  /// No description provided for @adminPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium users'**
+  String get adminPremium;
+
+  /// No description provided for @adminBroadcast.
+  ///
+  /// In en, this message translates to:
+  /// **'Broadcast'**
+  String get adminBroadcast;
+
+  /// No description provided for @noBanned.
+  ///
+  /// In en, this message translates to:
+  /// **'No banned users.'**
+  String get noBanned;
+
+  /// No description provided for @unban.
+  ///
+  /// In en, this message translates to:
+  /// **'Unban'**
+  String get unban;
+
+  /// No description provided for @noPremiumUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'No premium users.'**
+  String get noPremiumUsers;
+
+  /// No description provided for @grantPremium.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant premium (uid)'**
+  String get grantPremium;
+
+  /// No description provided for @uidHint.
+  ///
+  /// In en, this message translates to:
+  /// **'User uid'**
+  String get uidHint;
+
+  /// No description provided for @grant.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant'**
+  String get grant;
+
+  /// No description provided for @change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get change;
+
+  /// No description provided for @premiumUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Premium updated'**
+  String get premiumUpdated;
+
+  /// No description provided for @broadcastTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get broadcastTitle;
+
+  /// No description provided for @broadcastBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get broadcastBody;
+
+  /// No description provided for @broadcastSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send to everyone'**
+  String get broadcastSend;
+
+  /// No description provided for @broadcastSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Broadcast sent'**
+  String get broadcastSent;
+
+  /// No description provided for @listingDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Listing deleted'**
+  String get listingDeleted;
+
+  /// No description provided for @deleteListing.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete listing'**
+  String get deleteListing;
+
+  /// No description provided for @notifBroadcast.
+  ///
+  /// In en, this message translates to:
+  /// **'Announcement'**
+  String get notifBroadcast;
+
   /// No description provided for @perMonth.
   ///
   /// In en, this message translates to:

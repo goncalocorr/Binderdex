@@ -757,6 +757,60 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noConversation => 'No conversation between these users.';
 
   @override
+  String get adminBanned => 'Banned users';
+
+  @override
+  String get adminPremium => 'Premium users';
+
+  @override
+  String get adminBroadcast => 'Broadcast';
+
+  @override
+  String get noBanned => 'No banned users.';
+
+  @override
+  String get unban => 'Unban';
+
+  @override
+  String get noPremiumUsers => 'No premium users.';
+
+  @override
+  String get grantPremium => 'Grant premium (uid)';
+
+  @override
+  String get uidHint => 'User uid';
+
+  @override
+  String get grant => 'Grant';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get premiumUpdated => 'Premium updated';
+
+  @override
+  String get broadcastTitle => 'Title';
+
+  @override
+  String get broadcastBody => 'Message';
+
+  @override
+  String get broadcastSend => 'Send to everyone';
+
+  @override
+  String get broadcastSent => 'Broadcast sent';
+
+  @override
+  String get listingDeleted => 'Listing deleted';
+
+  @override
+  String get deleteListing => 'Delete listing';
+
+  @override
+  String get notifBroadcast => 'Announcement';
+
+  @override
   String get perMonth => '/month';
 
   @override
