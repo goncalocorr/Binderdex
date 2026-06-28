@@ -97,5 +97,34 @@ come from public databases.
 ## Recursos gráficos necessários (tens de criar)
 - **Ícone** 512×512 (já tens o do launcher — exporta em 512).
 - **Feature graphic** 1024×500 (banner no topo da ficha).
-- **Screenshots** de telemóvel: 2 a 8 (ex.: Início, um set, detalhe de carta,
-  Comunidade/pesquisa, Trocas perfeitas, Premium). Mín. 320px, lado maior ≤ 3840px.
+- **Screenshots** de telemóvel: 2 a 8. Mín. 320px, lado maior ≤ 3840px.
+
+---
+
+## Plano de screenshots (ordem + legenda)
+
+Tira o screenshot do ecrã indicado e põe a **legenda** por cima (faixa no topo
+ou rodapé). Ordem recomendada (os 2 primeiros são os mais vistos):
+
+| # | Ecrã | Legenda PT | Caption EN |
+|---|---|---|---|
+| 1 | Detalhe de uma carta bonita (holo) | A tua coleção, carta a carta | Your collection, card by card |
+| 2 | "O meu binder" (progresso + stats) | Vê o teu progresso e o que falta | Track progress and what's missing |
+| 3 | Grelha de um set (possuídas/em falta) | Marca o que tens, por variante | Mark what you own, by variant |
+| 4 | Comunidade (pesquisa de uma carta) | Encontra quem tem a carta que queres | Find who has the card you want |
+| 5 | Trocas perfeitas | Trocas perfeitas, automáticas | Perfect trades, automatic |
+| 6 | Chat de uma negociação | Combina trocas no chat | Arrange trades in chat |
+| 7 | Ecrã Premium (níveis com glow) | Premium: mais slots e vantagens | Premium: more slots & perks |
+| 8 | Wishlist | Lista de desejos | Wishlist for what you're after |
+
+Dicas: usa o **tema escuro** (fica bonito), telemóvel sem barra de bateria a
+13% :) , e mantém o **mesmo estilo de legenda** em todos.
+
+## Palavras-chave / ASO (não há campo de keywords no Google Play, mas usa-as
+naturalmente no texto e no nome curto)
+pokémon tcg · cartas · coleção · binder · trocar cartas · colecionador ·
+trading cards · card collection · trade · wishlist
+
+## "What's new" (notas da versão — 1.0.0)
+PT: `Primeira versão: coleção, comunidade de trocas, chat e premium.`
+EN: `First release: collection, trading community, chat and premium.`
