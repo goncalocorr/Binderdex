@@ -110,7 +110,7 @@ class PokedexApp extends ConsumerWidget {
     ref.watch(ensureOwnedSetsSyncedProvider); // sets possuídos → cache (binder)
     ref.watch(setsRefreshProvider); // apanha coleções novas da API (6h)
     // Moderação: aviso de conta suspensa (banido) ou aviso deixado pelo admin.
-    ref.listen(selfModerationProvider, (_, next) {
+    ref.listen(selfModerationProvider, (prev, next) {
       final mod = next.valueOrNull;
       if (mod == null) return;
       // Sem sessão → terminar sessão NÃO é desban; não mexer.
@@ -122,8 +122,10 @@ class PokedexApp extends ConsumerWidget {
         prefs.setString('bannedUid', uid); // ligado a esta conta
         return;
       }
-      // Não banido: só avisa "reativada" se ERA esta conta que estava banida.
-      if (prefs.getString('bannedUid') == uid) {
+      // Reativada se: transitou de banido→não-banido (app aberta) OU esta conta
+      // estava marcada como banida (reabertura). NÃO em logout (uid já guardado).
+      final justUnbanned = prev?.valueOrNull?.banned ?? false;
+      if (justUnbanned || prefs.getString('bannedUid') == uid) {
         prefs.remove('bannedUid');
         _banShown = false;
         _showUnban(ref);
