@@ -44,25 +44,31 @@ void _showBan(WidgetRef ref) {
   );
 }
 
-/// Aviso de que a conta foi reativada (desbanida).
+/// Aviso de que a conta foi reativada (desbanida). Adiado para depois do frame
+/// (a Comunidade reconstrói ao deixar de estar banido) e mostrado só uma vez.
+bool _unbanShown = false;
 void _showUnban(WidgetRef ref) {
-  final ctx = rootNavigatorKey.currentContext;
-  if (ctx == null) return;
-  final t = AppLocalizations.of(ctx)!;
-  showDialog<void>(
-    context: ctx,
-    builder: (dctx) => AlertDialog(
-      icon: const Icon(Icons.check_circle, color: Colors.green, size: 36),
-      title: Text(t.accountReactivatedTitle, textAlign: TextAlign.center),
-      content: Text(t.accountReactivated),
-      actions: [
-        FilledButton(
-          onPressed: () => Navigator.of(dctx).pop(),
-          child: Text(t.continueLabel),
-        ),
-      ],
-    ),
-  );
+  if (_unbanShown) return;
+  _unbanShown = true;
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    final ctx = rootNavigatorKey.currentContext;
+    if (ctx == null) return;
+    final t = AppLocalizations.of(ctx)!;
+    showDialog<void>(
+      context: ctx,
+      builder: (dctx) => AlertDialog(
+        icon: const Icon(Icons.check_circle, color: Colors.green, size: 36),
+        title: Text(t.accountReactivatedTitle, textAlign: TextAlign.center),
+        content: Text(t.accountReactivated),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.of(dctx).pop(),
+            child: Text(t.continueLabel),
+          ),
+        ],
+      ),
+    );
+  });
 }
 
 void _showWarning(WidgetRef ref, String text) {
@@ -120,6 +126,7 @@ class PokedexApp extends ConsumerWidget {
       if (mod.banned) {
         _showBan(ref);
         prefs.setString('bannedUid', uid); // ligado a esta conta
+        _unbanShown = false; // permite o aviso de reativação no próximo desban
         return;
       }
       // Reativada se: transitou de banido→não-banido (app aberta) OU esta conta
