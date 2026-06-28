@@ -5,6 +5,7 @@ import 'core/router/app_router.dart';
 import 'core/router/root_navigator.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
+import 'presentation/appeal.dart';
 import 'presentation/providers/app_providers.dart';
 
 /// Evita mostrar o aviso duas vezes enquanto o diálogo está aberto.
@@ -17,6 +18,8 @@ void _showBan(WidgetRef ref) {
   if (ctx == null) return;
   _banShown = true;
   final t = AppLocalizations.of(ctx)!;
+  final appealed =
+      ref.read(selfModerationProvider).valueOrNull?.appealed ?? false;
   showDialog<void>(
     context: ctx,
     builder: (dctx) => AlertDialog(
@@ -24,69 +27,20 @@ void _showBan(WidgetRef ref) {
       title: Text(t.accountSuspendedTitle, textAlign: TextAlign.center),
       content: Text(t.accountSuspended),
       actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(dctx).pop();
-            _appealSheet(ref);
-          },
-          child: Text(t.appeal),
-        ),
+        if (!appealed)
+          TextButton(
+            onPressed: () {
+              Navigator.of(dctx).pop();
+              showAppealSheet(ctx, ref);
+            },
+            child: Text(t.appeal),
+          ),
         FilledButton(
           onPressed: () => Navigator.of(dctx).pop(),
           child: Text(t.continueLabel),
         ),
       ],
     ),
-  );
-}
-
-/// Folha para o utilizador banido apelar (explicar-se). Vai para `appeals/`.
-void _appealSheet(WidgetRef ref) {
-  final ctx = rootNavigatorKey.currentContext;
-  if (ctx == null) return;
-  final ctrl = TextEditingController();
-  showModalBottomSheet<void>(
-    context: ctx,
-    isScrollControlled: true,
-    builder: (sctx) {
-      final t = AppLocalizations.of(sctx)!;
-      return Padding(
-        padding: EdgeInsets.fromLTRB(
-            16, 16, 16, MediaQuery.of(sctx).viewInsets.bottom + 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(t.appeal, style: Theme.of(sctx).textTheme.titleLarge),
-            const SizedBox(height: 12),
-            TextField(
-              controller: ctrl,
-              autofocus: true,
-              maxLines: 5,
-              maxLength: 1000,
-              decoration: InputDecoration(
-                  hintText: t.appealHint, border: const OutlineInputBorder()),
-            ),
-            const SizedBox(height: 8),
-            FilledButton(
-              onPressed: () async {
-                final text = ctrl.text.trim();
-                final user = ref.read(authStateProvider).valueOrNull;
-                if (text.isEmpty || user == null) return;
-                final messenger = ScaffoldMessenger.of(sctx);
-                await ref.read(adminServiceProvider).addAppeal(
-                    uid: user.uid,
-                    name: ref.read(displayNameProvider),
-                    text: text);
-                if (sctx.mounted) Navigator.of(sctx).pop();
-                messenger.showSnackBar(SnackBar(content: Text(t.appealSent)));
-              },
-              child: Text(t.send),
-            ),
-          ],
-        ),
-      );
-    },
   );
 }
 

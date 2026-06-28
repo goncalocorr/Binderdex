@@ -370,11 +370,13 @@ final adminUserListingsProvider =
   return ref.watch(marketServiceProvider).watchMine(uid);
 });
 
-/// Estado de moderação do próprio utilizador (aviso pendente + banido).
+/// Estado de moderação do próprio utilizador (aviso + banido + já apelou).
 final selfModerationProvider =
-    StreamProvider<({String? warning, bool banned})>((ref) {
+    StreamProvider<({String? warning, bool banned, bool appealed})>((ref) {
   final uid = _uid(ref);
-  if (uid == null) return Stream.value((warning: null, banned: false));
+  if (uid == null) {
+    return Stream.value((warning: null, banned: false, appealed: false));
+  }
   return ref.watch(profileServiceProvider).watchSelf(uid);
 });
 

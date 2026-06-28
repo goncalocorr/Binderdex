@@ -69,17 +69,23 @@ class ProfileService {
     }
   }
 
-  /// Estado de moderação do próprio utilizador: aviso pendente (texto) e se
-  /// está banido. Usado para mostrar o aviso e bloquear ações.
-  Stream<({String? warning, bool banned})> watchSelf(String uid) =>
+  /// Estado de moderação do próprio utilizador: aviso pendente, se está banido,
+  /// e se já apelou (só pode apelar 1x por ban).
+  Stream<({String? warning, bool banned, bool appealed})> watchSelf(
+          String uid) =>
       _doc(uid).snapshots().map((s) {
         final d = s.data() ?? const {};
         final w = d['warning'];
         return (
           warning: w is Map ? (w['text'] as String?) : null,
           banned: (d['banned'] as bool?) ?? false,
+          appealed: (d['appealed'] as bool?) ?? false,
         );
       });
+
+  /// Marca que o utilizador já apelou (não pode apelar de novo até novo ban).
+  Future<void> markAppealed(String uid) =>
+      _doc(uid).set({'appealed': true}, SetOptions(merge: true));
 
   /// Limpa o aviso depois de o utilizador o ver.
   Future<void> clearWarning(String uid) =>

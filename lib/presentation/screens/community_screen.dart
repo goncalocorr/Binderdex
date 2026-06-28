@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../appeal.dart';
 import '../providers/app_providers.dart';
 import '../widgets/auth_guard.dart';
 import '../widgets/card_tile.dart';
@@ -54,8 +55,9 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
-    // Banido → não pode usar a Comunidade.
-    if (ref.watch(isBannedProvider)) {
+    // Banido → não pode usar a Comunidade. Pode apelar 1x (por baixo do aviso).
+    final mod = ref.watch(selfModerationProvider).valueOrNull;
+    if (mod?.banned ?? false) {
       return Scaffold(
         body: Center(
           child: Padding(
@@ -65,6 +67,14 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
                   size: 56, color: Theme.of(context).colorScheme.error),
               const SizedBox(height: 16),
               Text(t.bannedCommunity, textAlign: TextAlign.center),
+              if (!mod!.appealed) ...[
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  icon: const Icon(Icons.record_voice_over_outlined),
+                  label: Text(t.appeal),
+                  onPressed: () => showAppealSheet(context, ref),
+                ),
+              ],
             ]),
           ),
         ),

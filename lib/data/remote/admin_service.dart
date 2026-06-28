@@ -82,10 +82,10 @@ class AdminService {
   /// Bane/desbane o utilizador (bloqueia publicar/contactar nas regras). Ao
   /// banir, apaga também todos os anúncios dele.
   Future<void> banUser(String uid, bool banned) async {
-    await _db
-        .collection('users')
-        .doc(uid)
-        .set({'banned': banned}, SetOptions(merge: true));
+    // Ao banir, repõe `appealed:false` → permite uma nova apelação por ban.
+    await _db.collection('users').doc(uid).set(
+        banned ? {'banned': true, 'appealed': false} : {'banned': false},
+        SetOptions(merge: true));
     if (!banned) return;
     final snap =
         await _db.collection('listings').where('ownerUid', isEqualTo: uid).get();
