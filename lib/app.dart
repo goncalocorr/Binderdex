@@ -159,15 +159,18 @@ class PokedexApp extends ConsumerWidget {
     ref.listen(selfModerationProvider, (_, next) {
       final mod = next.valueOrNull;
       if (mod == null) return;
+      // Sem sessão → terminar sessão NÃO é desban; não mexer.
+      final uid = ref.read(authStateProvider).valueOrNull?.uid;
+      if (uid == null) return;
       final prefs = ref.read(prefsProvider);
       if (mod.banned) {
         _showBan(ref);
-        prefs.setBool('wasBanned', true);
+        prefs.setString('bannedUid', uid); // ligado a esta conta
         return;
       }
-      // Não banido: se vinha de banido, avisa que a conta foi reativada.
-      if (prefs.getBool('wasBanned') == true) {
-        prefs.setBool('wasBanned', false);
+      // Não banido: só avisa "reativada" se ERA esta conta que estava banida.
+      if (prefs.getString('bannedUid') == uid) {
+        prefs.remove('bannedUid');
         _banShown = false;
         _showUnban(ref);
       }
