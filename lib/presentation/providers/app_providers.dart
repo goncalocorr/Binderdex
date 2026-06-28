@@ -305,6 +305,26 @@ final premiumUsersProvider = StreamProvider<List<AdminUser>>((ref) {
 final broadcastsProvider = StreamProvider<List<Broadcast>>(
     (ref) => ref.watch(adminServiceProvider).watchBroadcasts());
 
+/// Estado de um utilizador (ecrã de stats do admin).
+final adminUserProvider = StreamProvider.family<AdminUser, String>((ref, uid) {
+  if (!ref.watch(isAdminProvider)) return const Stream.empty();
+  return ref.watch(adminServiceProvider).watchUser(uid);
+});
+
+/// Denúncias contra um utilizador (stats).
+final adminUserReportsProvider =
+    StreamProvider.family<List<Report>, String>((ref, uid) {
+  if (!ref.watch(isAdminProvider)) return Stream.value(const <Report>[]);
+  return ref.watch(adminServiceProvider).watchReportsAgainst(uid);
+});
+
+/// Anúncios ativos de um utilizador (stats).
+final adminUserListingsProvider =
+    StreamProvider.family<List<Listing>, String>((ref, uid) {
+  if (!ref.watch(isAdminProvider)) return Stream.value(const <Listing>[]);
+  return ref.watch(marketServiceProvider).watchMine(uid);
+});
+
 /// Estado de moderação do próprio utilizador (aviso pendente + banido).
 final selfModerationProvider =
     StreamProvider<({String? warning, bool banned})>((ref) {

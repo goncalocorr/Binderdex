@@ -100,6 +100,27 @@ class AdminService {
       .snapshots()
       .map((s) => s.docs.map(_user).toList());
 
+  /// Estado de um utilizador (para o ecrã de stats do admin).
+  Stream<AdminUser> watchUser(String uid) =>
+      _db.collection('users').doc(uid).snapshots().map((d) {
+        final m = d.data() ?? const {};
+        return (
+          uid: uid,
+          name: (m['name'] ?? '') as String,
+          avatar: (m['avatar'] ?? '') as String,
+          tier: (m['marketTier'] ?? 0) as int,
+          banned: (m['banned'] ?? false) as bool,
+        );
+      });
+
+  /// Todas as denúncias contra um utilizador (para os stats dele).
+  Stream<List<Report>> watchReportsAgainst(String uid) => _db
+      .collection('reports')
+      .where('reportedUid', isEqualTo: uid)
+      .snapshots()
+      .map((s) => s.docs.map(_report).toList()
+        ..sort((a, b) => b.at.compareTo(a.at)));
+
   /// Publica um anúncio global (todos os utilizadores veem nas notificações).
   Future<void> postBroadcast(String title, String body) =>
       _db.collection('broadcasts').add({

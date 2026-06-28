@@ -811,6 +811,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifBroadcast => 'Announcement';
 
   @override
+  String get statListings => 'Active listings';
+
+  @override
+  String get statReports => 'Reports';
+
+  @override
+  String get bannedLabel => 'Banned';
+
+  @override
   String get perMonth => '/month';
 
   @override

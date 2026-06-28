@@ -108,26 +108,26 @@ class _ReportsTab extends ConsumerWidget {
 
   Widget _filterBar(
       BuildContext context, WidgetRef ref, AppLocalizations t, String? filter) {
-    return SizedBox(
-      height: 48,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        children: [
-          for (final r in <String?>[null, ...kReportReasons])
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Center(
-                child: ChoiceChip(
-                  label: Text(r == null ? t.reportAll : reportReasonLabel(t, r)),
-                  selected: filter == r,
-                  onSelected: (_) =>
-                      ref.read(reportFilterProvider.notifier).state = r,
-                ),
-              ),
-            ),
-        ],
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      child: Row(children: [
+        const Icon(Icons.filter_list),
+        const SizedBox(width: 12),
+        Expanded(
+          child: DropdownButton<String?>(
+            isExpanded: true,
+            value: filter,
+            items: [
+              DropdownMenuItem(value: null, child: Text(t.reportAll)),
+              for (final r in kReportReasons)
+                DropdownMenuItem(
+                    value: r, child: Text(reportReasonLabel(t, r))),
+            ],
+            onChanged: (v) =>
+                ref.read(reportFilterProvider.notifier).state = v,
+          ),
+        ),
+      ]),
     );
   }
 }

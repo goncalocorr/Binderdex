@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import 'admin_user_screen.dart';
 
 /// Utilizadores banidos — com opção de desbanir.
 class AdminBannedScreen extends ConsumerWidget {
@@ -31,6 +32,9 @@ class AdminBannedScreen extends ConsumerWidget {
                         maxLines: 1, overflow: TextOverflow.ellipsis),
                     subtitle: Text(u.uid,
                         maxLines: 1, overflow: TextOverflow.ellipsis),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (_) =>
+                            AdminUserScreen(uid: u.uid, fallbackName: u.name))),
                     trailing: TextButton(
                       onPressed: () =>
                           ref.read(adminServiceProvider).banUser(u.uid, false),
@@ -133,6 +137,10 @@ class _AdminPremiumScreenState extends ConsumerState<AdminPremiumScreen> {
                         title: Text(u.name.isEmpty ? u.uid : u.name,
                             maxLines: 1, overflow: TextOverflow.ellipsis),
                         subtitle: Text(MarketTier.nameFor(u.tier)),
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (_) => AdminUserScreen(
+                                    uid: u.uid, fallbackName: u.name))),
                         trailing: TextButton(
                           onPressed: () => _pickTier(u.uid),
                           child: Text(t.change),

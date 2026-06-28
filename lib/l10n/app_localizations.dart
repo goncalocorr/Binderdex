@@ -1574,6 +1574,24 @@ abstract class AppLocalizations {
   /// **'Announcement'**
   String get notifBroadcast;
 
+  /// No description provided for @statListings.
+  ///
+  /// In en, this message translates to:
+  /// **'Active listings'**
+  String get statListings;
+
+  /// No description provided for @statReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get statReports;
+
+  /// No description provided for @bannedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Banned'**
+  String get bannedLabel;
+
   /// No description provided for @perMonth.
   ///
   /// In en, this message translates to:

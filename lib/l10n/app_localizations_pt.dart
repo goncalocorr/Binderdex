@@ -815,6 +815,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get notifBroadcast => 'Anúncio';
 
   @override
+  String get statListings => 'Anúncios ativos';
+
+  @override
+  String get statReports => 'Denúncias';
+
+  @override
+  String get bannedLabel => 'Banido';
+
+  @override
   String get perMonth => '/mês';
 
   @override
