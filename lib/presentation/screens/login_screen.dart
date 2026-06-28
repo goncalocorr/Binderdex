@@ -27,18 +27,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _busy = false;
   bool _obscure = true;
   late final TapGestureRecognizer _privacyTap =
-      TapGestureRecognizer()..onTap = _openPrivacy;
+      TapGestureRecognizer()..onTap = () => _open(kPrivacyPolicyUrl);
+  late final TapGestureRecognizer _termsTap =
+      TapGestureRecognizer()..onTap = () => _open(kTermsUrl);
 
   @override
   void dispose() {
     _email.dispose();
     _password.dispose();
     _privacyTap.dispose();
+    _termsTap.dispose();
     super.dispose();
   }
 
-  Future<void> _openPrivacy() async {
-    final uri = Uri.parse(kPrivacyPolicyUrl);
+  Future<void> _open(String url) async {
+    final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
@@ -215,6 +218,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Text.rich(
                   TextSpan(children: [
                     TextSpan(text: t.consentPrefix),
+                    TextSpan(
+                      text: t.termsOfUse,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        decoration: TextDecoration.underline,
+                      ),
+                      recognizer: _termsTap,
+                    ),
+                    TextSpan(text: t.consentAnd),
                     TextSpan(
                       text: t.privacyPolicy,
                       style: TextStyle(

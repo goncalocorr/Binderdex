@@ -57,6 +57,14 @@ Future<void> _suggestionSheet(BuildContext context, WidgetRef ref) async {
     ..showSnackBar(SnackBar(content: Text(t.suggestionSent)));
 }
 
+/// Abre um URL externo (política/termos) no browser.
+Future<void> _openUrl(String url) async {
+  final uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+}
+
 /// Perfil: cabeçalho com avatar + resumo, atalhos (Iniciar sessão, Wishlist),
 /// tema e idioma. Sincronização e Premium ficam preparados aqui mas só ganham
 /// função nas Etapas 2 e 3.
@@ -475,15 +483,16 @@ class SettingsScreen extends ConsumerWidget {
         const Divider(),
         // --- Legal ---
         ListTile(
+          leading: const Icon(Icons.description_outlined),
+          title: Text(t.termsOfUse),
+          trailing: const Icon(Icons.open_in_new, size: 18),
+          onTap: () => _openUrl(kTermsUrl),
+        ),
+        ListTile(
           leading: const Icon(Icons.privacy_tip_outlined),
           title: Text(t.privacyPolicy),
           trailing: const Icon(Icons.open_in_new, size: 18),
-          onTap: () async {
-            final uri = Uri.parse(kPrivacyPolicyUrl);
-            if (await canLaunchUrl(uri)) {
-              await launchUrl(uri, mode: LaunchMode.externalApplication);
-            }
-          },
+          onTap: () => _openUrl(kPrivacyPolicyUrl),
         ),
         // Zona de perigo — só com sessão iniciada (RGPD: direito ao esquecimento).
         if (signedIn) ...[

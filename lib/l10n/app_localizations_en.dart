@@ -357,7 +357,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get guestEnter => 'Browse as guest';
 
   @override
-  String get consentPrefix => 'By continuing, you accept our ';
+  String get consentPrefix => 'By continuing, you accept the ';
+
+  @override
+  String get consentAnd => ' and the ';
+
+  @override
+  String get termsOfUse => 'Terms of Use';
 
   @override
   String get privacyPolicy => 'Privacy Policy';
