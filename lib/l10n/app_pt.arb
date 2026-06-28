@@ -216,6 +216,7 @@
   "suggestionSent": "Sugestão enviada. Obrigado!",
   "warningTitle": "Aviso",
   "accountSuspended": "A tua conta foi suspensa.",
+  "chatUnavailable": "Não foi possível carregar esta conversa.",
   "reportReasonTitle": "Porque estás a denunciar?",
   "reportScam": "Fraude / burla",
   "reportAbuse": "Mensagens abusivas",

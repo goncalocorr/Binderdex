@@ -1394,6 +1394,12 @@ abstract class AppLocalizations {
   /// **'Your account has been suspended.'**
   String get accountSuspended;
 
+  /// No description provided for @chatUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load this conversation.'**
+  String get chatUnavailable;
+
   /// No description provided for @reportReasonTitle.
   ///
   /// In en, this message translates to:

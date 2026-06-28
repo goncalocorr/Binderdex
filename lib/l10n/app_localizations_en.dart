@@ -721,6 +721,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountSuspended => 'Your account has been suspended.';
 
   @override
+  String get chatUnavailable => 'Couldn\'t load this conversation.';
+
+  @override
   String get reportReasonTitle => 'Why are you reporting?';
 
   @override

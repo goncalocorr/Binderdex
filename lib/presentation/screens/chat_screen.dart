@@ -42,6 +42,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final uid = ref.read(authStateProvider).valueOrNull?.uid;
     final text = _input.text.trim();
     if (uid == null || text.isEmpty) return;
+    if (ref.read(isBannedProvider)) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.accountSuspended)));
+      return;
+    }
     // Aviso a QUEM ENVIA quando vai partilhar um contacto seu (email/telemóvel).
     if (messageHasContact(text)) {
       final t = AppLocalizations.of(context)!;
@@ -214,7 +219,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         Expanded(
           child: messages.when(
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text('$e')),
+            error: (e, _) => Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(
+                  ref.watch(isBannedProvider)
+                      ? t.accountSuspended
+                      : t.chatUnavailable,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
             data: (all) {
               // Mensagens pendentes (createdAt=epoch) ficam sempre visíveis.
               final list = all

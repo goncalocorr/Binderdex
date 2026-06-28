@@ -725,6 +725,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get accountSuspended => 'A tua conta foi suspensa.';
 
   @override
+  String get chatUnavailable => 'Não foi possível carregar esta conversa.';
+
+  @override
   String get reportReasonTitle => 'Porque estás a denunciar?';
 
   @override
