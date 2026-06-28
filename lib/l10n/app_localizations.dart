@@ -1448,6 +1448,24 @@ abstract class AppLocalizations {
   /// **'Report sent'**
   String get reportSent;
 
+  /// No description provided for @reporterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reporter'**
+  String get reporterLabel;
+
+  /// No description provided for @reportedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Reported'**
+  String get reportedLabel;
+
+  /// No description provided for @noConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'No conversation between these users.'**
+  String get noConversation;
+
   /// No description provided for @perMonth.
   ///
   /// In en, this message translates to:

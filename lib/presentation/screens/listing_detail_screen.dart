@@ -88,6 +88,7 @@ class ListingDetailScreen extends ConsumerWidget {
                     reporterUid: uid,
                     reportedUid: listing.ownerUid,
                     reportedName: listing.ownerName,
+                    cardId: listing.cardId,
                     reason: reason);
                 messenger.showSnackBar(SnackBar(content: Text(t.reportSent)));
               } else if (v == 'block') {

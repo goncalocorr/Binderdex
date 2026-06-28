@@ -748,6 +748,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportSent => 'Report sent';
 
   @override
+  String get reporterLabel => 'Reporter';
+
+  @override
+  String get reportedLabel => 'Reported';
+
+  @override
+  String get noConversation => 'No conversation between these users.';
+
+  @override
   String get perMonth => '/month';
 
   @override

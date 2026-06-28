@@ -752,6 +752,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get reportSent => 'Denúncia enviada';
 
   @override
+  String get reporterLabel => 'Denunciante';
+
+  @override
+  String get reportedLabel => 'Denunciado';
+
+  @override
+  String get noConversation => 'Sem conversa entre estes utilizadores.';
+
+  @override
   String get perMonth => '/mês';
 
   @override

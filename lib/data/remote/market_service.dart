@@ -167,6 +167,7 @@ class MarketService {
     required String reporterUid,
     required String reportedUid,
     required String reportedName,
+    required String cardId,
     required String reason,
   }) =>
       _db.collection('reports').add({
@@ -174,6 +175,8 @@ class MarketService {
         'reporterUid': reporterUid,
         'reportedUid': reportedUid,
         'reportedName': reportedName,
+        // Carta do anúncio → permite ao admin abrir a conversa exata.
+        'cardId': cardId,
         'reason': reason,
         'status': 'open',
         'createdAt': FieldValue.serverTimestamp(),

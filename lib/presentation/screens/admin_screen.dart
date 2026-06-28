@@ -5,6 +5,7 @@ import '../../data/remote/admin_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../report_reasons.dart';
+import 'admin_chat_screen.dart';
 
 /// Painel de administração (só [kAdminEmail]): denúncias + sugestões.
 class AdminScreen extends ConsumerWidget {
@@ -102,6 +103,8 @@ class _ReportTile extends ConsumerWidget {
           '${reportReasonLabel(t, report.reason)} · ${report.listingId}',
           maxLines: 2,
           overflow: TextOverflow.ellipsis),
+      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => AdminChatScreen(report: report))),
       trailing: PopupMenuButton<String>(
         onSelected: (v) async {
           final messenger = ScaffoldMessenger.of(context);
