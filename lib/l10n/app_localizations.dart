@@ -1592,6 +1592,30 @@ abstract class AppLocalizations {
   /// **'Banned'**
   String get bannedLabel;
 
+  /// No description provided for @resolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get resolved;
+
+  /// No description provided for @resolvedWarn.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved · Warned'**
+  String get resolvedWarn;
+
+  /// No description provided for @resolvedBan.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved · Banned'**
+  String get resolvedBan;
+
+  /// No description provided for @resolvedDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved · Listing deleted'**
+  String get resolvedDelete;
+
   /// No description provided for @perMonth.
   ///
   /// In en, this message translates to:

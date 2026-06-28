@@ -14,6 +14,7 @@ typedef Report = ({
   String cardId,
   String reason,
   String status,
+  String resolution,
   DateTime at,
 });
 
@@ -46,22 +47,27 @@ class AdminService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   // --- Denúncias (admin) ---
-  /// Denúncias por tratar (status != 'handled'), mais recentes primeiro.
-  /// Sem `orderBy`/`where` no servidor → sem índice; a coleção é pequena.
+  /// Todas as denúncias (abertas primeiro, depois resolvidas), mais recentes
+  /// primeiro dentro de cada grupo. Sem `orderBy`/`where` → sem índice.
   Stream<List<Report>> watchReports() =>
       _db.collection('reports').snapshots().map((s) {
-        final list = s.docs
-            .map(_report)
-            .where((r) => r.status != 'handled')
-            .toList()
-          ..sort((a, b) => b.at.compareTo(a.at));
+        final list = s.docs.map(_report).toList();
+        list.sort((a, b) {
+          final ao = a.status == 'open' ? 0 : 1;
+          final bo = b.status == 'open' ? 0 : 1;
+          return ao != bo ? ao - bo : b.at.compareTo(a.at);
+        });
         return list;
       });
 
-  Future<void> markReportHandled(String id) => _db
-      .collection('reports')
-      .doc(id)
-      .set({'status': 'handled'}, SetOptions(merge: true));
+  /// Resolve uma denúncia — fica na lista marcada com a resolução
+  /// (`warn` / `ban` / `delete` / `done`).
+  Future<void> resolveReport(String id, String resolution) =>
+      _db.collection('reports').doc(id).set({
+        'status': 'resolved',
+        'resolution': resolution,
+        'resolvedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
 
   // --- Ações sobre um utilizador (admin) ---
   /// Deixa um aviso que o utilizador vê ao abrir a app (privado).
@@ -186,6 +192,7 @@ class AdminService {
       cardId: (m['cardId'] ?? '') as String,
       reason: (m['reason'] ?? '') as String,
       status: (m['status'] ?? 'open') as String,
+      resolution: (m['resolution'] ?? '') as String,
       at: _ts(m['createdAt']),
     );
   }

@@ -294,9 +294,11 @@ final lastSeenSuggestionsProvider = StateProvider<DateTime>((ref) =>
     DateTime.fromMillisecondsSinceEpoch(
         ref.read(prefsProvider).getInt('lastSeenSuggestions') ?? 0));
 
-/// Nº de denúncias por tratar (badge).
-final openReportsCountProvider = Provider<int>(
-    (ref) => ref.watch(reportsProvider).valueOrNull?.length ?? 0);
+/// Nº de denúncias por tratar (badge) — só as abertas.
+final openReportsCountProvider = Provider<int>((ref) =>
+    (ref.watch(reportsProvider).valueOrNull ?? const [])
+        .where((r) => r.status == 'open')
+        .length);
 
 /// Nº de sugestões novas desde a última visita (badge).
 final unseenSuggestionsCountProvider = Provider<int>((ref) {

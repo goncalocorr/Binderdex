@@ -9,6 +9,20 @@ import 'admin_broadcast_screen.dart';
 import 'admin_chat_screen.dart';
 import 'admin_users_screen.dart';
 
+/// Etiqueta de como a denúncia foi resolvida.
+String _resolutionLabel(AppLocalizations t, String resolution) {
+  switch (resolution) {
+    case 'warn':
+      return t.resolvedWarn;
+    case 'ban':
+      return t.resolvedBan;
+    case 'delete':
+      return t.resolvedDelete;
+    default:
+      return t.resolved;
+  }
+}
+
 /// Painel de administração (só [kAdminEmail]): menu para as várias áreas.
 class AdminScreen extends ConsumerWidget {
   const AdminScreen({super.key});
@@ -155,13 +169,23 @@ class _ReportTile extends ConsumerWidget {
     final t = AppLocalizations.of(context)!;
     final svc = ref.read(adminServiceProvider);
     final name = report.reportedName.isEmpty ? report.reportedUid : report.reportedName;
+    final resolved = report.status != 'open';
     return ListTile(
-      leading: const Icon(Icons.flag_outlined),
+      isThreeLine: resolved,
+      leading: Icon(resolved ? Icons.check_circle : Icons.flag_outlined,
+          color: resolved ? Colors.green : null),
       title: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
-      subtitle: Text(
-          '${reportReasonLabel(t, report.reason)} · ${report.listingId}',
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(reportReasonLabel(t, report.reason),
+              maxLines: 1, overflow: TextOverflow.ellipsis),
+          if (resolved)
+            Text(_resolutionLabel(t, report.resolution),
+                style: const TextStyle(
+                    color: Colors.green, fontWeight: FontWeight.w600)),
+        ],
+      ),
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => AdminChatScreen(report: report))),
       trailing: PopupMenuButton<String>(
@@ -171,20 +195,20 @@ class _ReportTile extends ConsumerWidget {
             final text = await _promptWarning(context, t);
             if (text == null || text.trim().isEmpty) return;
             await svc.warnUser(report.reportedUid, text);
-            await svc.markReportHandled(report.id);
+            await svc.resolveReport(report.id, 'warn');
             messenger.showSnackBar(SnackBar(content: Text(t.userWarned)));
           } else if (v == 'ban') {
             final ok = await _confirmBan(context, t);
             if (ok != true) return;
             await svc.banUser(report.reportedUid, true);
-            await svc.markReportHandled(report.id);
+            await svc.resolveReport(report.id, 'ban');
             messenger.showSnackBar(SnackBar(content: Text(t.userBanned)));
           } else if (v == 'delete') {
             await svc.deleteListing(report.listingId);
-            await svc.markReportHandled(report.id);
+            await svc.resolveReport(report.id, 'delete');
             messenger.showSnackBar(SnackBar(content: Text(t.listingDeleted)));
           } else if (v == 'handled') {
-            await svc.markReportHandled(report.id);
+            await svc.resolveReport(report.id, 'done');
           }
         },
         itemBuilder: (_) => [

@@ -820,6 +820,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bannedLabel => 'Banned';
 
   @override
+  String get resolved => 'Resolved';
+
+  @override
+  String get resolvedWarn => 'Resolved · Warned';
+
+  @override
+  String get resolvedBan => 'Resolved · Banned';
+
+  @override
+  String get resolvedDelete => 'Resolved · Listing deleted';
+
+  @override
   String get perMonth => '/month';
 
   @override

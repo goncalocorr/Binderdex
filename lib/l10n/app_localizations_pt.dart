@@ -824,6 +824,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get bannedLabel => 'Banido';
 
   @override
+  String get resolved => 'Resolvido';
+
+  @override
+  String get resolvedWarn => 'Resolvido · Aviso';
+
+  @override
+  String get resolvedBan => 'Resolvido · Banido';
+
+  @override
+  String get resolvedDelete => 'Resolvido · Anúncio apagado';
+
+  @override
   String get perMonth => '/mês';
 
   @override
