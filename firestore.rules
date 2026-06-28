@@ -97,6 +97,7 @@ service cloud.firestore {
 
       match /messages/{mid} {
         allow read: if isAdmin() || (request.auth != null
+          && exists(/databases/$(database)/documents/conversations/$(cid))
           && request.auth.uid in
              get(/databases/$(database)/documents/conversations/$(cid)).data.participants);
         allow create: if request.auth != null
