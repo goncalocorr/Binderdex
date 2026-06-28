@@ -25,6 +25,19 @@ class ChatService {
       .map((s) =>
           s.docs.map((d) => ChatMessage.fromMap(d.id, d.data())).toList());
 
+  /// Momento em que ESTE utilizador apagou/limpou a conversa (para esconder as
+  /// mensagens anteriores só para ele). Epoch se nunca apagou.
+  Stream<DateTime> watchClearedAt(String convId, String uid) =>
+      _convos.doc(convId).snapshots().map((d) {
+        final cleared =
+            (d.data()?['clearedAt'] as Map?)?.cast<String, dynamic>() ??
+                const {};
+        final v = cleared[uid];
+        return v is Timestamp
+            ? v.toDate()
+            : DateTime.fromMillisecondsSinceEpoch(0);
+      });
+
   /// Abre (ou cria) a conversa entre os dois utilizadores. Devolve o convId.
   /// Usa `set(merge)` sem ler primeiro — ler um doc inexistente seria negado
   /// pelas regras (que testam os participantes). Só define a identidade

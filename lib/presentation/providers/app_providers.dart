@@ -409,6 +409,17 @@ final messagesProvider =
     StreamProvider.family<List<ChatMessage>, String>((ref, convId) =>
         ref.watch(chatServiceProvider).watchMessages(convId));
 
+/// Momento em que apaguei esta conversa (esconde as mensagens anteriores só
+/// para mim). Epoch se nunca apaguei.
+final conversationClearedAtProvider =
+    StreamProvider.family<DateTime, String>((ref, convId) {
+  final uid = _uid(ref);
+  if (uid == null) {
+    return Stream.value(DateTime.fromMillisecondsSinceEpoch(0));
+  }
+  return ref.watch(chatServiceProvider).watchClearedAt(convId, uid);
+});
+
 /// Total de mensagens não-lidas (para o badge na Comunidade).
 final unreadTotalProvider = Provider<int>((ref) {
   final convos = ref.watch(conversationsProvider).valueOrNull ?? const [];

@@ -190,6 +190,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final t = AppLocalizations.of(context)!;
     final meUid = ref.watch(authStateProvider).valueOrNull?.uid;
     final messages = ref.watch(messagesProvider(_convId));
+    // Esconde as mensagens anteriores a quando apaguei a conversa (só p/ mim).
+    final cleared = ref.watch(conversationClearedAtProvider(_convId)).valueOrNull ??
+        DateTime.fromMillisecondsSinceEpoch(0);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.conversation.otherName),
@@ -212,15 +215,23 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           child: messages.when(
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => Center(child: Text('$e')),
-            data: (list) => ListView.builder(
-              reverse: true,
-              padding: const EdgeInsets.all(12),
-              itemCount: list.length,
-              itemBuilder: (_, i) {
-                final m = list[list.length - 1 - i];
-                return _Bubble(message: m, mine: m.senderUid == meUid);
-              },
-            ),
+            data: (all) {
+              // Mensagens pendentes (createdAt=epoch) ficam sempre visíveis.
+              final list = all
+                  .where((m) =>
+                      m.createdAt.millisecondsSinceEpoch == 0 ||
+                      m.createdAt.isAfter(cleared))
+                  .toList();
+              return ListView.builder(
+                reverse: true,
+                padding: const EdgeInsets.all(12),
+                itemCount: list.length,
+                itemBuilder: (_, i) {
+                  final m = list[list.length - 1 - i];
+                  return _Bubble(message: m, mine: m.senderUid == meUid);
+                },
+              );
+            },
           ),
         ),
         SafeArea(
