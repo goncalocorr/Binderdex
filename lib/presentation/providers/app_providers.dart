@@ -274,6 +274,9 @@ final adminServiceProvider = Provider<AdminService>((ref) => AdminService());
 final isAdminProvider = Provider<bool>(
     (ref) => ref.watch(authStateProvider).valueOrNull?.email == kAdminEmail);
 
+/// Filtro de motivo no painel de denúncias (null = todas).
+final reportFilterProvider = StateProvider<String?>((ref) => null);
+
 /// Denúncias por tratar (só admin).
 final reportsProvider = StreamProvider<List<Report>>((ref) {
   if (!ref.watch(isAdminProvider)) return Stream.value(const <Report>[]);

@@ -8,6 +8,7 @@ import '../../domain/entities/listing.dart';
 import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import '../report_reasons.dart';
 import '../widgets/auth_guard.dart';
 import '../widgets/premium_badge.dart';
 
@@ -78,17 +79,17 @@ class ListingDetailScreen extends ConsumerWidget {
                 return;
               }
               final svc = ref.read(marketServiceProvider);
+              final messenger = ScaffoldMessenger.of(context);
               if (v == 'report') {
+                final reason = await pickReportReason(context);
+                if (reason == null) return; // cancelou
                 await svc.report(
                     listingId: listing.id,
                     reporterUid: uid,
                     reportedUid: listing.ownerUid,
                     reportedName: listing.ownerName,
-                    reason: 'user');
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(t.report)));
-                }
+                    reason: reason);
+                messenger.showSnackBar(SnackBar(content: Text(t.reportSent)));
               } else if (v == 'block') {
                 await svc.block(uid, listing.ownerUid,
                     name: listing.ownerName, avatar: listing.ownerAvatar);

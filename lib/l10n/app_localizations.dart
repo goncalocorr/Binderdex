@@ -1394,6 +1394,60 @@ abstract class AppLocalizations {
   /// **'Your account has been suspended.'**
   String get accountSuspended;
 
+  /// No description provided for @reportReasonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Why are you reporting?'**
+  String get reportReasonTitle;
+
+  /// No description provided for @reportScam.
+  ///
+  /// In en, this message translates to:
+  /// **'Fraud / scam'**
+  String get reportScam;
+
+  /// No description provided for @reportAbuse.
+  ///
+  /// In en, this message translates to:
+  /// **'Abusive messages'**
+  String get reportAbuse;
+
+  /// No description provided for @reportInappropriate.
+  ///
+  /// In en, this message translates to:
+  /// **'Inappropriate content'**
+  String get reportInappropriate;
+
+  /// No description provided for @reportFake.
+  ///
+  /// In en, this message translates to:
+  /// **'Fake / not as described'**
+  String get reportFake;
+
+  /// No description provided for @reportSpam.
+  ///
+  /// In en, this message translates to:
+  /// **'Spam'**
+  String get reportSpam;
+
+  /// No description provided for @reportOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get reportOther;
+
+  /// No description provided for @reportAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get reportAll;
+
+  /// No description provided for @reportSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Report sent'**
+  String get reportSent;
+
   /// No description provided for @perMonth.
   ///
   /// In en, this message translates to:

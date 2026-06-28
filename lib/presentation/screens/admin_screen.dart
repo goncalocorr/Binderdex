@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/remote/admin_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import '../report_reasons.dart';
 
 /// Painel de administração (só [kAdminEmail]): denúncias + sugestões.
 class AdminScreen extends ConsumerWidget {
@@ -35,16 +36,52 @@ class _ReportsTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = AppLocalizations.of(context)!;
     final reports = ref.watch(reportsProvider);
-    return reports.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('$e')),
-      data: (list) => list.isEmpty
-          ? Center(child: Text(t.noReports))
-          : ListView.separated(
-              itemCount: list.length,
-              separatorBuilder: (_, __) => const Divider(height: 1),
-              itemBuilder: (_, i) => _ReportTile(report: list[i]),
+    final filter = ref.watch(reportFilterProvider);
+    return Column(children: [
+      _filterBar(context, ref, t, filter),
+      const Divider(height: 1),
+      Expanded(
+        child: reports.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('$e')),
+          data: (all) {
+            final list =
+                filter == null ? all : all.where((r) => r.reason == filter).toList();
+            return list.isEmpty
+                ? Center(child: Text(t.noReports))
+                : ListView.separated(
+                    itemCount: list.length,
+                    separatorBuilder: (_, __) => const Divider(height: 1),
+                    itemBuilder: (_, i) => _ReportTile(report: list[i]),
+                  );
+          },
+        ),
+      ),
+    ]);
+  }
+
+  Widget _filterBar(
+      BuildContext context, WidgetRef ref, AppLocalizations t, String? filter) {
+    return SizedBox(
+      height: 48,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        children: [
+          for (final r in <String?>[null, ...kReportReasons])
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Center(
+                child: ChoiceChip(
+                  label: Text(r == null ? t.reportAll : reportReasonLabel(t, r)),
+                  selected: filter == r,
+                  onSelected: (_) =>
+                      ref.read(reportFilterProvider.notifier).state = r,
+                ),
+              ),
             ),
+        ],
+      ),
     );
   }
 }
@@ -61,8 +98,10 @@ class _ReportTile extends ConsumerWidget {
     return ListTile(
       leading: const Icon(Icons.flag_outlined),
       title: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
-      subtitle: Text('${report.reason} · ${report.listingId}',
-          maxLines: 2, overflow: TextOverflow.ellipsis),
+      subtitle: Text(
+          '${reportReasonLabel(t, report.reason)} · ${report.listingId}',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis),
       trailing: PopupMenuButton<String>(
         onSelected: (v) async {
           final messenger = ScaffoldMessenger.of(context);

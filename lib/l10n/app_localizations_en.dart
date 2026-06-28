@@ -721,6 +721,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accountSuspended => 'Your account has been suspended.';
 
   @override
+  String get reportReasonTitle => 'Why are you reporting?';
+
+  @override
+  String get reportScam => 'Fraud / scam';
+
+  @override
+  String get reportAbuse => 'Abusive messages';
+
+  @override
+  String get reportInappropriate => 'Inappropriate content';
+
+  @override
+  String get reportFake => 'Fake / not as described';
+
+  @override
+  String get reportSpam => 'Spam';
+
+  @override
+  String get reportOther => 'Other';
+
+  @override
+  String get reportAll => 'All';
+
+  @override
+  String get reportSent => 'Report sent';
+
+  @override
   String get perMonth => '/month';
 
   @override

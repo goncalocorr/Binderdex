@@ -725,6 +725,33 @@ class AppLocalizationsPt extends AppLocalizations {
   String get accountSuspended => 'A tua conta foi suspensa.';
 
   @override
+  String get reportReasonTitle => 'Porque estás a denunciar?';
+
+  @override
+  String get reportScam => 'Fraude / burla';
+
+  @override
+  String get reportAbuse => 'Mensagens abusivas';
+
+  @override
+  String get reportInappropriate => 'Conteúdo impróprio';
+
+  @override
+  String get reportFake => 'Falsa / não corresponde';
+
+  @override
+  String get reportSpam => 'Spam';
+
+  @override
+  String get reportOther => 'Outro';
+
+  @override
+  String get reportAll => 'Todas';
+
+  @override
+  String get reportSent => 'Denúncia enviada';
+
+  @override
   String get perMonth => '/mês';
 
   @override
