@@ -1394,11 +1394,29 @@ abstract class AppLocalizations {
   /// **'Your account has been suspended.'**
   String get accountSuspended;
 
+  /// No description provided for @accountSuspendedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account suspended'**
+  String get accountSuspendedTitle;
+
   /// No description provided for @chatUnavailable.
   ///
   /// In en, this message translates to:
   /// **'Couldn\'t load this conversation.'**
   String get chatUnavailable;
+
+  /// No description provided for @bannedCommunity.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re banned, so you can\'t use the Community.'**
+  String get bannedCommunity;
+
+  /// No description provided for @bannedPublish.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re banned, so you can\'t post listings.'**
+  String get bannedPublish;
 
   /// No description provided for @reportReasonTitle.
   ///

@@ -76,11 +76,23 @@ class AdminService {
         'warning': {'text': text.trim(), 'at': FieldValue.serverTimestamp()},
       }, SetOptions(merge: true));
 
-  /// Bane/desbane o utilizador (bloqueia publicar/contactar nas regras).
-  Future<void> banUser(String uid, bool banned) => _db
-      .collection('users')
-      .doc(uid)
-      .set({'banned': banned}, SetOptions(merge: true));
+  /// Bane/desbane o utilizador (bloqueia publicar/contactar nas regras). Ao
+  /// banir, apaga também todos os anúncios dele.
+  Future<void> banUser(String uid, bool banned) async {
+    await _db
+        .collection('users')
+        .doc(uid)
+        .set({'banned': banned}, SetOptions(merge: true));
+    if (!banned) return;
+    final snap =
+        await _db.collection('listings').where('ownerUid', isEqualTo: uid).get();
+    if (snap.docs.isEmpty) return;
+    final batch = _db.batch(); // anúncios por user ≤ 500 (limite de slots)
+    for (final d in snap.docs) {
+      batch.delete(d.reference);
+    }
+    await batch.commit();
+  }
 
   /// Apaga um anúncio (moderação — regras permitem ao admin). Ignora id vazio
   /// (denúncias feitas a partir da conversa não têm anúncio).

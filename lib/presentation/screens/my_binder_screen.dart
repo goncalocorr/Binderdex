@@ -68,8 +68,18 @@ class MyBinderScreen extends ConsumerWidget {
               child: OutlinedButton.icon(
                 icon: const Icon(Icons.storefront),
                 label: Text(AppLocalizations.of(context)!.sellOrTrade),
-                onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => const MyCardsScreen())),
+                onPressed: () {
+                  if (ref.read(isBannedProvider)) {
+                    ScaffoldMessenger.of(context)
+                      ..clearSnackBars()
+                      ..showSnackBar(SnackBar(
+                          content: Text(
+                              AppLocalizations.of(context)!.bannedPublish)));
+                    return;
+                  }
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => const MyCardsScreen()));
+                },
               ),
             ),
 

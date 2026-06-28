@@ -54,6 +54,22 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
   @override
   Widget build(BuildContext context) {
     final t = AppLocalizations.of(context)!;
+    // Banido → não pode usar a Comunidade.
+    if (ref.watch(isBannedProvider)) {
+      return Scaffold(
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Icon(Icons.block,
+                  size: 56, color: Theme.of(context).colorScheme.error),
+              const SizedBox(height: 16),
+              Text(t.bannedCommunity, textAlign: TextAlign.center),
+            ]),
+          ),
+        ),
+      );
+    }
     final query = ref.watch(communitySearchQueryProvider);
     final searching = query.trim().isNotEmpty;
 

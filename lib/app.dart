@@ -9,6 +9,29 @@ import 'presentation/providers/app_providers.dart';
 
 /// Evita mostrar o aviso duas vezes enquanto o diálogo está aberto.
 bool _warningShowing = false;
+bool _banShown = false;
+
+void _showBan(WidgetRef ref) {
+  if (_banShown) return;
+  final ctx = rootNavigatorKey.currentContext;
+  if (ctx == null) return;
+  _banShown = true;
+  final t = AppLocalizations.of(ctx)!;
+  showDialog<void>(
+    context: ctx,
+    builder: (dctx) => AlertDialog(
+      icon: const Icon(Icons.block, color: Colors.red, size: 36),
+      title: Text(t.accountSuspendedTitle, textAlign: TextAlign.center),
+      content: Text(t.accountSuspended),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.of(dctx).pop(),
+          child: Text(t.continueLabel),
+        ),
+      ],
+    ),
+  );
+}
 
 void _showWarning(WidgetRef ref, String text) {
   if (_warningShowing) return;
@@ -54,9 +77,16 @@ class PokedexApp extends ConsumerWidget {
     ref.watch(wishlistWatchSyncProvider); // wishlist → notifyCards (push)
     ref.watch(ensureOwnedSetsSyncedProvider); // sets possuídos → cache (binder)
     ref.watch(setsRefreshProvider); // apanha coleções novas da API (6h)
-    // Aviso de moderação: mostra o aviso deixado pelo admin (e limpa-o).
+    // Moderação: aviso de conta suspensa (banido) ou aviso deixado pelo admin.
     ref.listen(selfModerationProvider, (_, next) {
-      final w = next.valueOrNull?.warning;
+      final mod = next.valueOrNull;
+      if (mod == null) return;
+      if (mod.banned) {
+        _showBan(ref);
+        return;
+      }
+      _banShown = false; // desbanido → permite mostrar de novo se voltar
+      final w = mod.warning;
       if (w != null && w.trim().isNotEmpty) _showWarning(ref, w);
     });
     final router = ref.watch(appRouterProvider);
