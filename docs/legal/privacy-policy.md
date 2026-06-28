@@ -1,5 +1,9 @@
 # Política de Privacidade — Binderdex
 
+> ⚠️ **Versão canónica (a alojar):** [`docs/privacy.html`](../privacy.html) —
+> atualizada (28/06/2026) com comunidade, chat, notificações e moderação.
+> O texto abaixo é a versão antiga (só coleção/sync) e fica como histórico.
+
 _Última atualização: 23 de junho de 2026_
 
 A Binderdex ("a app") é um registo pessoal de coleções de cartas. Esta política
