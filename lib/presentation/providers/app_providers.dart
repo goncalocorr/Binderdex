@@ -289,6 +289,28 @@ final suggestionsProvider = StreamProvider<List<Suggestion>>((ref) {
   return ref.watch(adminServiceProvider).watchSuggestions();
 });
 
+/// Última vez que o admin abriu as sugestões (para contar as novas).
+final lastSeenSuggestionsProvider = StateProvider<DateTime>((ref) =>
+    DateTime.fromMillisecondsSinceEpoch(
+        ref.read(prefsProvider).getInt('lastSeenSuggestions') ?? 0));
+
+/// Nº de denúncias por tratar (badge).
+final openReportsCountProvider = Provider<int>(
+    (ref) => ref.watch(reportsProvider).valueOrNull?.length ?? 0);
+
+/// Nº de sugestões novas desde a última visita (badge).
+final unseenSuggestionsCountProvider = Provider<int>((ref) {
+  final last = ref.watch(lastSeenSuggestionsProvider);
+  return (ref.watch(suggestionsProvider).valueOrNull ?? const [])
+      .where((s) => s.at.isAfter(last))
+      .length;
+});
+
+/// Total de pendentes do admin (para a entrada "Admin" no Perfil).
+final adminPendingCountProvider = Provider<int>((ref) =>
+    ref.watch(openReportsCountProvider) +
+    ref.watch(unseenSuggestionsCountProvider));
+
 /// Utilizadores banidos (só admin).
 final bannedUsersAdminProvider = StreamProvider<List<AdminUser>>((ref) {
   if (!ref.watch(isAdminProvider)) return Stream.value(const <AdminUser>[]);

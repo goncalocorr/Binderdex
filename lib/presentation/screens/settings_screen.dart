@@ -402,12 +402,17 @@ class SettingsScreen extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => _suggestionSheet(context, ref),
           ),
-        // Painel de administração — só para o admin.
+        // Painel de administração — só para o admin (com nº de pendentes).
         if (ref.watch(isAdminProvider))
           ListTile(
             leading: const Icon(Icons.shield_outlined),
             title: Text(t.admin),
-            trailing: const Icon(Icons.chevron_right),
+            trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+              if (ref.watch(adminPendingCountProvider) > 0)
+                Badge(label: Text('${ref.watch(adminPendingCountProvider)}')),
+              const SizedBox(width: 6),
+              const Icon(Icons.chevron_right),
+            ]),
             onTap: () => context.push('/admin'),
           ),
         const Divider(),

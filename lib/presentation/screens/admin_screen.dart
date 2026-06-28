@@ -10,50 +10,45 @@ import 'admin_chat_screen.dart';
 import 'admin_users_screen.dart';
 
 /// Painel de administração (só [kAdminEmail]): menu para as várias áreas.
-class AdminScreen extends StatelessWidget {
+class AdminScreen extends ConsumerWidget {
   const AdminScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = AppLocalizations.of(context)!;
+    final reports = ref.watch(openReportsCountProvider);
+    final suggestions = ref.watch(unseenSuggestionsCountProvider);
     void go(Widget page) => Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => page));
     return Scaffold(
       appBar: AppBar(title: Text(t.admin)),
       body: ListView(children: [
-        ListTile(
-          leading: const Icon(Icons.flag_outlined),
-          title: Text(t.adminReports),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => go(const _AdminReportsPage()),
-        ),
-        ListTile(
-          leading: const Icon(Icons.lightbulb_outline),
-          title: Text(t.adminSuggestions),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => go(const _AdminSuggestionsPage()),
-        ),
-        ListTile(
-          leading: const Icon(Icons.block),
-          title: Text(t.adminBanned),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => go(const AdminBannedScreen()),
-        ),
-        ListTile(
-          leading: const Icon(Icons.workspace_premium_outlined),
-          title: Text(t.adminPremium),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => go(const AdminPremiumScreen()),
-        ),
-        ListTile(
-          leading: const Icon(Icons.campaign_outlined),
-          title: Text(t.adminBroadcast),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => go(const AdminBroadcastScreen()),
-        ),
+        _row(Icons.flag_outlined, t.adminReports,
+            onTap: () => go(const _AdminReportsPage()), count: reports),
+        _row(Icons.lightbulb_outline, t.adminSuggestions,
+            onTap: () => go(const _AdminSuggestionsPage()), count: suggestions),
+        _row(Icons.block, t.adminBanned,
+            onTap: () => go(const AdminBannedScreen())),
+        _row(Icons.workspace_premium_outlined, t.adminPremium,
+            onTap: () => go(const AdminPremiumScreen())),
+        _row(Icons.campaign_outlined, t.adminBroadcast,
+            onTap: () => go(const AdminBroadcastScreen())),
       ]),
     );
   }
+
+  Widget _row(IconData icon, String title,
+          {required VoidCallback onTap, int count = 0}) =>
+      ListTile(
+        leading: Icon(icon),
+        title: Text(title),
+        trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+          if (count > 0) Badge(label: Text('$count')),
+          const SizedBox(width: 6),
+          const Icon(Icons.chevron_right),
+        ]),
+        onTap: onTap,
+      );
 }
 
 class _AdminReportsPage extends StatelessWidget {
@@ -65,8 +60,27 @@ class _AdminReportsPage extends StatelessWidget {
       );
 }
 
-class _AdminSuggestionsPage extends StatelessWidget {
+class _AdminSuggestionsPage extends ConsumerStatefulWidget {
   const _AdminSuggestionsPage();
+  @override
+  ConsumerState<_AdminSuggestionsPage> createState() =>
+      _AdminSuggestionsPageState();
+}
+
+class _AdminSuggestionsPageState extends ConsumerState<_AdminSuggestionsPage> {
+  @override
+  void initState() {
+    super.initState();
+    // Ao abrir, marca as sugestões como vistas (zera o badge).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final now = DateTime.now();
+      ref.read(lastSeenSuggestionsProvider.notifier).state = now;
+      ref
+          .read(prefsProvider)
+          .setInt('lastSeenSuggestions', now.millisecondsSinceEpoch);
+    });
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar:
