@@ -1280,6 +1280,120 @@ abstract class AppLocalizations {
   /// **'Couldn\'t update'**
   String get refreshFailed;
 
+  /// No description provided for @admin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get admin;
+
+  /// No description provided for @adminReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports'**
+  String get adminReports;
+
+  /// No description provided for @adminSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestions'**
+  String get adminSuggestions;
+
+  /// No description provided for @noReports.
+  ///
+  /// In en, this message translates to:
+  /// **'No reports.'**
+  String get noReports;
+
+  /// No description provided for @noSuggestions.
+  ///
+  /// In en, this message translates to:
+  /// **'No suggestions.'**
+  String get noSuggestions;
+
+  /// No description provided for @warnUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Warn'**
+  String get warnUser;
+
+  /// No description provided for @banUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Ban'**
+  String get banUser;
+
+  /// No description provided for @markHandled.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark handled'**
+  String get markHandled;
+
+  /// No description provided for @warnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Warn user'**
+  String get warnTitle;
+
+  /// No description provided for @warnHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning message'**
+  String get warnHint;
+
+  /// No description provided for @banConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Ban this user? They won\'t be able to post or message.'**
+  String get banConfirm;
+
+  /// No description provided for @userWarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning sent'**
+  String get userWarned;
+
+  /// No description provided for @userBanned.
+  ///
+  /// In en, this message translates to:
+  /// **'User banned'**
+  String get userBanned;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @sendSuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a suggestion'**
+  String get sendSuggestion;
+
+  /// No description provided for @suggestionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your suggestion…'**
+  String get suggestionHint;
+
+  /// No description provided for @suggestionSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggestion sent. Thanks!'**
+  String get suggestionSent;
+
+  /// No description provided for @warningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Notice'**
+  String get warningTitle;
+
+  /// No description provided for @accountSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been suspended.'**
+  String get accountSuspended;
+
   /// No description provided for @perMonth.
   ///
   /// In en, this message translates to:

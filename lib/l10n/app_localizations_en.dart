@@ -663,6 +663,64 @@ class AppLocalizationsEn extends AppLocalizations {
   String get refreshFailed => 'Couldn\'t update';
 
   @override
+  String get admin => 'Admin';
+
+  @override
+  String get adminReports => 'Reports';
+
+  @override
+  String get adminSuggestions => 'Suggestions';
+
+  @override
+  String get noReports => 'No reports.';
+
+  @override
+  String get noSuggestions => 'No suggestions.';
+
+  @override
+  String get warnUser => 'Warn';
+
+  @override
+  String get banUser => 'Ban';
+
+  @override
+  String get markHandled => 'Mark handled';
+
+  @override
+  String get warnTitle => 'Warn user';
+
+  @override
+  String get warnHint => 'Warning message';
+
+  @override
+  String get banConfirm =>
+      'Ban this user? They won\'t be able to post or message.';
+
+  @override
+  String get userWarned => 'Warning sent';
+
+  @override
+  String get userBanned => 'User banned';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get sendSuggestion => 'Send a suggestion';
+
+  @override
+  String get suggestionHint => 'Your suggestion…';
+
+  @override
+  String get suggestionSent => 'Suggestion sent. Thanks!';
+
+  @override
+  String get warningTitle => 'Notice';
+
+  @override
+  String get accountSuspended => 'Your account has been suspended.';
+
+  @override
   String get perMonth => '/month';
 
   @override

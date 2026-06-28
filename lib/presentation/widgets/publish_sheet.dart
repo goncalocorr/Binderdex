@@ -6,6 +6,7 @@ import '../../domain/entities/listing.dart';
 import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import 'auth_guard.dart';
 import 'want_cards_field.dart';
 
 class PublishSheet extends ConsumerStatefulWidget {
@@ -33,6 +34,7 @@ class _PublishSheetState extends ConsumerState<PublishSheet> {
     final t = AppLocalizations.of(context)!;
     final uid = ref.read(authStateProvider).valueOrNull?.uid;
     if (uid == null) return;
+    if (!requireNotBanned(context, ref)) return; // conta suspensa
     final tier = ref.read(marketTierProvider).valueOrNull ?? 0;
     final active = ref.read(activeListingsCountProvider);
     if (!MarketTier.canPublish(

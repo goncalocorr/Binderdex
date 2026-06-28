@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/router/root_navigator.dart';
 import '../../data/local/database.dart';
+import '../../data/remote/admin_service.dart';
 import '../../data/remote/auth_service.dart';
 import '../../data/remote/chat_service.dart';
 import '../../data/remote/market_service.dart';
@@ -264,6 +265,38 @@ final onboardingDoneProvider = StateProvider<bool>((_) => false);
 
 // --- Comunidade / marketplace ---
 final marketServiceProvider = Provider<MarketService>((ref) => MarketService());
+
+// --- Admin / moderação ---
+final adminServiceProvider = Provider<AdminService>((ref) => AdminService());
+
+/// Verdadeiro só para a conta de administração (ver [kAdminEmail]). Apenas para
+/// mostrar a UI — a segurança real está nas regras do Firestore.
+final isAdminProvider = Provider<bool>(
+    (ref) => ref.watch(authStateProvider).valueOrNull?.email == kAdminEmail);
+
+/// Denúncias por tratar (só admin).
+final reportsProvider = StreamProvider<List<Report>>((ref) {
+  if (!ref.watch(isAdminProvider)) return Stream.value(const <Report>[]);
+  return ref.watch(adminServiceProvider).watchReports();
+});
+
+/// Sugestões recebidas (só admin).
+final suggestionsProvider = StreamProvider<List<Suggestion>>((ref) {
+  if (!ref.watch(isAdminProvider)) return Stream.value(const <Suggestion>[]);
+  return ref.watch(adminServiceProvider).watchSuggestions();
+});
+
+/// Estado de moderação do próprio utilizador (aviso pendente + banido).
+final selfModerationProvider =
+    StreamProvider<({String? warning, bool banned})>((ref) {
+  final uid = _uid(ref);
+  if (uid == null) return Stream.value((warning: null, banned: false));
+  return ref.watch(profileServiceProvider).watchSelf(uid);
+});
+
+/// Verdadeiro se a minha conta está banida (bloqueia publicar/contactar).
+final isBannedProvider = Provider<bool>(
+    (ref) => ref.watch(selfModerationProvider).valueOrNull?.banned ?? false);
 
 String? _uid(Ref ref) => ref.watch(authStateProvider).valueOrNull?.uid;
 

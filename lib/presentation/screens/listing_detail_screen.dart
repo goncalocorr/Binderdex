@@ -23,6 +23,7 @@ class ListingDetailScreen extends ConsumerWidget {
 
   Future<void> _contact(BuildContext context, WidgetRef ref) async {
     if (!requireSignIn(context, ref)) return;
+    if (!requireNotBanned(context, ref)) return; // conta suspensa
     final meUid = ref.read(authStateProvider).valueOrNull?.uid;
     if (meUid == null) return;
     try {
@@ -79,7 +80,11 @@ class ListingDetailScreen extends ConsumerWidget {
               final svc = ref.read(marketServiceProvider);
               if (v == 'report') {
                 await svc.report(
-                    listingId: listing.id, reporterUid: uid, reason: 'user');
+                    listingId: listing.id,
+                    reporterUid: uid,
+                    reportedUid: listing.ownerUid,
+                    reportedName: listing.ownerName,
+                    reason: 'user');
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(t.report)));

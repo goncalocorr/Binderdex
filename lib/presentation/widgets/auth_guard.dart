@@ -85,6 +85,17 @@ Future<void> ensureDisplayName(BuildContext context, WidgetRef ref) async {
   }
 }
 
+/// Verdadeiro se a conta NÃO está banida. Se estiver, mostra um aviso e devolve
+/// `false` (bloqueia publicar/contactar; as regras também o impedem no servidor).
+bool requireNotBanned(BuildContext context, WidgetRef ref) {
+  if (!ref.read(isBannedProvider)) return true;
+  final t = AppLocalizations.of(context)!;
+  ScaffoldMessenger.of(context)
+    ..clearSnackBars()
+    ..showSnackBar(SnackBar(content: Text(t.accountSuspended)));
+  return false;
+}
+
 /// Garante que o utilizador pode editar. Se for convidado (sem sessão), mostra
 /// um aviso com botão para iniciar sessão / criar conta e devolve `false`.
 bool requireSignIn(BuildContext context, WidgetRef ref) {

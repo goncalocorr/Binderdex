@@ -1,14 +1,32 @@
 rules_version = '2';
 
 // Binderdex — regras fechadas por omissão.
-// Cada utilizador só pode ler/escrever a SUA própria coleção de cartas.
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Perfil do utilizador (nome, avatar).
+    // Conta de administração (vê denúncias/sugestões, avisa/bane).
+    function isAdmin() {
+      return request.auth != null
+             && request.auth.token.email == 'hivecode.comercial@gmail.com';
+    }
+
+    // O próprio utilizador NÃO está banido (bloqueia publicar/contactar).
+    function notBanned() {
+      let u = /databases/$(database)/documents/users/$(request.auth.uid);
+      return !exists(u) || get(u).data.get('banned', false) != true;
+    }
+
+    // O próprio utilizador é premium (marketTier >= 1). Client-trusted (igual
+    // aos slots) até haver Play Billing real.
+    function isPremium() {
+      let u = /databases/$(database)/documents/users/$(request.auth.uid);
+      return exists(u) && get(u).data.get('marketTier', 0) >= 1;
+    }
+
+    // Perfil do utilizador — o dono lê/escreve; o admin também (avisar/banir).
     match /users/{userId} {
-      allow read, write: if request.auth != null
-                         && request.auth.uid == userId;
+      allow read, write: if (request.auth != null && request.auth.uid == userId)
+                         || isAdmin();
 
       // Coleção de cartas do utilizador.
       match /cards/{cardId} {
@@ -23,11 +41,12 @@ service cloud.firestore {
       }
     }
 
-    // Marketplace público — leitura por autenticados; escrita só do dono.
+    // Marketplace público — leitura por autenticados; escrita só do dono (não banido).
     match /listings/{id} {
       allow read: if request.auth != null;
       allow create: if request.auth != null
         && request.auth.token.firebase.sign_in_provider != 'anonymous'
+        && notBanned()
         && request.resource.data.ownerUid == request.auth.uid
         && request.resource.data.mode in ['trade','sell','both']
         && request.resource.data.condition in ['mint','good','used','damaged']
@@ -39,19 +58,30 @@ service cloud.firestore {
         && resource.data.ownerUid == request.auth.uid;
     }
 
-    // Denúncias — criar por autenticados; sem leitura no cliente.
+    // Denúncias — qualquer autenticado cria; só o admin lê/trata.
     match /reports/{id} {
       allow create: if request.auth != null
         && request.auth.token.firebase.sign_in_provider != 'anonymous'
         && request.resource.data.reporterUid == request.auth.uid;
-      allow read, update, delete: if false;
+      allow read, update: if isAdmin();
+      allow delete: if false;
     }
 
-    // Conversas privadas — só os participantes leem/escrevem.
+    // Sugestões — só premium criam; só o admin lê.
+    match /suggestions/{id} {
+      allow create: if request.auth != null
+        && request.auth.token.firebase.sign_in_provider != 'anonymous'
+        && request.resource.data.uid == request.auth.uid
+        && isPremium();
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Conversas privadas — só os participantes; criar só se não banido.
     match /conversations/{cid} {
       allow read: if request.auth != null
                   && request.auth.uid in resource.data.participants;
       allow create: if request.auth != null
+                    && notBanned()
                     && request.auth.uid in request.resource.data.participants;
       allow update: if request.auth != null
                     && request.auth.uid in resource.data.participants;
@@ -61,6 +91,7 @@ service cloud.firestore {
           && request.auth.uid in
              get(/databases/$(database)/documents/conversations/$(cid)).data.participants;
         allow create: if request.auth != null
+          && notBanned()
           && request.resource.data.senderUid == request.auth.uid
           && request.auth.uid in
              get(/databases/$(database)/documents/conversations/$(cid)).data.participants;

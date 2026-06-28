@@ -9,6 +9,7 @@ import '../../domain/entities/market_tier.dart';
 import 'root_navigator.dart';
 import '../../l10n/app_localizations.dart';
 import '../../presentation/providers/app_providers.dart';
+import '../../presentation/screens/admin_screen.dart';
 import '../../presentation/screens/blocked_users_screen.dart';
 import '../../presentation/screens/card_detail_screen.dart';
 import '../../presentation/screens/card_listings_screen.dart';
@@ -251,6 +252,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       builder: (_, s) => CardListingsScreen(cardId: s.pathParameters['id']!),
     ),
     GoRoute(path: '/premium', builder: (_, __) => const PremiumScreen()),
+    GoRoute(path: '/admin', builder: (_, __) => const AdminScreen()),
     GoRoute(
         path: '/trades', builder: (_, __) => const TradeMatchesScreen()),
     GoRoute(path: '/messages', builder: (_, __) => const MessagesScreen()),

@@ -9,6 +9,52 @@ import '../providers/app_providers.dart';
 import '../widgets/avatar.dart';
 import '../widgets/premium_badge.dart';
 
+/// Folha para enviar uma sugestão (só premium). Escreve em `suggestions/`.
+Future<void> _suggestionSheet(BuildContext context, WidgetRef ref) async {
+  final t = AppLocalizations.of(context)!;
+  final ctrl = TextEditingController();
+  final text = await showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    builder: (ctx) => Padding(
+      padding: EdgeInsets.fromLTRB(
+          16, 16, 16, MediaQuery.of(ctx).viewInsets.bottom + 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(t.sendSuggestion, style: Theme.of(ctx).textTheme.titleLarge),
+          const SizedBox(height: 12),
+          TextField(
+            controller: ctrl,
+            autofocus: true,
+            maxLines: 4,
+            maxLength: 500,
+            decoration: InputDecoration(
+                hintText: t.suggestionHint, border: const OutlineInputBorder()),
+          ),
+          const SizedBox(height: 8),
+          FilledButton(
+              onPressed: () => Navigator.of(ctx).pop(ctrl.text),
+              child: Text(t.send)),
+        ],
+      ),
+    ),
+  );
+  if (text == null || text.trim().isEmpty) return;
+  final user = ref.read(authStateProvider).valueOrNull;
+  if (user == null) return;
+  await ref.read(adminServiceProvider).addSuggestion(
+        uid: user.uid,
+        name: ref.read(displayNameProvider),
+        text: text,
+      );
+  if (!context.mounted) return;
+  ScaffoldMessenger.of(context)
+    ..clearSnackBars()
+    ..showSnackBar(SnackBar(content: Text(t.suggestionSent)));
+}
+
 /// Perfil: cabeçalho com avatar + resumo, atalhos (Iniciar sessão, Wishlist),
 /// tema e idioma. Sincronização e Premium ficam preparados aqui mas só ganham
 /// função nas Etapas 2 e 3.
@@ -348,6 +394,22 @@ class SettingsScreen extends ConsumerWidget {
           trailing: const Icon(Icons.chevron_right),
           onTap: () => context.push('/premium'),
         ),
+        // Enviar sugestão — vantagem premium.
+        if (MarketTier.isPremium(myTier))
+          ListTile(
+            leading: const Icon(Icons.lightbulb_outline),
+            title: Text(t.sendSuggestion),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _suggestionSheet(context, ref),
+          ),
+        // Painel de administração — só para o admin.
+        if (ref.watch(isAdminProvider))
+          ListTile(
+            leading: const Icon(Icons.shield_outlined),
+            title: Text(t.admin),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push('/admin'),
+          ),
         const Divider(),
 
         // --- Tema ---

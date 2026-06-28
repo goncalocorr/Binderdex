@@ -667,6 +667,64 @@ class AppLocalizationsPt extends AppLocalizations {
   String get refreshFailed => 'Não foi possível atualizar';
 
   @override
+  String get admin => 'Admin';
+
+  @override
+  String get adminReports => 'Denúncias';
+
+  @override
+  String get adminSuggestions => 'Sugestões';
+
+  @override
+  String get noReports => 'Sem denúncias.';
+
+  @override
+  String get noSuggestions => 'Sem sugestões.';
+
+  @override
+  String get warnUser => 'Avisar';
+
+  @override
+  String get banUser => 'Banir';
+
+  @override
+  String get markHandled => 'Marcar tratada';
+
+  @override
+  String get warnTitle => 'Avisar utilizador';
+
+  @override
+  String get warnHint => 'Mensagem de aviso';
+
+  @override
+  String get banConfirm =>
+      'Banir este utilizador? Não poderá publicar nem contactar.';
+
+  @override
+  String get userWarned => 'Aviso enviado';
+
+  @override
+  String get userBanned => 'Utilizador banido';
+
+  @override
+  String get send => 'Enviar';
+
+  @override
+  String get sendSuggestion => 'Enviar sugestão';
+
+  @override
+  String get suggestionHint => 'A tua sugestão…';
+
+  @override
+  String get suggestionSent => 'Sugestão enviada. Obrigado!';
+
+  @override
+  String get warningTitle => 'Aviso';
+
+  @override
+  String get accountSuspended => 'A tua conta foi suspensa.';
+
+  @override
   String get perMonth => '/mês';
 
   @override

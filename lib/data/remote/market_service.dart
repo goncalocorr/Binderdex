@@ -165,12 +165,17 @@ class MarketService {
   Future<void> report({
     required String listingId,
     required String reporterUid,
+    required String reportedUid,
+    required String reportedName,
     required String reason,
   }) =>
       _db.collection('reports').add({
         'listingId': listingId,
         'reporterUid': reporterUid,
+        'reportedUid': reportedUid,
+        'reportedName': reportedName,
         'reason': reason,
+        'status': 'open',
         'createdAt': FieldValue.serverTimestamp(),
       });
 
