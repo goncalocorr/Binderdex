@@ -1418,6 +1418,48 @@ abstract class AppLocalizations {
   /// **'You\'re banned, so you can\'t post listings.'**
   String get bannedPublish;
 
+  /// No description provided for @appeal.
+  ///
+  /// In en, this message translates to:
+  /// **'Appeal'**
+  String get appeal;
+
+  /// No description provided for @appealHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain your situation…'**
+  String get appealHint;
+
+  /// No description provided for @appealSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Appeal sent.'**
+  String get appealSent;
+
+  /// No description provided for @accountReactivatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account reactivated'**
+  String get accountReactivatedTitle;
+
+  /// No description provided for @accountReactivated.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been reactivated.'**
+  String get accountReactivated;
+
+  /// No description provided for @adminAppeals.
+  ///
+  /// In en, this message translates to:
+  /// **'Appeals'**
+  String get adminAppeals;
+
+  /// No description provided for @noAppeals.
+  ///
+  /// In en, this message translates to:
+  /// **'No appeals.'**
+  String get noAppeals;
+
   /// No description provided for @reportReasonTitle.
   ///
   /// In en, this message translates to:

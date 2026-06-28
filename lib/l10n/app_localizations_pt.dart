@@ -739,6 +739,27 @@ class AppLocalizationsPt extends AppLocalizations {
       'Estás banido, por isso não podes publicar anúncios.';
 
   @override
+  String get appeal => 'Apelar';
+
+  @override
+  String get appealHint => 'Explica a tua situação…';
+
+  @override
+  String get appealSent => 'Apelação enviada.';
+
+  @override
+  String get accountReactivatedTitle => 'Conta reativada';
+
+  @override
+  String get accountReactivated => 'A tua conta foi reativada.';
+
+  @override
+  String get adminAppeals => 'Apelações';
+
+  @override
+  String get noAppeals => 'Sem apelações.';
+
+  @override
   String get reportReasonTitle => 'Porque estás a denunciar?';
 
   @override

@@ -39,6 +39,9 @@ typedef AdminUser = ({
 /// Um anúncio global (do admin para todos).
 typedef Broadcast = ({String id, String title, String body, DateTime at});
 
+/// Uma apelação de um utilizador banido (visto pelo admin).
+typedef Appeal = ({String id, String uid, String name, String text, DateTime at});
+
 DateTime _ts(dynamic v) =>
     v is Timestamp ? v.toDate() : DateTime.fromMillisecondsSinceEpoch(0);
 
@@ -141,6 +144,32 @@ class AdminService {
       .snapshots()
       .map((s) => s.docs.map(_report).toList()
         ..sort((a, b) => b.at.compareTo(a.at)));
+
+  /// Apelações (admin lê todas, mais recentes primeiro).
+  Stream<List<Appeal>> watchAppeals() =>
+      _db.collection('appeals').snapshots().map((s) => s.docs
+          .map((d) => (
+                id: d.id,
+                uid: (d.data()['uid'] ?? '') as String,
+                name: (d.data()['name'] ?? '') as String,
+                text: (d.data()['text'] ?? '') as String,
+                at: _ts(d.data()['createdAt']),
+              ))
+          .toList()
+        ..sort((a, b) => b.at.compareTo(a.at)));
+
+  /// Envia uma apelação (um utilizador banido pode explicar-se).
+  Future<void> addAppeal({
+    required String uid,
+    required String name,
+    required String text,
+  }) =>
+      _db.collection('appeals').add({
+        'uid': uid,
+        'name': name,
+        'text': text.trim(),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
 
   /// Publica um anúncio global (todos os utilizadores veem nas notificações).
   Future<void> postBroadcast(String title, String body) =>

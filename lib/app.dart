@@ -24,6 +24,84 @@ void _showBan(WidgetRef ref) {
       title: Text(t.accountSuspendedTitle, textAlign: TextAlign.center),
       content: Text(t.accountSuspended),
       actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(dctx).pop();
+            _appealSheet(ref);
+          },
+          child: Text(t.appeal),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(dctx).pop(),
+          child: Text(t.continueLabel),
+        ),
+      ],
+    ),
+  );
+}
+
+/// Folha para o utilizador banido apelar (explicar-se). Vai para `appeals/`.
+void _appealSheet(WidgetRef ref) {
+  final ctx = rootNavigatorKey.currentContext;
+  if (ctx == null) return;
+  final ctrl = TextEditingController();
+  showModalBottomSheet<void>(
+    context: ctx,
+    isScrollControlled: true,
+    builder: (sctx) {
+      final t = AppLocalizations.of(sctx)!;
+      return Padding(
+        padding: EdgeInsets.fromLTRB(
+            16, 16, 16, MediaQuery.of(sctx).viewInsets.bottom + 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(t.appeal, style: Theme.of(sctx).textTheme.titleLarge),
+            const SizedBox(height: 12),
+            TextField(
+              controller: ctrl,
+              autofocus: true,
+              maxLines: 5,
+              maxLength: 1000,
+              decoration: InputDecoration(
+                  hintText: t.appealHint, border: const OutlineInputBorder()),
+            ),
+            const SizedBox(height: 8),
+            FilledButton(
+              onPressed: () async {
+                final text = ctrl.text.trim();
+                final user = ref.read(authStateProvider).valueOrNull;
+                if (text.isEmpty || user == null) return;
+                final messenger = ScaffoldMessenger.of(sctx);
+                await ref.read(adminServiceProvider).addAppeal(
+                    uid: user.uid,
+                    name: ref.read(displayNameProvider),
+                    text: text);
+                if (sctx.mounted) Navigator.of(sctx).pop();
+                messenger.showSnackBar(SnackBar(content: Text(t.appealSent)));
+              },
+              child: Text(t.send),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+/// Aviso de que a conta foi reativada (desbanida).
+void _showUnban(WidgetRef ref) {
+  final ctx = rootNavigatorKey.currentContext;
+  if (ctx == null) return;
+  final t = AppLocalizations.of(ctx)!;
+  showDialog<void>(
+    context: ctx,
+    builder: (dctx) => AlertDialog(
+      icon: const Icon(Icons.check_circle, color: Colors.green, size: 36),
+      title: Text(t.accountReactivatedTitle, textAlign: TextAlign.center),
+      content: Text(t.accountReactivated),
+      actions: [
         FilledButton(
           onPressed: () => Navigator.of(dctx).pop(),
           child: Text(t.continueLabel),
@@ -81,11 +159,18 @@ class PokedexApp extends ConsumerWidget {
     ref.listen(selfModerationProvider, (_, next) {
       final mod = next.valueOrNull;
       if (mod == null) return;
+      final prefs = ref.read(prefsProvider);
       if (mod.banned) {
         _showBan(ref);
+        prefs.setBool('wasBanned', true);
         return;
       }
-      _banShown = false; // desbanido → permite mostrar de novo se voltar
+      // Não banido: se vinha de banido, avisa que a conta foi reativada.
+      if (prefs.getBool('wasBanned') == true) {
+        prefs.setBool('wasBanned', false);
+        _banShown = false;
+        _showUnban(ref);
+      }
       final w = mod.warning;
       if (w != null && w.trim().isNotEmpty) _showWarning(ref, w);
     });

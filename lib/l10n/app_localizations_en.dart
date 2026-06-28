@@ -734,6 +734,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bannedPublish => 'You\'re banned, so you can\'t post listings.';
 
   @override
+  String get appeal => 'Appeal';
+
+  @override
+  String get appealHint => 'Explain your situation…';
+
+  @override
+  String get appealSent => 'Appeal sent.';
+
+  @override
+  String get accountReactivatedTitle => 'Account reactivated';
+
+  @override
+  String get accountReactivated => 'Your account has been reactivated.';
+
+  @override
+  String get adminAppeals => 'Appeals';
+
+  @override
+  String get noAppeals => 'No appeals.';
+
+  @override
   String get reportReasonTitle => 'Why are you reporting?';
 
   @override

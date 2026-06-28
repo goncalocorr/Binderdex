@@ -308,10 +308,31 @@ final unseenSuggestionsCountProvider = Provider<int>((ref) {
       .length;
 });
 
+/// Apelações de utilizadores banidos (só admin).
+final appealsProvider = StreamProvider<List<Appeal>>((ref) {
+  if (!ref.watch(isAdminProvider)) return Stream.value(const <Appeal>[]);
+  return ref.watch(adminServiceProvider).watchAppeals();
+});
+
+/// Última vez que o admin viu as apelações (badge).
+final lastSeenAppealsProvider = StateProvider<DateTime>((ref) =>
+    DateTime.fromMillisecondsSinceEpoch(
+        ref.read(prefsProvider).getInt('lastSeenAppeals') ?? 0));
+
+final unseenAppealsCountProvider = Provider<int>((ref) {
+  final last = ref.watch(lastSeenAppealsProvider);
+  return (ref.watch(appealsProvider).valueOrNull ?? const [])
+      .where((a) => a.at.isAfter(last))
+      .length;
+});
+
 /// Total de pendentes do admin (para a entrada "Admin" no Perfil).
-final adminPendingCountProvider = Provider<int>((ref) =>
-    ref.watch(openReportsCountProvider) +
-    ref.watch(unseenSuggestionsCountProvider));
+final adminPendingCountProvider = Provider<int>((ref) {
+  final int reports = ref.watch(openReportsCountProvider);
+  final int suggestions = ref.watch(unseenSuggestionsCountProvider);
+  final int appeals = ref.watch(unseenAppealsCountProvider);
+  return reports + suggestions + appeals;
+});
 
 /// Utilizadores banidos (só admin).
 final bannedUsersAdminProvider = StreamProvider<List<AdminUser>>((ref) {

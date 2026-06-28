@@ -5,6 +5,7 @@ import '../../data/remote/admin_service.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../report_reasons.dart';
+import 'admin_appeals_screen.dart';
 import 'admin_broadcast_screen.dart';
 import 'admin_chat_screen.dart';
 import 'admin_users_screen.dart';
@@ -32,6 +33,7 @@ class AdminScreen extends ConsumerWidget {
     final t = AppLocalizations.of(context)!;
     final reports = ref.watch(openReportsCountProvider);
     final suggestions = ref.watch(unseenSuggestionsCountProvider);
+    final appeals = ref.watch(unseenAppealsCountProvider);
     void go(Widget page) => Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => page));
     return Scaffold(
@@ -39,6 +41,8 @@ class AdminScreen extends ConsumerWidget {
       body: ListView(children: [
         _row(Icons.flag_outlined, t.adminReports,
             onTap: () => go(const _AdminReportsPage()), count: reports),
+        _row(Icons.record_voice_over_outlined, t.adminAppeals,
+            onTap: () => go(const AdminAppealsScreen()), count: appeals),
         _row(Icons.lightbulb_outline, t.adminSuggestions,
             onTap: () => go(const _AdminSuggestionsPage()), count: suggestions),
         _row(Icons.block, t.adminBanned,
