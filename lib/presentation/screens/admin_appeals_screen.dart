@@ -37,7 +37,7 @@ class _AdminAppealsScreenState extends ConsumerState<AdminAppealsScreen> {
             : ListView.separated(
                 itemCount: list.length,
                 separatorBuilder: (_, __) => const Divider(height: 1),
-                itemBuilder: (_, i) {
+                itemBuilder: (ctx, i) {
                   final a = list[i];
                   return ListTile(
                     isThreeLine: true,
@@ -46,8 +46,16 @@ class _AdminAppealsScreenState extends ConsumerState<AdminAppealsScreen> {
                         maxLines: 1, overflow: TextOverflow.ellipsis),
                     subtitle: Text(a.text),
                     trailing: TextButton(
-                      onPressed: () =>
-                          ref.read(adminServiceProvider).banUser(a.uid, false),
+                      onPressed: () async {
+                        final messenger = ScaffoldMessenger.of(ctx);
+                        await ref
+                            .read(adminServiceProvider)
+                            .banUser(a.uid, false);
+                        messenger
+                          ..clearSnackBars()
+                          ..showSnackBar(
+                              SnackBar(content: Text(t.userUnbanned)));
+                      },
                       child: Text(t.unban),
                     ),
                   );

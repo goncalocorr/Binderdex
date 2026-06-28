@@ -210,6 +210,7 @@
   "banConfirm": "Banir este utilizador? Não poderá publicar nem contactar.",
   "userWarned": "Aviso enviado",
   "userBanned": "Utilizador banido",
+  "userUnbanned": "Utilizador desbanido",
   "send": "Enviar",
   "sendSuggestion": "Enviar sugestão",
   "suggestionHint": "A tua sugestão…",

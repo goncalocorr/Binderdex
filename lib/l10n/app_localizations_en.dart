@@ -703,6 +703,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get userBanned => 'User banned';
 
   @override
+  String get userUnbanned => 'User unbanned';
+
+  @override
   String get send => 'Send';
 
   @override

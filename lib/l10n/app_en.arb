@@ -256,6 +256,7 @@
   "banConfirm": "Ban this user? They won't be able to post or message.",
   "userWarned": "Warning sent",
   "userBanned": "User banned",
+  "userUnbanned": "User unbanned",
   "send": "Send",
   "sendSuggestion": "Send a suggestion",
   "suggestionHint": "Your suggestion…",

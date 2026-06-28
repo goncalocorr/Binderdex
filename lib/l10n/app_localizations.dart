@@ -1358,6 +1358,12 @@ abstract class AppLocalizations {
   /// **'User banned'**
   String get userBanned;
 
+  /// No description provided for @userUnbanned.
+  ///
+  /// In en, this message translates to:
+  /// **'User unbanned'**
+  String get userUnbanned;
+
   /// No description provided for @send.
   ///
   /// In en, this message translates to:
