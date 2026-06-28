@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/links.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
@@ -23,12 +26,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _register = false;
   bool _busy = false;
   bool _obscure = true;
+  late final TapGestureRecognizer _privacyTap =
+      TapGestureRecognizer()..onTap = _openPrivacy;
 
   @override
   void dispose() {
     _email.dispose();
     _password.dispose();
+    _privacyTap.dispose();
     super.dispose();
+  }
+
+  Future<void> _openPrivacy() async {
+    final uri = Uri.parse(kPrivacyPolicyUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
   }
 
   Future<void> _run(Future<void> Function() action) async {
@@ -193,6 +206,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: TextButton(
                   onPressed: _busy ? null : _enterAsGuest,
                   child: Text(t.guestEnter),
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Consentimento: ao continuar, aceita a Política de Privacidade.
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text.rich(
+                  TextSpan(children: [
+                    TextSpan(text: t.consentPrefix),
+                    TextSpan(
+                      text: t.privacyPolicy,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        decoration: TextDecoration.underline,
+                      ),
+                      recognizer: _privacyTap,
+                    ),
+                    const TextSpan(text: '.'),
+                  ]),
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
               ),
             ],

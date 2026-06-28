@@ -740,6 +740,18 @@ abstract class AppLocalizations {
   /// **'Browse as guest'**
   String get guestEnter;
 
+  /// No description provided for @consentPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing, you accept our '**
+  String get consentPrefix;
+
+  /// No description provided for @privacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
   /// No description provided for @loginRequiredTitle.
   ///
   /// In en, this message translates to:

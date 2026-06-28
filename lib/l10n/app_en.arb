@@ -137,6 +137,8 @@
   "accountDeleted": "Account deleted.",
   "deleteFailed": "Couldn't delete your account. Please try again.",
   "guestEnter": "Browse as guest",
+  "consentPrefix": "By continuing, you accept our ",
+  "privacyPolicy": "Privacy Policy",
   "loginRequiredTitle": "Sign in to add cards",
   "loginRequiredBody": "Create a free account or log in to start tracking your collection. As a guest you can only browse.",
   "loginOrCreate": "Log in or create account",

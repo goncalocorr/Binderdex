@@ -361,6 +361,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get guestEnter => 'Entrar como convidado';
 
   @override
+  String get consentPrefix => 'Ao continuar, aceitas a nossa ';
+
+  @override
+  String get privacyPolicy => 'Política de Privacidade';
+
+  @override
   String get loginRequiredTitle => 'Inicia sessão para adicionar';
 
   @override

@@ -357,6 +357,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get guestEnter => 'Browse as guest';
 
   @override
+  String get consentPrefix => 'By continuing, you accept our ';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
   String get loginRequiredTitle => 'Sign in to add cards';
 
   @override

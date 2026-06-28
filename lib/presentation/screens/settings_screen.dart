@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/links.dart';
 import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
@@ -469,6 +471,19 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
+        ),
+        const Divider(),
+        // --- Legal ---
+        ListTile(
+          leading: const Icon(Icons.privacy_tip_outlined),
+          title: Text(t.privacyPolicy),
+          trailing: const Icon(Icons.open_in_new, size: 18),
+          onTap: () async {
+            final uri = Uri.parse(kPrivacyPolicyUrl);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+          },
         ),
         // Zona de perigo — só com sessão iniciada (RGPD: direito ao esquecimento).
         if (signedIn) ...[
