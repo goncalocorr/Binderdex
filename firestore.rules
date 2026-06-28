@@ -81,6 +81,8 @@ service cloud.firestore {
       allow create: if request.auth != null
         && request.auth.token.firebase.sign_in_provider != 'anonymous'
         && request.resource.data.uid == request.auth.uid
+        && request.resource.data.text is string
+        && request.resource.data.text.size() <= 500
         && isPremium();
       allow read, update, delete: if isAdmin();
     }
