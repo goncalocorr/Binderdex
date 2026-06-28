@@ -76,9 +76,12 @@ class AdminService {
       .doc(uid)
       .set({'banned': banned}, SetOptions(merge: true));
 
-  /// Apaga um anúncio (moderação — regras permitem ao admin).
-  Future<void> deleteListing(String id) =>
-      _db.collection('listings').doc(id).delete();
+  /// Apaga um anúncio (moderação — regras permitem ao admin). Ignora id vazio
+  /// (denúncias feitas a partir da conversa não têm anúncio).
+  Future<void> deleteListing(String id) async {
+    if (id.isEmpty) return;
+    await _db.collection('listings').doc(id).delete();
+  }
 
   /// Define o nível premium de uma conta (dar/tirar premium).
   Future<void> setUserTier(String uid, int tier) => _db

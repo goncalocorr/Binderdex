@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../domain/entities/chat.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
+import '../report_reasons.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   final Conversation conversation;
@@ -79,6 +80,28 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       }
     } finally {
       if (mounted) setState(() => _sending = false);
+    }
+  }
+
+  Future<void> _report() async {
+    final t = AppLocalizations.of(context)!;
+    final meUid = ref.read(authStateProvider).valueOrNull?.uid;
+    if (meUid == null) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final reason = await pickReportReason(context);
+    if (reason == null) return;
+    try {
+      await ref.read(marketServiceProvider).report(
+            listingId: '', // denúncia a partir da conversa (sem anúncio)
+            reporterUid: meUid,
+            reportedUid: widget.conversation.otherUid,
+            reportedName: widget.conversation.otherName,
+            cardId: widget.conversation.cardId,
+            reason: reason,
+          );
+      messenger.showSnackBar(SnackBar(content: Text(t.reportSent)));
+    } catch (err) {
+      messenger.showSnackBar(SnackBar(content: Text('$err')));
     }
   }
 
@@ -174,8 +197,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           PopupMenuButton<String>(
             onSelected: (v) {
               if (v == 'block') _block();
+              if (v == 'report') _report();
             },
             itemBuilder: (_) => [
+              PopupMenuItem(value: 'report', child: Text(t.report)),
               PopupMenuItem(value: 'block', child: Text(t.block)),
             ],
           ),
