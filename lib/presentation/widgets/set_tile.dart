@@ -69,6 +69,7 @@ class SetTile extends StatelessWidget {
                             imageUrl:
                                 s.logoUrl.isNotEmpty ? s.logoUrl : s.symbolUrl,
                             fit: BoxFit.contain,
+                            memCacheWidth: 220,
                             placeholder: (_, __) => const SizedBox.shrink(),
                             errorWidget: (_, __, ___) =>
                                 Icon(Icons.style, color: cs.primary),

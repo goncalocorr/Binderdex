@@ -49,7 +49,8 @@ class WantCardsField extends StatelessWidget {
                             imageUrl: c.cardImage,
                             width: 46,
                             height: 64,
-                            fit: BoxFit.cover),
+                            fit: BoxFit.cover,
+                            memCacheWidth: 138),
                   );
                 },
               ),

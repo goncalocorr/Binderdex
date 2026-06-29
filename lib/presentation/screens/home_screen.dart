@@ -393,6 +393,7 @@ class _Logo extends StatelessWidget {
               imageUrl: url,
               fit: BoxFit.contain,
               alignment: Alignment.centerLeft,
+              memCacheWidth: 220,
               placeholder: (_, __) => const SizedBox.shrink(),
               errorWidget: (_, __, ___) =>
                   Icon(Icons.style, color: cs.primary, size: 22),

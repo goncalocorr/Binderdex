@@ -30,6 +30,7 @@ class ListingTile extends StatelessWidget {
             : CachedNetworkImage(
                 imageUrl: listing.cardImage,
                 fit: BoxFit.contain,
+                memCacheWidth: 120,
                 errorWidget: (_, __, ___) => const Icon(Icons.style),
               ),
       ),

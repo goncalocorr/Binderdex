@@ -141,7 +141,8 @@ class _WantCardsPickerState extends ConsumerState<WantCardsPicker> {
                         imageUrl: c.cardImage,
                         width: 48,
                         height: 64,
-                        fit: BoxFit.cover),
+                        fit: BoxFit.cover,
+                        memCacheWidth: 144),
               ),
               Positioned(
                 right: -6,

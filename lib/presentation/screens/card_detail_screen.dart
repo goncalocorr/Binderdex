@@ -117,6 +117,7 @@ class CardDetailScreen extends ConsumerWidget {
                                     ? card.imageLarge
                                     : card.imageSmall,
                                 height: 360,
+                                memCacheWidth: 720,
                                 placeholder: (_, __) => const SizedBox(
                                   height: 360,
                                   child: Center(

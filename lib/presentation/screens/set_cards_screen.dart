@@ -372,6 +372,7 @@ class _QuickAddSheet extends ConsumerWidget {
                             child: CachedNetworkImage(
                               imageUrl: c.imageSmall,
                               fit: BoxFit.contain,
+                              memCacheWidth: 120,
                               placeholder: (_, __) => const SizedBox.shrink(),
                               errorWidget: (_, __, ___) =>
                                   const Icon(Icons.image_not_supported),

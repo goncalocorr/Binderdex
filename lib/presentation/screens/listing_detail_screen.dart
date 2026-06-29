@@ -110,7 +110,10 @@ class ListingDetailScreen extends ConsumerWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: CachedNetworkImage(
-                  imageUrl: listing.cardImage, height: 320, fit: BoxFit.contain),
+                  imageUrl: listing.cardImage,
+                  height: 320,
+                  fit: BoxFit.contain,
+                  memCacheWidth: 520),
             ),
           ),
         const SizedBox(height: 16),
@@ -150,7 +153,8 @@ class ListingDetailScreen extends ConsumerWidget {
                         : CachedNetworkImage(
                             imageUrl: c.cardImage,
                             width: 78,
-                            fit: BoxFit.cover),
+                            fit: BoxFit.cover,
+                            memCacheWidth: 234),
                   ),
                 );
               },
