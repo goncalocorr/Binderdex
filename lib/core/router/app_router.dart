@@ -203,12 +203,12 @@ class _FloatingNav extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(32),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            filter: ImageFilter.blur(sigmaX: 26, sigmaY: 26),
             child: Container(
               height: 62,
               decoration: BoxDecoration(
                 color:
-                    (isDark ? Colors.black : Colors.white).withValues(alpha: 0.55),
+                    (isDark ? Colors.black : Colors.white).withValues(alpha: 0.28),
                 borderRadius: BorderRadius.circular(32),
                 border: Border.all(
                     color: cs.outlineVariant.withValues(alpha: 0.4), width: 1),
