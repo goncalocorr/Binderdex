@@ -192,40 +192,84 @@ class _FloatingNav extends StatelessWidget {
 
   static const _icons = ['inicio', 'colecoes', 'binder', 'comunidade', 'perfil'];
 
+  static const _curve = Curves.easeOutCubic;
+  static const _dur = Duration(milliseconds: 340);
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final base = isDark ? Colors.black : Colors.white;
     return SafeArea(
       top: false,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(22, 0, 22, 10),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(32),
+          borderRadius: BorderRadius.circular(34),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 26, sigmaY: 26),
+            filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
             child: Container(
-              height: 62,
+              height: 64,
               decoration: BoxDecoration(
-                color:
-                    (isDark ? Colors.black : Colors.white).withValues(alpha: 0.28),
-                borderRadius: BorderRadius.circular(32),
+                // Vidro: leve gradiente vertical para apanhar a luz no topo.
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    base.withValues(alpha: isDark ? 0.34 : 0.40),
+                    base.withValues(alpha: isDark ? 0.20 : 0.26),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(34),
                 border: Border.all(
-                    color: cs.outlineVariant.withValues(alpha: 0.4), width: 1),
+                    color: Colors.white.withValues(alpha: isDark ? 0.12 : 0.55),
+                    width: 1),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.18),
-                    blurRadius: 24,
-                    offset: const Offset(0, 10),
+                    color: Colors.black.withValues(alpha: 0.22),
+                    blurRadius: 30,
+                    spreadRadius: -4,
+                    offset: const Offset(0, 12),
                   ),
                 ],
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  for (var i = 0; i < _icons.length; i++) _item(context, i),
-                ],
-              ),
+              child: LayoutBuilder(builder: (context, c) {
+                final slot = c.maxWidth / _icons.length;
+                const inset = 8.0;
+                return Stack(children: [
+                  // Indicador ativo que desliza entre separadores.
+                  AnimatedPositioned(
+                    duration: _dur,
+                    curve: _curve,
+                    left: index * slot + inset,
+                    top: 10,
+                    bottom: 10,
+                    width: slot - inset * 2,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: cs.primary.withValues(alpha: 0.22),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                            color: cs.primary.withValues(alpha: 0.45),
+                            width: 1),
+                        boxShadow: [
+                          BoxShadow(
+                            color: cs.primary.withValues(alpha: 0.35),
+                            blurRadius: 14,
+                            spreadRadius: -3,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      for (var i = 0; i < _icons.length; i++)
+                        Expanded(child: _item(context, i)),
+                    ],
+                  ),
+                ]);
+              }),
             ),
           ),
         ),
@@ -234,7 +278,6 @@ class _FloatingNav extends StatelessWidget {
   }
 
   Widget _item(BuildContext context, int i) {
-    final cs = Theme.of(context).colorScheme;
     final active = i == index;
     Widget icon = _tabIcon(_icons[i]);
     if (i == 3 && unread > 0) {
@@ -243,20 +286,17 @@ class _FloatingNav extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () => onSelect(i),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeOut,
-        padding:
-            EdgeInsets.symmetric(horizontal: active ? 18 : 12, vertical: 9),
-        decoration: BoxDecoration(
-          color:
-              active ? cs.primary.withValues(alpha: 0.18) : Colors.transparent,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: AnimatedOpacity(
-          duration: const Duration(milliseconds: 220),
-          opacity: active ? 1 : 0.55,
-          child: icon,
+      child: Center(
+        child: AnimatedScale(
+          duration: _dur,
+          curve: _curve,
+          scale: active ? 1.14 : 1,
+          child: AnimatedOpacity(
+            duration: _dur,
+            curve: _curve,
+            opacity: active ? 1 : 0.5,
+            child: icon,
+          ),
         ),
       ),
     );
