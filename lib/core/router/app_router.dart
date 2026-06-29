@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -209,6 +210,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     navigatorKey: rootNavigatorKey,
     initialLocation: initial,
     refreshListenable: refresh,
+    // Analytics: regista a navegação entre ecrãs automaticamente.
+    observers: [FirebaseAnalyticsObserver(analytics: ref.read(analyticsProvider))],
     redirect: (context, state) {
       final auth = ref.read(authStateProvider);
       if (auth.isLoading) return null; // ainda a restaurar a sessão

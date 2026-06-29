@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -35,6 +36,10 @@ final databaseProvider = Provider<AppDatabase>((ref) {
 });
 
 final tcgApiProvider = Provider<TcgApi>((ref) => TcgApi());
+
+/// Firebase Analytics (uso da app). Observador no router faz o screen-tracking.
+final analyticsProvider =
+    Provider<FirebaseAnalytics>((ref) => FirebaseAnalytics.instance);
 
 final setsRepositoryProvider = Provider((ref) =>
     SetsRepository(ref.watch(databaseProvider), ref.watch(tcgApiProvider)));

@@ -53,6 +53,18 @@ Estado: preparação da ficha. Marca à medida que avanças.
 - [ ] Testar fluxo completo numa conta nova (onboarding → login → coleção →
       comunidade → trocas → premium → moderação).
 
+## 8a. Crashlytics + Analytics (já ligados no código)
+- [ ] **Firebase Console → Crashlytics** → confirmar/clicar "Enable" (aparece após
+      o 1.º relatório). Em **release**, força um crash de teste para validar:
+      `FirebaseCrashlytics.instance.crash();` (remove depois).
+- [ ] **Analytics** liga-se sozinho; confirma eventos em Console → Analytics →
+      Realtime (pode demorar a aparecer).
+- [ ] **Opcional** (só se usares `flutter build --obfuscate`): adicionar o
+      **plugin Gradle do Crashlytics** para deobfuscar stack traces —
+      `id("com.google.firebase.crashlytics")` no app/build.gradle.kts + no
+      settings.gradle.kts (`version` compatível com o teu AGP). Sem obfuscação,
+      os stack traces de Dart já são legíveis.
+
 ## 8b. Pendentes técnicos conhecidos
 - iOS: **APNs** por configurar (se um dia fores para iOS).
 - Push de "carta seguida": precisa que o "seguir carta" esteja no Firestore
