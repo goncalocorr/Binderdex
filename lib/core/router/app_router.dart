@@ -3,6 +3,7 @@ import 'dart:ui' show ImageFilter;
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -171,11 +172,30 @@ class _ShellState extends ConsumerState<_Shell> {
       ),
       // extendBody: o conteúdo passa por trás da barra (efeito vidro/blur).
       extendBody: true,
-      body: _tabs[index],
+      // Transição suave (fade + micro-slide) ao trocar de separador.
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 260),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, anim) => FadeTransition(
+          opacity: anim,
+          child: SlideTransition(
+            position: Tween<Offset>(
+                    begin: const Offset(0, 0.015), end: Offset.zero)
+                .animate(anim),
+            child: child,
+          ),
+        ),
+        child: KeyedSubtree(key: ValueKey(index), child: _tabs[index]),
+      ),
       bottomNavigationBar: _FloatingNav(
         index: index,
         unread: ref.watch(unreadTotalProvider),
-        onSelect: (i) => ref.read(navIndexProvider.notifier).state = i,
+        onSelect: (i) {
+          if (i == index) return;
+          HapticFeedback.selectionClick(); // feedback subtil ao trocar de tab
+          ref.read(navIndexProvider.notifier).state = i;
+        },
       ),
     );
   }
