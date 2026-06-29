@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
@@ -276,7 +277,11 @@ class _VariantToggleState extends State<VariantToggle>
       );
 
   Widget _pill(BoxDecoration deco, Color textColor) => GestureDetector(
-        onTap: widget.onTap,
+        onTap: () {
+          // Toque háptico ao colecionar/remover uma variante (momento-chave).
+          HapticFeedback.lightImpact();
+          widget.onTap();
+        },
         child: Container(
           height: 36,
           padding: const EdgeInsets.symmetric(horizontal: 14),
