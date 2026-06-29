@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -51,6 +52,10 @@ class AdminScreen extends ConsumerWidget {
             onTap: () => go(const AdminPremiumScreen())),
         _row(Icons.campaign_outlined, t.adminBroadcast,
             onTap: () => go(const AdminBroadcastScreen())),
+        // TEMPORÁRIO: valida o Crashlytics (só funciona em release/profile).
+        // Remover depois de confirmar o crash na consola Firebase.
+        _row(Icons.bug_report_outlined, 'Testar Crashlytics',
+            onTap: () => FirebaseCrashlytics.instance.crash()),
       ]),
     );
   }
