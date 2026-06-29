@@ -92,6 +92,11 @@
   "@profileSummary": {
     "placeholders": { "cards": { "type": "int" }, "sets": { "type": "int" } }
   },
+  "profileStatCards": "Cards",
+  "profileStatSets": "Sets",
+  "profileSectionAccount": "Account",
+  "profileSectionAppearance": "Appearance",
+  "profileSectionAbout": "About",
   "signIn": "Sign in",
   "signInSync": "Sign in to sync across devices",
   "backupSync": "Backup & sync",

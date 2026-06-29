@@ -5,11 +5,26 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/links.dart';
+import '../../core/theme/app_theme.dart';
 import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/avatar.dart';
+import '../widgets/dex_ui.dart';
 import '../widgets/premium_badge.dart';
+
+/// Etiqueta de secção (maiúsculas, discreta) para organizar a lista.
+Widget _sectionHeader(BuildContext context, String text) => Padding(
+      padding: const EdgeInsets.fromLTRB(20, 22, 16, 8),
+      child: Text(
+        text.toUpperCase(),
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w800,
+              letterSpacing: 0.8,
+            ),
+      ),
+    );
 
 /// Folha para enviar uma sugestão (só premium). Escreve em `suggestions/`.
 Future<void> _suggestionSheet(BuildContext context, WidgetRef ref) async {
@@ -301,72 +316,109 @@ class SettingsScreen extends ConsumerWidget {
     final themeLabels = [t.themeSystem, t.themeLight, t.themeDark];
 
     return ListView(
+      // Espaço inferior: a barra flutuante (extendBody) cobre o fundo.
+      padding: const EdgeInsets.only(bottom: 96),
       children: [
-        // --- Cabeçalho de perfil ---
+        // --- Cabeçalho hero (centrado) ---
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
-          child: Row(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 4),
+          child: Column(
             children: [
               InkWell(
                 customBorder: const CircleBorder(),
                 onTap: () => _pickAvatar(context, ref),
                 child: Stack(
                   children: [
-                    Avatar(name: name, size: 64, avatarId: avatar),
+                    Avatar(name: name, size: 96, avatarId: avatar),
                     Positioned(
-                      right: 0,
-                      bottom: 0,
+                      right: 2,
+                      bottom: 2,
                       child: Container(
-                        padding: const EdgeInsets.all(3),
+                        padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
                           color: cs.primary,
                           shape: BoxShape.circle,
-                          border: Border.all(color: cs.surface, width: 2),
+                          border: Border.all(color: cs.surface, width: 2.5),
                         ),
                         child: const Icon(Icons.edit,
-                            size: 12, color: Colors.white),
+                            size: 13, color: Colors.white),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () => _editName(context, ref),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(children: [
-                      Flexible(
-                        child: Text(name.isEmpty ? t.guest : name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.titleLarge),
-                      ),
-                      if (isPremium)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 6),
-                          child: PremiumBadge(size: 20, tier: myTier),
-                        ),
-                    ]),
-                    const SizedBox(height: 2),
-                    Text(t.profileSummary(owned, mySets),
+                    Flexible(
+                      child: Text(
+                        name.isEmpty ? t.guest : name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: Theme.of(context)
                             .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: cs.onSurfaceVariant)),
+                            .headlineSmall
+                            ?.copyWith(
+                              fontFamily: AppTheme.displayFont,
+                              fontWeight: FontWeight.w700,
+                            ),
+                      ),
+                    ),
+                    if (isPremium)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: PremiumBadge(size: 22, tier: myTier),
+                      ),
+                    const SizedBox(width: 4),
+                    Icon(Icons.edit_outlined,
+                        size: 16, color: cs.onSurfaceVariant),
                   ],
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.edit_outlined),
-                tooltip: t.editName,
-                onPressed: () => _editName(context, ref),
+              const SizedBox(height: 3),
+              Text(
+                signedIn ? (user.email ?? '') : t.signInSync,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: cs.onSurfaceVariant),
+              ),
+              const SizedBox(height: 18),
+              // Stats da coleção (componentes StatCard do design system).
+              Row(
+                children: [
+                  Expanded(
+                    child: StatCard(
+                      icon: Icons.style_outlined,
+                      value: '$owned',
+                      label: t.profileStatCards,
+                      color: cs.tertiary,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: StatCard(
+                      icon: Icons.collections_bookmark_outlined,
+                      value: '$mySets',
+                      label: t.profileStatSets,
+                      color: cs.primary,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
 
-        // --- Atalhos ---
+        // --- Conta ---
+        _sectionHeader(context, t.profileSectionAccount),
         if (signedIn)
           ListTile(
             leading: const Icon(Icons.account_circle),
@@ -400,7 +452,7 @@ class SettingsScreen extends ConsumerWidget {
           leading: const Icon(Icons.workspace_premium),
           title: Text(t.premiumSlots),
           subtitle: Text(
-              '${MarketTier.nameFor(ref.watch(marketTierProvider).valueOrNull ?? 0)} · ${MarketTier.slotsFor(ref.watch(marketTierProvider).valueOrNull ?? 0)} slots'),
+              '${MarketTier.nameFor(myTier)} · ${MarketTier.slotsFor(myTier)} slots'),
           trailing: const Icon(Icons.chevron_right),
           onTap: () => context.push('/premium'),
         ),
@@ -425,9 +477,9 @@ class SettingsScreen extends ConsumerWidget {
             ]),
             onTap: () => context.push('/admin'),
           ),
-        const Divider(),
 
-        // --- Tema ---
+        // --- Aparência ---
+        _sectionHeader(context, t.profileSectionAppearance),
         ListTile(
           leading: const Icon(Icons.palette_outlined),
           title: Text(t.theme),
@@ -447,9 +499,6 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
         ),
-        const Divider(),
-
-        // --- Idioma ---
         ListTile(
           leading: const Icon(Icons.language),
           title: Text(t.language),
@@ -480,8 +529,9 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const Divider(),
-        // --- Legal ---
+
+        // --- Sobre ---
+        _sectionHeader(context, t.profileSectionAbout),
         ListTile(
           leading: const Icon(Icons.description_outlined),
           title: Text(t.termsOfUse),
@@ -495,14 +545,12 @@ class SettingsScreen extends ConsumerWidget {
           onTap: () => _openUrl(kPrivacyPolicyUrl),
         ),
         // Zona de perigo — só com sessão iniciada (RGPD: direito ao esquecimento).
-        if (signedIn) ...[
-          const Divider(),
+        if (signedIn)
           ListTile(
             leading: Icon(Icons.delete_forever, color: cs.error),
             title: Text(t.deleteAccount, style: TextStyle(color: cs.error)),
             onTap: () => _deleteAccount(context, ref),
           ),
-        ],
       ],
     );
   }

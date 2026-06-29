@@ -240,6 +240,21 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get profileStatCards => 'Cartas';
+
+  @override
+  String get profileStatSets => 'Coleções';
+
+  @override
+  String get profileSectionAccount => 'Conta';
+
+  @override
+  String get profileSectionAppearance => 'Aparência';
+
+  @override
+  String get profileSectionAbout => 'Sobre';
+
+  @override
   String get signIn => 'Iniciar sessão';
 
   @override

@@ -239,6 +239,21 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get profileStatCards => 'Cards';
+
+  @override
+  String get profileStatSets => 'Sets';
+
+  @override
+  String get profileSectionAccount => 'Account';
+
+  @override
+  String get profileSectionAppearance => 'Appearance';
+
+  @override
+  String get profileSectionAbout => 'About';
+
+  @override
   String get signIn => 'Sign in';
 
   @override

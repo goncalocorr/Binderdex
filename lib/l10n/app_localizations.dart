@@ -524,6 +524,36 @@ abstract class AppLocalizations {
   /// **'{cards} cards · {sets} sets'**
   String profileSummary(int cards, int sets);
 
+  /// No description provided for @profileStatCards.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards'**
+  String get profileStatCards;
+
+  /// No description provided for @profileStatSets.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get profileStatSets;
+
+  /// No description provided for @profileSectionAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get profileSectionAccount;
+
+  /// No description provided for @profileSectionAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get profileSectionAppearance;
+
+  /// No description provided for @profileSectionAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get profileSectionAbout;
+
   /// No description provided for @signIn.
   ///
   /// In en, this message translates to:
