@@ -360,6 +360,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get consentPrefix => 'By continuing, you accept the ';
 
   @override
+  String get acceptPrefix => 'I accept the ';
+
+  @override
+  String get acceptTermsFirst => 'Please accept the Terms and Privacy Policy.';
+
+  @override
   String get consentAnd => ' and the ';
 
   @override

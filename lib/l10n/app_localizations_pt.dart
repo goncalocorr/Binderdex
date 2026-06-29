@@ -364,6 +364,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get consentPrefix => 'Ao continuar, aceitas os ';
 
   @override
+  String get acceptPrefix => 'Aceito os ';
+
+  @override
+  String get acceptTermsFirst =>
+      'Aceita os Termos e a Política de Privacidade para continuar.';
+
+  @override
   String get consentAnd => ' e a ';
 
   @override

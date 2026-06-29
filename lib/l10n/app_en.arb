@@ -138,6 +138,8 @@
   "deleteFailed": "Couldn't delete your account. Please try again.",
   "guestEnter": "Browse as guest",
   "consentPrefix": "By continuing, you accept the ",
+  "acceptPrefix": "I accept the ",
+  "acceptTermsFirst": "Please accept the Terms and Privacy Policy.",
   "consentAnd": " and the ",
   "termsOfUse": "Terms of Use",
   "privacyPolicy": "Privacy Policy",

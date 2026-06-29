@@ -108,6 +108,8 @@
   "deleteFailed": "Não foi possível eliminar a conta. Tenta de novo.",
   "guestEnter": "Entrar como convidado",
   "consentPrefix": "Ao continuar, aceitas os ",
+  "acceptPrefix": "Aceito os ",
+  "acceptTermsFirst": "Aceita os Termos e a Política de Privacidade para continuar.",
   "consentAnd": " e a ",
   "termsOfUse": "Termos de Utilização",
   "privacyPolicy": "Política de Privacidade",

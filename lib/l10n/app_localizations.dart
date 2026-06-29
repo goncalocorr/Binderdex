@@ -746,6 +746,18 @@ abstract class AppLocalizations {
   /// **'By continuing, you accept the '**
   String get consentPrefix;
 
+  /// No description provided for @acceptPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'I accept the '**
+  String get acceptPrefix;
+
+  /// No description provided for @acceptTermsFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please accept the Terms and Privacy Policy.'**
+  String get acceptTermsFirst;
+
   /// No description provided for @consentAnd.
   ///
   /// In en, this message translates to:

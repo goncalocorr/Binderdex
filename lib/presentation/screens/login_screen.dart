@@ -26,6 +26,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _register = false;
   bool _busy = false;
   bool _obscure = true;
+  bool _accepted = false; // aceitou Termos + Privacidade
   late final TapGestureRecognizer _privacyTap =
       TapGestureRecognizer()..onTap = () => _open(kPrivacyPolicyUrl);
   late final TapGestureRecognizer _termsTap =
@@ -47,7 +48,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  /// Exige a checkbox de Termos+Privacidade marcada antes de entrar.
+  bool _requireAccepted() {
+    if (_accepted) return true;
+    final t = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context)
+      ..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text(t.acceptTermsFirst)));
+    return false;
+  }
+
   Future<void> _run(Future<void> Function() action) async {
+    if (!_requireAccepted()) return;
     setState(() => _busy = true);
     try {
       await action();
@@ -77,6 +89,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   /// poder LER a Comunidade (regras exigem `request.auth != null`); se falhar
   /// (ex.: sem rede), mantém o comportamento de convidado offline.
   Future<void> _enterAsGuest() async {
+    if (!_requireAccepted()) return;
     setState(() => _busy = true);
     try {
       await ref.read(authServiceProvider).signInAnonymously();
@@ -211,37 +224,44 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Text(t.guestEnter),
                 ),
               ),
-              const SizedBox(height: 8),
-              // Consentimento: ao continuar, aceita a Política de Privacidade.
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text.rich(
-                  TextSpan(children: [
-                    TextSpan(text: t.consentPrefix),
-                    TextSpan(
-                      text: t.termsOfUse,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        decoration: TextDecoration.underline,
-                      ),
-                      recognizer: _termsTap,
-                    ),
-                    TextSpan(text: t.consentAnd),
-                    TextSpan(
-                      text: t.privacyPolicy,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        decoration: TextDecoration.underline,
-                      ),
-                      recognizer: _privacyTap,
-                    ),
-                    const TextSpan(text: '.'),
-                  ]),
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant),
+              const SizedBox(height: 4),
+              // Consentimento explícito: tem de marcar a checkbox para entrar.
+              Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                Checkbox(
+                  value: _accepted,
+                  onChanged: (v) => setState(() => _accepted = v ?? false),
                 ),
-              ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => setState(() => _accepted = !_accepted),
+                    child: Text.rich(
+                      TextSpan(children: [
+                        TextSpan(text: t.acceptPrefix),
+                        TextSpan(
+                          text: t.termsOfUse,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: _termsTap,
+                        ),
+                        TextSpan(text: t.consentAnd),
+                        TextSpan(
+                          text: t.privacyPolicy,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: _privacyTap,
+                        ),
+                        const TextSpan(text: '.'),
+                      ]),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    ),
+                  ),
+                ),
+              ]),
             ],
           ),
         ),
