@@ -1,3 +1,5 @@
+import 'dart:ui' show ImageFilter;
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/material.dart';
@@ -167,25 +169,95 @@ class _ShellState extends ConsumerState<_Shell> {
           ),
         ],
       ),
+      // extendBody: o conteúdo passa por trás da barra (efeito vidro/blur).
+      extendBody: true,
       body: _tabs[index],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: index,
-        onDestinationSelected: (i) =>
-            ref.read(navIndexProvider.notifier).state = i,
-        destinations: [
-          NavigationDestination(icon: _tabIcon('inicio'), label: t.tabHome),
-          NavigationDestination(icon: _tabIcon('colecoes'), label: t.tabSets),
-          NavigationDestination(
-              icon: _tabIcon('binder'), label: t.tabBinderShort),
-          NavigationDestination(
-              icon: Badge(
-                label: Text('${ref.watch(unreadTotalProvider)}'),
-                isLabelVisible: ref.watch(unreadTotalProvider) > 0,
-                child: _tabIcon('comunidade'),
+      bottomNavigationBar: _FloatingNav(
+        index: index,
+        unread: ref.watch(unreadTotalProvider),
+        onSelect: (i) => ref.read(navIndexProvider.notifier).state = i,
+      ),
+    );
+  }
+}
+
+/// Barra de navegação flutuante em "pílula": fundo translúcido com blur,
+/// destacada das margens e com o item ativo realçado.
+class _FloatingNav extends StatelessWidget {
+  final int index;
+  final int unread;
+  final ValueChanged<int> onSelect;
+  const _FloatingNav(
+      {required this.index, required this.unread, required this.onSelect});
+
+  static const _icons = ['inicio', 'colecoes', 'binder', 'comunidade', 'perfil'];
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(22, 0, 22, 10),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(32),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: Container(
+              height: 62,
+              decoration: BoxDecoration(
+                color:
+                    (isDark ? Colors.black : Colors.white).withValues(alpha: 0.55),
+                borderRadius: BorderRadius.circular(32),
+                border: Border.all(
+                    color: cs.outlineVariant.withValues(alpha: 0.4), width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.18),
+                    blurRadius: 24,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
-              label: t.tabCommunity),
-          NavigationDestination(icon: _tabIcon('perfil'), label: t.tabProfile),
-        ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  for (var i = 0; i < _icons.length; i++) _item(context, i),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _item(BuildContext context, int i) {
+    final cs = Theme.of(context).colorScheme;
+    final active = i == index;
+    Widget icon = _tabIcon(_icons[i]);
+    if (i == 3 && unread > 0) {
+      icon = Badge(label: Text('$unread'), child: icon);
+    }
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => onSelect(i),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOut,
+        padding:
+            EdgeInsets.symmetric(horizontal: active ? 18 : 12, vertical: 9),
+        decoration: BoxDecoration(
+          color:
+              active ? cs.primary.withValues(alpha: 0.18) : Colors.transparent,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 220),
+          opacity: active ? 1 : 0.55,
+          child: icon,
+        ),
       ),
     );
   }
