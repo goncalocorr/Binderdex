@@ -73,12 +73,17 @@ class _ShellState extends ConsumerState<_Shell> {
   /// ecrã de login ao autenticar.
   Future<void> _maybeAskName() async {
     if (_prompting || !mounted) return;
-    if (!isSignedIn(ref)) return;
+    // Qualquer sessão (conta real ou convidado anónimo) tem um uid.
+    if (ref.read(authStateProvider).valueOrNull == null) return;
     _prompting = true;
     // 1. Restaura nome/avatar da conta (evita o popup em contas existentes).
     await syncProfileFromCloud(ref);
-    // 2. Só pede o nome se a conta realmente não tiver.
-    if (mounted && ref.read(displayNameProvider).trim().isEmpty) {
+    // 2. Consentimento por conta: conta nova tem sempre de aceitar (1x).
+    if (mounted) await ensureTermsAccepted(context, ref);
+    // 3. Só pede o nome a contas reais que ainda não tenham nome.
+    if (mounted &&
+        isSignedIn(ref) &&
+        ref.read(displayNameProvider).trim().isEmpty) {
       await ensureDisplayName(context, ref);
     }
     _prompting = false;

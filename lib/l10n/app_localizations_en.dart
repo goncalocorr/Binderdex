@@ -375,6 +375,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacyPolicy => 'Privacy Policy';
 
   @override
+  String get consentGateTitle => 'Terms & Privacy';
+
+  @override
+  String get consentGateBody => 'To use Binderdex, please review and accept:';
+
+  @override
+  String get consentAccept => 'Accept and continue';
+
+  @override
   String get loginRequiredTitle => 'Sign in to add cards';
 
   @override

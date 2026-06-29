@@ -776,6 +776,24 @@ abstract class AppLocalizations {
   /// **'Privacy Policy'**
   String get privacyPolicy;
 
+  /// No description provided for @consentGateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Privacy'**
+  String get consentGateTitle;
+
+  /// No description provided for @consentGateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'To use Binderdex, please review and accept:'**
+  String get consentGateBody;
+
+  /// No description provided for @consentAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept and continue'**
+  String get consentAccept;
+
   /// No description provided for @loginRequiredTitle.
   ///
   /// In en, this message translates to:

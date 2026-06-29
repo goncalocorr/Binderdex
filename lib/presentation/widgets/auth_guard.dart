@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/links.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 
@@ -30,6 +32,101 @@ Future<void> syncProfileFromCloud(WidgetRef ref) async {
     ref.read(avatarProvider.notifier).state = p.avatar;
     await prefs.setString('avatar', p.avatar);
   }
+}
+
+/// Garante o consentimento de Termos+Privacidade **por conta** (não por
+/// dispositivo): uma conta nova tem sempre de aceitar. Aplica-se a qualquer
+/// sessão, incluindo convidado. Deve ser chamado da app já montada, após o
+/// login. Se já aceitou (neste dispositivo ou na conta), não faz nada.
+Future<void> ensureTermsAccepted(BuildContext context, WidgetRef ref) async {
+  final uid = ref.read(authStateProvider).valueOrNull?.uid;
+  if (uid == null) return; // sem sessão
+  final prefs = ref.read(prefsProvider);
+  // 1. Cache local desta conta neste dispositivo (rápido, funciona offline).
+  if (prefs.getBool('acceptedTerms_$uid') ?? false) return;
+  // 2. Já aceitou na conta (ex.: aceitou noutro dispositivo)?
+  if (await ref.read(profileServiceProvider).hasAcceptedTerms(uid)) {
+    await prefs.setBool('acceptedTerms_$uid', true);
+    return;
+  }
+  // 3. Ainda não aceitou → gate bloqueante (só sai ao aceitar).
+  if (!context.mounted) return;
+  final accepted = await _showConsentGate(context);
+  if (accepted != true) return; // não aceitou — repete no próximo arranque
+  await prefs.setBool('acceptedTerms_$uid', true);
+  try {
+    await ref.read(profileServiceProvider).setAcceptedTerms(uid);
+  } catch (_) {/* offline / regras — fica local, sincroniza depois */}
+}
+
+Future<void> _openLegal(String url) async {
+  final uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+}
+
+/// Diálogo de consentimento. Não é dispensável: o único botão ("Aceitar e
+/// continuar") só fica ativo com a checkbox marcada.
+Future<bool?> _showConsentGate(BuildContext context) {
+  final t = AppLocalizations.of(context)!;
+  bool checked = false;
+  return showDialog<bool>(
+    context: context,
+    barrierDismissible: false,
+    builder: (ctx) => PopScope(
+      canPop: false,
+      child: StatefulBuilder(
+        builder: (ctx, setState) {
+          final cs = Theme.of(ctx).colorScheme;
+          return AlertDialog(
+            title: Text(t.consentGateTitle),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(t.consentGateBody,
+                    style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                        color: cs.onSurfaceVariant)),
+                const SizedBox(height: 8),
+                InkWell(
+                  onTap: () => setState(() => checked = !checked),
+                  child: Row(children: [
+                    Checkbox(
+                      value: checked,
+                      onChanged: (v) => setState(() => checked = v ?? false),
+                    ),
+                    Expanded(
+                      child: Text(
+                        '${t.acceptPrefix}${t.termsOfUse}${t.consentAnd}${t.privacyPolicy}.',
+                        style: Theme.of(ctx).textTheme.bodySmall,
+                      ),
+                    ),
+                  ]),
+                ),
+                Row(children: [
+                  TextButton(
+                    onPressed: () => _openLegal(kTermsUrl),
+                    child: Text(t.termsOfUse),
+                  ),
+                  TextButton(
+                    onPressed: () => _openLegal(kPrivacyPolicyUrl),
+                    child: Text(t.privacyPolicy),
+                  ),
+                ]),
+              ],
+            ),
+            actions: [
+              FilledButton(
+                onPressed: checked ? () => Navigator.pop(ctx, true) : null,
+                child: Text(t.consentAccept),
+              ),
+            ],
+          );
+        },
+      ),
+    ),
+  );
 }
 
 /// Mostra o popup do nome se houver sessão e ainda não houver nome. Deve ser

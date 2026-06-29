@@ -26,21 +26,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _register = false;
   bool _busy = false;
   bool _obscure = true;
-  bool _accepted = false; // aceitou Termos + Privacidade nesta sessão
-  bool _consentDone = false; // já aceitou antes (não volta a pedir)
   late final TapGestureRecognizer _privacyTap =
       TapGestureRecognizer()..onTap = () => _open(kPrivacyPolicyUrl);
   late final TapGestureRecognizer _termsTap =
       TapGestureRecognizer()..onTap = () => _open(kTermsUrl);
-
-  @override
-  void initState() {
-    super.initState();
-    // Aceitar Termos+Privacidade é uma vez só: se já aceitou antes, não
-    // mostramos a checkbox e deixamos entrar direto.
-    _consentDone = ref.read(prefsProvider).getBool('acceptedTerms') ?? false;
-    _accepted = _consentDone;
-  }
 
   @override
   void dispose() {
@@ -58,25 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  /// Exige a checkbox de Termos+Privacidade marcada antes de entrar.
-  /// Depois de aceitar uma vez, guarda a flag e nunca mais pergunta.
-  bool _requireAccepted() {
-    if (_consentDone || _accepted) {
-      if (!_consentDone) {
-        _consentDone = true;
-        ref.read(prefsProvider).setBool('acceptedTerms', true);
-      }
-      return true;
-    }
-    final t = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context)
-      ..clearSnackBars()
-      ..showSnackBar(SnackBar(content: Text(t.acceptTermsFirst)));
-    return false;
-  }
-
   Future<void> _run(Future<void> Function() action) async {
-    if (!_requireAccepted()) return;
     setState(() => _busy = true);
     try {
       await action();
@@ -106,7 +77,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   /// poder LER a Comunidade (regras exigem `request.auth != null`); se falhar
   /// (ex.: sem rede), mantém o comportamento de convidado offline.
   Future<void> _enterAsGuest() async {
-    if (!_requireAccepted()) return;
     setState(() => _busy = true);
     try {
       await ref.read(authServiceProvider).signInAnonymously();
@@ -241,47 +211,35 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: Text(t.guestEnter),
                 ),
               ),
-              const SizedBox(height: 4),
-              // Consentimento explícito: tem de marcar a checkbox para entrar.
-              // Só aparece a quem ainda não aceitou (conta nova / 1ª vez).
-              if (!_consentDone)
-                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                  Checkbox(
-                    value: _accepted,
-                    onChanged: (v) => setState(() => _accepted = v ?? false),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () => setState(() => _accepted = !_accepted),
-                      child: Text.rich(
-                        TextSpan(children: [
-                          TextSpan(text: t.acceptPrefix),
-                          TextSpan(
-                            text: t.termsOfUse,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: _termsTap,
-                          ),
-                          TextSpan(text: t.consentAnd),
-                          TextSpan(
-                            text: t.privacyPolicy,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.primary,
-                              decoration: TextDecoration.underline,
-                            ),
-                            recognizer: _privacyTap,
-                          ),
-                          const TextSpan(text: '.'),
-                        ]),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant),
-                      ),
+              const SizedBox(height: 8),
+              // Aviso de transparência. O consentimento explícito (checkbox) é
+              // pedido uma vez por conta, logo após entrar (ver ensureTermsAccepted).
+              Text.rich(
+                TextSpan(children: [
+                  TextSpan(text: t.consentPrefix),
+                  TextSpan(
+                    text: t.termsOfUse,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      decoration: TextDecoration.underline,
                     ),
+                    recognizer: _termsTap,
                   ),
+                  TextSpan(text: t.consentAnd),
+                  TextSpan(
+                    text: t.privacyPolicy,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: _privacyTap,
+                  ),
+                  const TextSpan(text: '.'),
                 ]),
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant),
+              ),
             ],
           ),
         ),

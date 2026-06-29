@@ -83,6 +83,23 @@ class ProfileService {
         );
       });
 
+  /// Lê se a conta já aceitou os Termos+Privacidade. O consentimento é por
+  /// conta (não por dispositivo): uma conta nova tem sempre de aceitar.
+  Future<bool> hasAcceptedTerms(String uid) async {
+    try {
+      final snap = await _doc(uid).get();
+      return (snap.data()?['acceptedTerms'] as bool?) ?? false;
+    } catch (_) {
+      return false; // offline / sem permissão — assume que não, mostra o gate
+    }
+  }
+
+  /// Regista o consentimento na conta, com a data (registo para auditoria).
+  Future<void> setAcceptedTerms(String uid) => _doc(uid).set(
+        {'acceptedTerms': true, 'acceptedTermsAt': FieldValue.serverTimestamp()},
+        SetOptions(merge: true),
+      );
+
   /// Marca que o utilizador já apelou (não pode apelar de novo até novo ban).
   Future<void> markAppealed(String uid) =>
       _doc(uid).set({'appealed': true}, SetOptions(merge: true));
