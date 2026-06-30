@@ -153,28 +153,32 @@ class _TierCard extends ConsumerWidget {
                     ?.copyWith(color: cs.outline),
               ),
             ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: isCurrent
-                ? OutlinedButton(
-                    onPressed: null, child: Text(t.currentPlanTag))
-                : FilledButton(
-                    onPressed: (premium && !billingAvailable)
-                        ? null
-                        : () {
-                            if (premium && matchedOffer != null) {
-                              ref
-                                  .read(billingServiceProvider)
-                                  .buy(matchedOffer);
-                            }
-                            // Tier 0 (Grátis) não tem offer — o botão
-                            // apenas mostra "Desbloquear" (free downgrade
-                            // chega via webhook/Cloud Function).
-                          },
-                    child: Text(t.unlock),
-                  ),
-          ),
+          // Plano atual → etiqueta. Plano pago não-atual → comprar.
+          // Grátis não-atual (utilizador é premium) → sem botão: para cancelar
+          // usa-se a Play e o downgrade chega via RTDN.
+          if (isCurrent) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                  onPressed: null, child: Text(t.currentPlanTag)),
+            ),
+          ] else if (premium) ...[
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: billingAvailable
+                    ? () {
+                        if (matchedOffer != null) {
+                          ref.read(billingServiceProvider).buy(matchedOffer);
+                        }
+                      }
+                    : null,
+                child: Text(t.unlock),
+              ),
+            ),
+          ],
         ],
       ),
     );
