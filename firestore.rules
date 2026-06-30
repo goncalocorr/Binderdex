@@ -25,8 +25,29 @@ service cloud.firestore {
 
     // Perfil do utilizador — o dono lê/escreve; o admin também (avisar/banir).
     match /users/{userId} {
-      allow read, write: if (request.auth != null && request.auth.uid == userId)
-                         || isAdmin();
+      allow read: if (request.auth != null && request.auth.uid == userId)
+                  || isAdmin();
+
+      // Campos que o PRÓPRIO utilizador pode escrever. marketTier/sub ficam de
+      // fora — só as Cloud Functions (admin SDK) e o admin os alteram.
+      function selfWritableKeys() {
+        return ['name', 'avatar', 'fcmTokens', 'notifyCards',
+                'acceptedTerms', 'acceptedTermsAt', 'appealed', 'warning'].toSet();
+      }
+
+      // Criar o próprio doc: permitido (campos legítimos; sem marketTier/sub).
+      allow create: if isAdmin()
+        || (request.auth != null && request.auth.uid == userId
+            && !request.resource.data.keys().hasAny(['marketTier', 'sub']));
+
+      // Atualizar: admin tudo; o próprio só os campos da whitelist.
+      allow update: if isAdmin()
+        || (request.auth != null && request.auth.uid == userId
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(selfWritableKeys()));
+
+      allow delete: if (request.auth != null && request.auth.uid == userId)
+                    || isAdmin();
 
       // Coleção de cartas do utilizador.
       match /cards/{cardId} {
@@ -117,6 +138,11 @@ service cloud.firestore {
           && request.auth.uid in
              get(/databases/$(database)/documents/conversations/$(cid)).data.participants;
       }
+    }
+
+    // Mapeamento token->uid: só as Cloud Functions (admin SDK) lê/escreve.
+    match /purchaseTokens/{token} {
+      allow read, write: if false;
     }
 
     // Tudo o resto é negado por omissão.
