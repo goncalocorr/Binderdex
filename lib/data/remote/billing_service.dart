@@ -45,7 +45,8 @@ class BillingService {
           'purchaseToken': token,
           'basePlanId': p.productID, // informativo; a função recalcula pela Play
         });
-        tier = (res.data?['tier'] as int?) ?? 0;
+        // A callable pode devolver o número como int ou double — normaliza.
+        tier = (res.data?['tier'] as num?)?.toInt() ?? 0;
       } catch (_) {
         // Falha de verificação — não concede nada; a app fica como está.
       }
