@@ -68,7 +68,10 @@ Subscrição `binderdex_premium` com 3 base plans auto-renováveis mensais:
   plans disponíveis (no Android, um `ProductDetails`/offer por base plan).
 - Mapeamento `basePlanId → tier`: `{ treinador: 1, mestre: 2, lendario: 3 }`.
 - `buy(tier)`: lança `buyNonConsumable` com o `GooglePlayPurchaseParam` do offer
-  certo; para troca de plano usa `changeSubscriptionParam` (upgrade/downgrade).
+  certo, passando **`applicationUserName`/`obfuscatedAccountId = uid`** (a Play
+  devolve-o nas respostas da API → o `playRtdn` resolve o dono sem depender só do
+  Firestore). Para troca de plano usa `changeSubscriptionParam`
+  (upgrade/downgrade com replacement mode).
 - `restore()`: `restorePurchases()` (botão exigido pela Play).
 - No `purchaseStream`, para `purchased`/`restored`:
   1. chama a callable `verifyPurchase` com `{ purchaseToken, basePlanId }`;
@@ -96,16 +99,30 @@ Subscrição `binderdex_premium` com 3 base plans auto-renováveis mensais:
   (`androidpublisher.purchases.subscriptionsv2.get`).
 - Confirma que a subscrição está ativa e qual o base plan → calcula `tier` e
   `expiryMs`.
-- Escreve `users/{uid}`: `marketTier`, `sub{...}`, `updatedAt`.
-- Grava `purchaseTokens/{token}` → `{ uid, basePlanId }` (para o RTDN resolver o
-  dono).
+- Escreve `users/{uid}`: `marketTier`, `sub{...}` (com `purchaseToken` = token
+  novo, que passa a ser o **autoritativo**), `updatedAt`.
+- Grava `purchaseTokens/{token}` → `{ uid, basePlanId }`.
+- **Supersessão (upgrade/downgrade):** se a resposta da Play trouxer
+  `linkedPurchaseToken` (token antigo que este substitui), apaga
+  `purchaseTokens/{linkedPurchaseToken}` (limpa o mapeamento obsoleto).
 - Devolve `{ tier, expiryMs, state }`.
 
 ### `playRtdn` (trigger Pub/Sub no tópico de RTDN)
-- Descodifica a `SubscriptionNotification` (base64 → JSON).
-- Resolve o `uid` por `purchaseTokens/{token}`.
-- Reconsulta a Play Developer API com o token (fonte de verdade).
-- Atualiza `users/{uid}`: renovou/em-período-de-graça → mantém tier + nova
+- Descodifica a `SubscriptionNotification` (base64 → JSON) → `purchaseToken`.
+- Resolve o `uid`:
+  1. preferencialmente pelo `obfuscatedExternalAccountId` da resposta da Play
+     (definido na compra como o uid — ver "Token lifecycle"); caso contrário
+  2. por `purchaseTokens/{token}`.
+  3. Se não resolver (mapeamento limpo / token desconhecido) → **regista e
+     ignora** (não há nada a fazer com fiabilidade).
+- Reconsulta a Play Developer API com o token (fonte de verdade do estado).
+- **Guarda de staleness (crítica):** só altera `marketTier`/`sub` se o token da
+  notificação **for igual a `users/{uid}.sub.purchaseToken`** (o autoritativo).
+  - Se for **diferente** (token antigo de uma subscrição já substituída por
+    resubscrição/upgrade) → **não toca** no tier; opcionalmente apaga
+    `purchaseTokens/{token}` (limpeza). Isto impede que um `EXPIRED` tardio de um
+    token velho derrube uma subscrição nova ativa.
+- Se for o token atual: renovou/em-período-de-graça → mantém tier + nova
   validade; expirou/cancelou/revogado/em-espera → `marketTier = 0` + estado.
 - A lógica já existente em `app_router` (repor avatar premium quando o tier
   deixa de ser premium) trata do efeito colateral no cliente.
@@ -134,6 +151,27 @@ sub: {
 ```
 { uid: string, basePlanId: string }
 ```
+
+### Token lifecycle / staleness (resubscrição e upgrade)
+
+Um `purchaseToken` identifica uma compra específica. Em **cancelar+resubscrever**
+ou **upgrade/downgrade**, a Play emite um **token novo**; o antigo fica
+superseded (e, em upgrade, vem como `linkedPurchaseToken` na compra nova).
+
+Regras para nunca aplicar estado obsoleto:
+
+- O **token autoritativo** de um utilizador é sempre `users/{uid}.sub.purchaseToken`,
+  definido pelo último `verifyPurchase`.
+- `playRtdn` só altera `marketTier`/`sub` se a notificação for **sobre esse
+  token**. Notificações de tokens antigos são ignoradas (efeito no tier) e o
+  mapeamento obsoleto pode ser limpo.
+- `verifyPurchase` apaga o mapeamento do `linkedPurchaseToken` quando processa o
+  token novo (upgrade).
+- O `uid` é resolúvel a partir da própria Play (`obfuscatedExternalAccountId`),
+  por isso um mapeamento em falta não bloqueia; um mapeamento obsoleto não causa
+  dano (a guarda de staleness protege).
+- Reconsultar sempre a Play no momento do evento evita problemas de **ordem** de
+  entrega das notificações (lê-se o estado atual real do token, não o do evento).
 
 ## Regras do Firestore (alteração de segurança)
 
