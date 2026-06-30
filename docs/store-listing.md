@@ -50,40 +50,62 @@ provêm de bases de dados públicas.
 
 ---
 
-## English (EN)
+## English (EN) — versão PRINCIPAL (idioma predefinido na Play)
 
-**Short description** (max 80 chars)
-> Track your Pokémon TCG card collection and trade with the community.
+**App name** (max 30): `Binderdex`  — ver nota de marca abaixo (recomendado: NÃO meter "Pokémon" no título).
+
+**Short description** (max 80 chars) — duas opções:
+- (recomendada, neutra) `Track your card collection, see what's missing, trade with collectors.` (69)
+- (com marca, +procura/+risco) `Track your Pokémon TCG collection, find missing cards & trade doubles.` (69)
 
 **Full description** (max 4000 chars)
 ```
-Binderdex is your digital Pokémon TCG binder. Track your collection, find what
-you're missing, and trade or sell with other collectors.
+Binderdex is the digital binder for trading card collectors. Track every set
+card by card, see exactly what you're missing, and trade or sell your doubles
+with a community of collectors — all in a fast, beautiful app.
 
-COLLECTION
-• Every official set, card by card.
-• Mark what you own — by variant (normal, holo, reverse) and quantity.
-• See your progress, missing cards and duplicates.
-• Wishlist for the cards you're after.
+TRACK YOUR COLLECTION
+• Every official set, card by card — owned vs. missing at a glance.
+• Mark cards by variant (normal, holo, reverse) and quantity.
+• Live progress, completion rings and per-set stats.
+• Spot your duplicates instantly.
 
-COMMUNITY
+NEVER MISS A CARD
+• Build a wishlist of the cards you're hunting.
+• Get notified the moment a wanted card is listed.
+
+TRADE WITH THE COMMUNITY
 • List your duplicates to trade or sell.
-• Search a card and see who has it.
-• Chat with other collectors.
-• "Perfect trades": matches your wishlist with others' duplicates.
+• Search any card and see who has it.
+• Chat privately to arrange deals.
+• Perfect Trades: Binderdex automatically matches your wishlist with other
+  collectors' doubles — mutual trades found for you.
 
-PREMIUM (optional)
-• More listing slots, a badge, exclusive avatars.
+BEAUTIFUL BY DESIGN
+• Animated holo, reverse and rainbow shines on your rare cards.
+• Light and dark themes.
+
+PREMIUM (optional subscription)
+• More marketplace slots, a collector badge and exclusive avatars.
 • Estimated value of your collection.
 
 LOCAL-FIRST & PRIVATE
-• Works without an account — your collection stays on your device.
+• Works fully offline — your collection lives on your device.
 • Sign in only if you want cloud sync and the community.
+• Safe community: report, block and moderation built in.
 
-Not affiliated with or endorsed by Nintendo, Game Freak or The Pokémon Company.
-Pokémon and card names are trademarks of their respective owners. Card images
-come from public databases.
+Start your binder today and complete every set.
+
+—
+Binderdex is a fan-made collection tracker. It is NOT affiliated with,
+endorsed by, or sponsored by Nintendo, Game Freak or The Pokémon Company. All
+card names and images are the property of their respective owners.
 ```
+
+### Nota de marca (decisão tua)
+- **Título:** mantém **só "Binderdex"**. Pôr "Pokémon" no título é o maior risco (política da Google sobre marcas de terceiros + atenção do dono da marca). Recomendo NÃO o fazer.
+- **Short/Full description:** a variante **com "Pokémon"** capta mais pesquisas mas **aumenta o risco** de takedown. A **neutra** é mais segura. O disclaimer "fan-made / not affiliated" tem de ficar SEMPRE (já está no fim da descrição).
+- Decide tu o equilíbrio procura ⇄ risco; eu deixei as duas prontas.
 
 ---
 
