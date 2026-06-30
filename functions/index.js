@@ -145,4 +145,5 @@ exports.onNewListing = onDocumentCreated("listings/{id}", async (event) => {
 //    Usa o segredo ANNOUNCE_SECRET (Secret Manager).
 // 4) Verificacao de compra (callable) + 5) RTDN (Pub/Sub) — Play Billing.
 Object.assign(exports, require("./verify_purchase"));
+Object.assign(exports, require("./play_rtdn"));
 require("./announce_new_set")(exports);
