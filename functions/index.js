@@ -143,4 +143,6 @@ exports.onNewListing = onDocumentCreated("listings/{id}", async (event) => {
 
 // 3) Anúncio de coleção nova (manual, HTTP) → functions/announce_new_set.js.
 //    Usa o segredo ANNOUNCE_SECRET (Secret Manager).
+// 4) Verificacao de compra (callable) + 5) RTDN (Pub/Sub) — Play Billing.
+Object.assign(exports, require("./verify_purchase"));
 require("./announce_new_set")(exports);
