@@ -4,8 +4,18 @@ import '../../core/theme/app_theme.dart';
 import '../../core/theme/dex_tokens.dart';
 
 /// Todos os avatares incluídos (assets/avatars/<id>.png).
+/// Lista explícita dos `avatar_*` (alguns foram removidos) + os `person_avatar_*`.
 final List<String> kAvatarIds = [
-  for (var i = 1; i <= 16; i++) 'avatar_${i.toString().padLeft(2, '0')}',
+  'avatar_03',
+  'avatar_05',
+  'avatar_06',
+  'avatar_07',
+  'avatar_09',
+  'avatar_10',
+  'avatar_11',
+  'avatar_12',
+  'avatar_13',
+  'avatar_15',
   for (var i = 1; i <= 16; i++)
     'person_avatar_${i.toString().padLeft(2, '0')}',
 ];
@@ -41,10 +51,16 @@ class Avatar extends StatelessWidget {
           width: size,
           height: size,
           fit: BoxFit.cover,
+          // Se o asset não existir (ex.: avatar removido), cai para a inicial.
+          errorBuilder: (_, __, ___) => _fallback(),
         ),
       );
     }
+    return _fallback();
+  }
 
+  /// Reserva: inicial do nome num círculo, ou ícone de pessoa (convidado).
+  Widget _fallback() {
     final trimmed = name.trim();
     final letter = trimmed.isEmpty ? '' : trimmed.characters.first.toUpperCase();
     return Container(
