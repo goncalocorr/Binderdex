@@ -36,6 +36,12 @@ exports.verifyPurchase = onCall(async (request) => {
   }
 
   const s = subStateFromV2(resp);
+  // Segurança: o token tem de pertencer a quem chama. Na compra marcamos
+  // obfuscatedAccountId = uid; a Play devolve-o em externalAccountIdentifiers.
+  // Se não bater, é uma tentativa de usar o token de outra conta — rejeita.
+  if (s.uid && s.uid !== uid) {
+    throw new HttpsError("permission-denied", "Compra de outra conta.");
+  }
   const db = admin.firestore();
   await db.collection("users").doc(uid).set(
     {
