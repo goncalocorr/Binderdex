@@ -973,4 +973,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notifNewCollection => 'New collection';
+
+  @override
+  String get restorePurchases => 'Restore purchases';
 }

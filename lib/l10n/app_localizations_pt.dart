@@ -979,4 +979,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get notifNewCollection => 'Nova coleção';
+
+  @override
+  String get restorePurchases => 'Restaurar compras';
 }

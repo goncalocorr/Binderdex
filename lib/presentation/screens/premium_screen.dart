@@ -1,14 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 
 import '../../core/theme/dex_tokens.dart';
+import '../../data/remote/billing_ids.dart';
 import '../../domain/entities/market_tier.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/premium_badge.dart';
 
-/// Ecrã de subscrição premium. Mostra os níveis e desbloqueia via marcador
-/// (`setTier`). O botão "Desbloquear" fica pronto para ligar ao Play Billing.
+// ─── Provider local: carrega os offers da Play ───────────────────────────────
+
+final _offersProvider = FutureProvider<List<ProductDetails>>((ref) async {
+  final billing = ref.read(billingServiceProvider);
+  final available = await billing.isAvailable();
+  if (!available) return const [];
+  return billing.loadOffers();
+});
+
+// ─── Helper: extrai o basePlanId de um GooglePlayProductDetails ───────────────
+
+String? _basePlanIdOf(ProductDetails pd) {
+  if (pd is GooglePlayProductDetails && pd.subscriptionIndex != null) {
+    final subs = pd.productDetails.subscriptionOfferDetails;
+    if (subs != null && pd.subscriptionIndex! < subs.length) {
+      return subs[pd.subscriptionIndex!].basePlanId;
+    }
+  }
+  return null;
+}
+
+/// Ecrã de subscrição premium. Mostra os níveis com preços da Play e compra
+/// via Play Billing. O desbloqueio chega pelo listener global (Task 12) +
+/// `marketTierProvider` (stream do Firestore).
 class PremiumScreen extends ConsumerWidget {
   const PremiumScreen({super.key});
 
@@ -16,6 +41,9 @@ class PremiumScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = AppLocalizations.of(context)!;
     final current = ref.watch(marketTierProvider).valueOrNull ?? 0;
+    final offersAsync = ref.watch(_offersProvider);
+    final offers = offersAsync.valueOrNull ?? const [];
+
     return Scaffold(
       appBar: AppBar(title: Text(t.premium)),
       body: ListView(
@@ -25,7 +53,15 @@ class PremiumScreen extends ConsumerWidget {
               style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 12),
           for (var i = 0; i < MarketTier.slots.length; i++)
-            _TierCard(tier: i, current: current),
+            _TierCard(tier: i, current: current, offers: offers),
+          const SizedBox(height: 8),
+          Center(
+            child: TextButton.icon(
+              onPressed: () => ref.read(billingServiceProvider).restore(),
+              icon: const Icon(Icons.restore),
+              label: Text(t.restorePurchases),
+            ),
+          ),
         ],
       ),
     );
@@ -35,7 +71,13 @@ class PremiumScreen extends ConsumerWidget {
 class _TierCard extends ConsumerWidget {
   final int tier;
   final int current;
-  const _TierCard({required this.tier, required this.current});
+  final List<ProductDetails> offers;
+
+  const _TierCard({
+    required this.tier,
+    required this.current,
+    required this.offers,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,6 +85,27 @@ class _TierCard extends ConsumerWidget {
     final cs = Theme.of(context).colorScheme;
     final isCurrent = tier == current;
     final premium = MarketTier.isPremium(tier);
+
+    // Para planos pagos, tenta encontrar o offer correspondente.
+    ProductDetails? matchedOffer;
+    if (premium) {
+      final wantedBasePlan = basePlanForTier(tier);
+      if (wantedBasePlan != null) {
+        for (final o in offers) {
+          if (_basePlanIdOf(o) == wantedBasePlan) {
+            matchedOffer = o;
+            break;
+          }
+        }
+      }
+    }
+
+    // Preço: da Play se disponível; fallback ao valor hardcoded.
+    final priceLabel =
+        matchedOffer?.price ?? MarketTier.priceFor(tier);
+    // O billing está disponível se obtivemos pelo menos um offer
+    // OU se este tier é gratuito (não precisa de billing).
+    final billingAvailable = !premium || matchedOffer != null;
 
     final card = Container(
       padding: const EdgeInsets.all(16),
@@ -68,7 +131,7 @@ class _TierCard extends ConsumerWidget {
                 style: Theme.of(context).textTheme.titleLarge),
             const Spacer(),
             if (premium)
-              Text('${MarketTier.priceFor(tier)}${t.perMonth}',
+              Text('$priceLabel${t.perMonth}',
                   style: Theme.of(context)
                       .textTheme
                       .titleMedium
@@ -79,6 +142,17 @@ class _TierCard extends ConsumerWidget {
           if (premium) _perk(context, _tradeMatchesPerk(t, tier)),
           if (premium) _perk(context, t.perkBadge),
           if (premium) _perk(context, t.perkAvatars),
+          if (premium && !billingAvailable)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                'indisponível',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: cs.outline),
+              ),
+            ),
           const SizedBox(height: 12),
           SizedBox(
             width: double.infinity,
@@ -86,16 +160,18 @@ class _TierCard extends ConsumerWidget {
                 ? OutlinedButton(
                     onPressed: null, child: Text(t.currentPlanTag))
                 : FilledButton(
-                    onPressed: () async {
-                      final uid =
-                          ref.read(authStateProvider).valueOrNull?.uid;
-                      if (uid == null) return;
-                      await ref.read(marketServiceProvider).setTier(uid, tier);
-                      if (!context.mounted) return;
-                      tier == 0
-                          ? _showSubscriptionEnded(context, t)
-                          : _showUnlocked(context, t, tier);
-                    },
+                    onPressed: (premium && !billingAvailable)
+                        ? null
+                        : () {
+                            if (premium && matchedOffer != null) {
+                              ref
+                                  .read(billingServiceProvider)
+                                  .buy(matchedOffer);
+                            }
+                            // Tier 0 (Grátis) não tem offer — o botão
+                            // apenas mostra "Desbloquear" (free downgrade
+                            // chega via webhook/Cloud Function).
+                          },
                     child: Text(t.unlock),
                   ),
           ),
@@ -128,62 +204,3 @@ String _tradeMatchesPerk(AppLocalizations t, int tier) {
   final n = MarketTier.tradeMatchViewsFor(tier);
   return n < 0 ? t.perkTradeMatchesUnlimited : t.perkTradeMatchesCount(n);
 }
-
-/// Popup de "desbloqueado com sucesso" com as vantagens do nível.
-void _showUnlocked(BuildContext context, AppLocalizations t, int tier) {
-  showDialog<void>(
-    context: context,
-    builder: (ctx) => AlertDialog(
-      icon: PremiumBadge(size: 44, tier: tier),
-      title: Text(t.premiumUnlocked(MarketTier.nameFor(tier)),
-          textAlign: TextAlign.center),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(t.youUnlocked,
-              style: const TextStyle(fontWeight: FontWeight.w700)),
-          const SizedBox(height: 8),
-          _unlockPerk(ctx, t.perkSlots(MarketTier.slotsFor(tier))),
-          _unlockPerk(ctx, _tradeMatchesPerk(t, tier)),
-          _unlockPerk(ctx, t.perkBadge),
-          _unlockPerk(ctx, t.perkAvatars),
-        ],
-      ),
-      actions: [
-        FilledButton(
-          onPressed: () => Navigator.of(ctx).pop(),
-          child: Text(t.continueLabel),
-        ),
-      ],
-    ),
-  );
-}
-
-/// Aviso ao voltar ao plano Grátis (subscrição não renovada / expirada).
-void _showSubscriptionEnded(BuildContext context, AppLocalizations t) {
-  showDialog<void>(
-    context: context,
-    builder: (ctx) => AlertDialog(
-      icon: const Icon(Icons.info_outline, color: Colors.orange, size: 36),
-      title: Text(t.subscriptionNotRenewed, textAlign: TextAlign.center),
-      content: Text(t.backToFreeBody),
-      actions: [
-        FilledButton(
-          onPressed: () => Navigator.of(ctx).pop(),
-          child: Text(t.continueLabel),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _unlockPerk(BuildContext context, String text) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Row(children: [
-        Icon(Icons.check_circle,
-            size: 18, color: Theme.of(context).colorScheme.primary),
-        const SizedBox(width: 8),
-        Expanded(child: Text(text)),
-      ]),
-    );

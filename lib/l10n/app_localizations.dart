@@ -1891,6 +1891,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'New collection'**
   String get notifNewCollection;
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore purchases'**
+  String get restorePurchases;
 }
 
 class _AppLocalizationsDelegate

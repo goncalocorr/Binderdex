@@ -345,5 +345,6 @@
   "notifCleared": "Notification cleared",
   "notifNewMessage": "New message",
   "notifWishlistAvailable": "Tracked card available",
-  "notifNewCollection": "New collection"
+  "notifNewCollection": "New collection",
+  "restorePurchases": "Restore purchases"
 }

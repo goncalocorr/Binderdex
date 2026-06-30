@@ -298,5 +298,6 @@
   "notifCleared": "Notificação limpa",
   "notifNewMessage": "Nova mensagem",
   "notifWishlistAvailable": "Carta seguida disponível",
-  "notifNewCollection": "Nova coleção"
+  "notifNewCollection": "Nova coleção",
+  "restorePurchases": "Restaurar compras"
 }
