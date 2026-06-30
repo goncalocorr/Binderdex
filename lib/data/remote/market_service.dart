@@ -196,9 +196,4 @@ class MarketService {
       .collection('blocks')
       .doc(blockedUid)
       .delete();
-
-  Future<void> setTier(String uid, int tier) => _db
-      .collection('users')
-      .doc(uid)
-      .set({'marketTier': tier}, SetOptions(merge: true));
 }
