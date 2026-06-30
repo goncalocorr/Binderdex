@@ -115,6 +115,7 @@ class PokedexApp extends ConsumerWidget {
     ref.watch(wishlistWatchSyncProvider); // wishlist → notifyCards (push)
     ref.watch(ensureOwnedSetsSyncedProvider); // sets possuídos → cache (binder)
     ref.watch(setsRefreshProvider); // apanha coleções novas da API (6h)
+    ref.watch(billingListenerProvider); // processa compras/restauros/renovações Play
     // Moderação: aviso de conta suspensa (banido) ou aviso deixado pelo admin.
     ref.listen(selfModerationProvider, (prev, next) {
       final mod = next.valueOrNull;

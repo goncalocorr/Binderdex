@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +11,7 @@ import '../../core/router/root_navigator.dart';
 import '../../data/local/database.dart';
 import '../../data/remote/admin_service.dart';
 import '../../data/remote/auth_service.dart';
+import '../../data/remote/billing_service.dart';
 import '../../data/remote/chat_service.dart';
 import '../../data/remote/market_service.dart';
 import '../../data/remote/profile_service.dart';
@@ -106,6 +109,25 @@ final pushServiceProvider = Provider<PushService>((ref) {
     }
   }, fireImmediately: true);
   return svc;
+});
+
+// --- Play Billing ---
+final billingServiceProvider =
+    Provider<BillingService>((ref) => BillingService());
+
+/// Ativa o processamento global de compras Play (compras/restauros/
+/// renovações pendentes). Subscreve uma única vez; cancela ao destruir.
+final billingListenerProvider = Provider<void>((ref) {
+  // Só processa com sessão (uid existe). Sem sessão, nada a fazer.
+  final signedIn = ref.watch(authStateProvider).valueOrNull != null;
+  if (!signedIn) return;
+  final billing = ref.read(billingServiceProvider);
+  final sub = billing.purchaseStream.listen((purchases) {
+    for (final p in purchases) {
+      billing.handlePurchase(p);
+    }
+  });
+  ref.onDispose(() => sub.cancel());
 });
 
 // --- Sets (ecrã inicial) ---
