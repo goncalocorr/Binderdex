@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 
 import '../../domain/entities/listing.dart';
 import '../../domain/entities/market_tier.dart';
@@ -22,7 +23,12 @@ class ListingTile extends StatelessWidget {
     final t = AppLocalizations.of(context)!;
     final cs = Theme.of(context).colorScheme;
     return ListTile(
-      onTap: onTap,
+      onTap: onTap == null
+          ? null
+          : () {
+              HapticFeedback.selectionClick();
+              onTap!();
+            },
       leading: SizedBox(
         width: 40,
         child: listing.cardImage.isEmpty
@@ -34,8 +40,8 @@ class ListingTile extends StatelessWidget {
                 errorWidget: (_, __, ___) => const Icon(Icons.style),
               ),
       ),
-      title: Text(listing.cardName,
-          maxLines: 1, overflow: TextOverflow.ellipsis),
+      title:
+          Text(listing.cardName, maxLines: 1, overflow: TextOverflow.ellipsis),
       subtitle: Row(children: [
         Flexible(
           child: Text(listing.ownerName,

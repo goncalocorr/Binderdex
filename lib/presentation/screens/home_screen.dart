@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -9,6 +10,7 @@ import '../../data/repositories/sets_repository.dart';
 import '../../l10n/app_localizations.dart';
 import '../providers/app_providers.dart';
 import '../widgets/completion_ring.dart';
+import '../widgets/dex_ui.dart';
 
 /// Início: "launchpad" pessoal — saudação, progresso compacto (ou CTA de
 /// login), ações rápidas, "Quase lá!" e "Descobrir". O dashboard detalhado
@@ -90,7 +92,8 @@ class HomeScreen extends ConsumerWidget {
                 .where((s) =>
                     s.progress.owned > 0 && s.progress.owned < s.progress.total)
                 .toList()
-              ..sort((a, b) => a.progress.missing.compareTo(b.progress.missing));
+              ..sort(
+                  (a, b) => a.progress.missing.compareTo(b.progress.missing));
             if (almost.isEmpty) return const SizedBox.shrink();
             return _Section(
               title: t.homeAlmostThere,
@@ -98,8 +101,7 @@ class HomeScreen extends ConsumerWidget {
                 children: almost
                     .take(6)
                     .map((s) => _AlmostCard(
-                        data: s,
-                        onTap: () => context.push('/set/${s.set.id}')))
+                        data: s, onTap: () => context.push('/set/${s.set.id}')))
                     .toList(),
               ),
             );
@@ -118,8 +120,7 @@ class HomeScreen extends ConsumerWidget {
               child: _HRow(
                 children: fresh
                     .map((s) => _DiscoverCard(
-                        data: s,
-                        onTap: () => context.push('/set/${s.set.id}')))
+                        data: s, onTap: () => context.push('/set/${s.set.id}')))
                     .toList(),
               ),
             );
@@ -219,24 +220,29 @@ class _QuickAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
     return Expanded(
-      child: InkWell(
-        borderRadius: BorderRadius.circular(DexRadii.lg),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: cs.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(DexRadii.lg),
-          ),
-          child: Column(
-            children: [
-              Icon(icon, color: cs.primary),
-              const SizedBox(height: 6),
-              Text(label,
-                  style: Theme.of(context).textTheme.labelMedium,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis),
-            ],
+      child: Pressable(
+        child: InkWell(
+          borderRadius: BorderRadius.circular(DexRadii.lg),
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap();
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 14),
+            decoration: BoxDecoration(
+              color: cs.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(DexRadii.lg),
+            ),
+            child: Column(
+              children: [
+                Icon(icon, color: cs.primary),
+                const SizedBox(height: 6),
+                Text(label,
+                    style: Theme.of(context).textTheme.labelMedium,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis),
+              ],
+            ),
           ),
         ),
       ),
@@ -413,24 +419,29 @@ class _MiniCard extends StatelessWidget {
     final dark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(right: 10),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(DexRadii.lg),
-        onTap: onTap,
-        child: Container(
-          width: 150,
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: cs.surface,
-            borderRadius: BorderRadius.circular(DexRadii.lg),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: dark ? 0.35 : 0.06),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
+      child: Pressable(
+        child: InkWell(
+          borderRadius: BorderRadius.circular(DexRadii.lg),
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap();
+          },
+          child: Container(
+            width: 150,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: cs.surface,
+              borderRadius: BorderRadius.circular(DexRadii.lg),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: dark ? 0.35 : 0.06),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: child,
           ),
-          child: child,
         ),
       ),
     );

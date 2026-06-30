@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/format.dart';
@@ -61,46 +62,52 @@ class CardTile extends ConsumerWidget {
           Icon(Icons.broken_image_outlined, color: cs.onSurfaceVariant),
     );
     if (!owned) {
-      art = Opacity(opacity: 0.28, child: ColorFiltered(colorFilter: _grayscale, child: art));
+      art = Opacity(
+          opacity: 0.28,
+          child: ColorFiltered(colorFilter: _grayscale, child: art));
     }
 
     return Pressable(
       child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        borderRadius: BorderRadius.circular(DexRadii.lg),
-        child: Ink(
-          decoration: BoxDecoration(
-            color: owned ? cs.surface : cs.surfaceContainerHigh,
-            borderRadius: BorderRadius.circular(DexRadii.lg),
-            boxShadow: owned
-                ? [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
-                      blurRadius: 10,
-                      offset: const Offset(0, 3),
-                    ),
-                  ]
-                : null,
-          ),
-          child: CustomPaint(
-            foregroundPainter: owned
-                ? null
-                : _DashedRRectPainter(
-                    color: cs.outline, radius: DexRadii.lg, strokeWidth: 2),
-            child: ClipRRect(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.selectionClick();
+            onTap();
+          },
+          onLongPress: onLongPress,
+          borderRadius: BorderRadius.circular(DexRadii.lg),
+          child: Ink(
+            decoration: BoxDecoration(
+              color: owned ? cs.surface : cs.surfaceContainerHigh,
               borderRadius: BorderRadius.circular(DexRadii.lg),
-              child: Column(
-                children: [
-                  // Área da arte
-                  Expanded(
-                    child: Container(
-                      color: owned ? tint : Colors.transparent,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
+              boxShadow: owned
+                  ? [
+                      BoxShadow(
+                        color:
+                            Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
+                        blurRadius: 10,
+                        offset: const Offset(0, 3),
+                      ),
+                    ]
+                  : null,
+            ),
+            child: CustomPaint(
+              foregroundPainter: owned
+                  ? null
+                  : _DashedRRectPainter(
+                      color: cs.outline, radius: DexRadii.lg, strokeWidth: 2),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(DexRadii.lg),
+                child: Column(
+                  children: [
+                    // Área da arte
+                    Expanded(
+                      child: Container(
+                        color: owned ? tint : Colors.transparent,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
                             Padding(
                               padding: const EdgeInsets.all(6),
                               child: art,
@@ -134,8 +141,8 @@ class CardTile extends ConsumerWidget {
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black
-                                            .withValues(alpha: 0.2),
+                                        color:
+                                            Colors.black.withValues(alpha: 0.2),
                                         blurRadius: 2,
                                         offset: const Offset(0, 1),
                                       ),
@@ -179,53 +186,54 @@ class CardTile extends ConsumerWidget {
                                           color: Colors.white)),
                                 ),
                               ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Rodapé: nome + check
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 6, 8, 7),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              owned ? c.name : '???',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: owned
+                                        ? cs.onSurface
+                                        : cs.onSurfaceVariant,
+                                  ),
+                            ),
+                          ),
+                          if (owned) ...[
+                            const SizedBox(width: 4),
+                            Container(
+                              width: 18,
+                              height: 18,
+                              decoration: const BoxDecoration(
+                                  color: DexColors.green500,
+                                  shape: BoxShape.circle),
+                              child: const Icon(Icons.check,
+                                  size: 13, color: Colors.white),
+                            ),
+                          ],
                         ],
                       ),
                     ),
-                  ),
-                  // Rodapé: nome + check
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 6, 8, 7),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            owned ? c.name : '???',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color:
-                                      owned ? cs.onSurface : cs.onSurfaceVariant,
-                                ),
-                          ),
-                        ),
-                        if (owned) ...[
-                          const SizedBox(width: 4),
-                          Container(
-                            width: 18,
-                            height: 18,
-                            decoration: const BoxDecoration(
-                                color: DexColors.green500,
-                                shape: BoxShape.circle),
-                            child: const Icon(Icons.check,
-                                size: 13, color: Colors.white),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 }
@@ -271,8 +279,7 @@ class _DashedRRectPainter extends CustomPainter {
     for (final metric in path.computeMetrics()) {
       var d = 0.0;
       while (d < metric.length) {
-        canvas.drawPath(
-            metric.extractPath(d, d + dash), paint);
+        canvas.drawPath(metric.extractPath(d, d + dash), paint);
         d += dash + gap;
       }
     }
