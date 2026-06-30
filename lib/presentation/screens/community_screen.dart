@@ -211,7 +211,8 @@ class _CommunityScreenState extends ConsumerState<CommunityScreen> {
       data: (items) => items.isEmpty
           ? Center(child: Text(t.noMatch))
           : GridView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+              // Fundo extra para a barra flutuante (extendBody) não tapar.
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 96),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 childAspectRatio: 0.62,

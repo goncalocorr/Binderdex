@@ -48,7 +48,8 @@ class MyBinderScreen extends ConsumerWidget {
         final percent = total == 0 ? 0.0 : owned / total;
 
         return ListView(
-          padding: const EdgeInsets.only(bottom: 16),
+          // Espaço para a barra flutuante (extendBody) não tapar o fundo.
+          padding: const EdgeInsets.only(bottom: 96),
           children: [
             // Subtítulo: N sets seguidos.
             Padding(

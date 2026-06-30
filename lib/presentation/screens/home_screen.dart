@@ -25,7 +25,8 @@ class HomeScreen extends ConsumerWidget {
     final setsAsync = ref.watch(setsListProvider);
 
     return ListView(
-      padding: const EdgeInsets.only(bottom: 20),
+      // Espaço para a barra flutuante (extendBody) não tapar o fundo.
+      padding: const EdgeInsets.only(bottom: 96),
       children: [
         // Saudação.
         Padding(

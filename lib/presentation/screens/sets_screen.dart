@@ -87,7 +87,8 @@ class SetsScreen extends ConsumerWidget {
               return RefreshIndicator(
                 onRefresh: () => _refreshCatalog(context, ref, t),
                 child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 16),
+                  // Espaço para a barra flutuante (extendBody) não tapar.
+                  padding: const EdgeInsets.only(bottom: 96),
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: header.length + filtered.length,
                   itemBuilder: (context, i) {
