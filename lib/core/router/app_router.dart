@@ -3,6 +3,7 @@ import 'dart:ui' show ImageFilter;
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -55,6 +56,7 @@ class _Shell extends ConsumerStatefulWidget {
 
 class _ShellState extends ConsumerState<_Shell> {
   bool _prompting = false;
+  bool _navShrunk = false; // barra encolhe ao fazer scroll para baixo
 
   static const _tabs = [
     HomeScreen(),
@@ -118,7 +120,10 @@ class _ShellState extends ConsumerState<_Shell> {
       ref.read(prefsProvider).setString('avatar', '');
       final uid = ref.read(authStateProvider).valueOrNull?.uid;
       if (uid != null) {
-        ref.read(profileServiceProvider).save(uid, avatar: '').catchError((_) {});
+        ref
+            .read(profileServiceProvider)
+            .save(uid, avatar: '')
+            .catchError((_) {});
       }
     });
 
@@ -172,28 +177,42 @@ class _ShellState extends ConsumerState<_Shell> {
       ),
       // extendBody: o conteúdo passa por trás da barra (efeito vidro/blur).
       extendBody: true,
-      // Transição suave (fade + micro-slide) ao trocar de separador.
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 260),
-        switchInCurve: Curves.easeOutCubic,
-        switchOutCurve: Curves.easeInCubic,
-        transitionBuilder: (child, anim) => FadeTransition(
-          opacity: anim,
-          child: SlideTransition(
-            position: Tween<Offset>(
-                    begin: const Offset(0, 0.015), end: Offset.zero)
-                .animate(anim),
-            child: child,
+      // Ouve o scroll: para baixo encolhe a barra, para cima repõe-a.
+      body: NotificationListener<UserScrollNotification>(
+        onNotification: (n) {
+          if (n.metrics.axis != Axis.vertical) return false;
+          if (n.direction == ScrollDirection.reverse && !_navShrunk) {
+            setState(() => _navShrunk = true);
+          } else if (n.direction == ScrollDirection.forward && _navShrunk) {
+            setState(() => _navShrunk = false);
+          }
+          return false;
+        },
+        // Transição suave (fade + micro-slide) ao trocar de separador.
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 260),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
+          transitionBuilder: (child, anim) => FadeTransition(
+            opacity: anim,
+            child: SlideTransition(
+              position:
+                  Tween<Offset>(begin: const Offset(0, 0.015), end: Offset.zero)
+                      .animate(anim),
+              child: child,
+            ),
           ),
+          child: KeyedSubtree(key: ValueKey(index), child: _tabs[index]),
         ),
-        child: KeyedSubtree(key: ValueKey(index), child: _tabs[index]),
       ),
       bottomNavigationBar: _FloatingNav(
         index: index,
         unread: ref.watch(unreadTotalProvider),
+        shrunk: _navShrunk,
         onSelect: (i) {
           if (i == index) return;
           HapticFeedback.selectionClick(); // feedback subtil ao trocar de tab
+          setState(() => _navShrunk = false); // repõe ao trocar de tab
           ref.read(navIndexProvider.notifier).state = i;
         },
       ),
@@ -206,11 +225,21 @@ class _ShellState extends ConsumerState<_Shell> {
 class _FloatingNav extends StatelessWidget {
   final int index;
   final int unread;
+  final bool shrunk;
   final ValueChanged<int> onSelect;
   const _FloatingNav(
-      {required this.index, required this.unread, required this.onSelect});
+      {required this.index,
+      required this.unread,
+      required this.shrunk,
+      required this.onSelect});
 
-  static const _icons = ['inicio', 'colecoes', 'binder', 'comunidade', 'perfil'];
+  static const _icons = [
+    'inicio',
+    'colecoes',
+    'binder',
+    'comunidade',
+    'perfil'
+  ];
 
   static const _curve = Curves.easeOutCubic;
   static const _dur = Duration(milliseconds: 340);
@@ -222,74 +251,86 @@ class _FloatingNav extends StatelessWidget {
     final base = isDark ? Colors.black : Colors.white;
     return SafeArea(
       top: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(34),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
-            child: Container(
-              height: 64,
-              decoration: BoxDecoration(
-                // Vidro: leve gradiente vertical para apanhar a luz no topo.
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    base.withValues(alpha: isDark ? 0.34 : 0.40),
-                    base.withValues(alpha: isDark ? 0.20 : 0.26),
-                  ],
-                ),
-                borderRadius: BorderRadius.circular(34),
-                border: Border.all(
-                    color: Colors.white.withValues(alpha: isDark ? 0.12 : 0.55),
-                    width: 1),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.22),
-                    blurRadius: 30,
-                    spreadRadius: -4,
-                    offset: const Offset(0, 12),
-                  ),
-                ],
-              ),
-              child: LayoutBuilder(builder: (context, c) {
-                final slot = c.maxWidth / _icons.length;
-                const inset = 8.0;
-                return Stack(children: [
-                  // Indicador ativo que desliza entre separadores.
-                  AnimatedPositioned(
-                    duration: _dur,
-                    curve: _curve,
-                    left: index * slot + inset,
-                    top: 10,
-                    bottom: 10,
-                    width: slot - inset * 2,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: cs.primary.withValues(alpha: 0.22),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                            color: cs.primary.withValues(alpha: 0.45),
-                            width: 1),
-                        boxShadow: [
-                          BoxShadow(
-                            color: cs.primary.withValues(alpha: 0.35),
-                            blurRadius: 14,
-                            spreadRadius: -3,
-                          ),
-                        ],
-                      ),
+      child: AnimatedScale(
+        duration: _dur,
+        curve: _curve,
+        alignment: Alignment.bottomCenter,
+        scale: shrunk ? 0.82 : 1, // encolhe ao fazer scroll para baixo
+        child: AnimatedOpacity(
+          duration: _dur,
+          curve: _curve,
+          opacity: shrunk ? 0.9 : 1,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(34),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
+                child: Container(
+                  height: 64,
+                  decoration: BoxDecoration(
+                    // Vidro: leve gradiente vertical para apanhar a luz no topo.
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        base.withValues(alpha: isDark ? 0.34 : 0.40),
+                        base.withValues(alpha: isDark ? 0.20 : 0.26),
+                      ],
                     ),
-                  ),
-                  Row(
-                    children: [
-                      for (var i = 0; i < _icons.length; i++)
-                        Expanded(child: _item(context, i)),
+                    borderRadius: BorderRadius.circular(34),
+                    border: Border.all(
+                        color: Colors.white
+                            .withValues(alpha: isDark ? 0.12 : 0.55),
+                        width: 1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.22),
+                        blurRadius: 30,
+                        spreadRadius: -4,
+                        offset: const Offset(0, 12),
+                      ),
                     ],
                   ),
-                ]);
-              }),
+                  child: LayoutBuilder(builder: (context, c) {
+                    final slot = c.maxWidth / _icons.length;
+                    const inset = 8.0;
+                    return Stack(children: [
+                      // Indicador ativo que desliza entre separadores.
+                      AnimatedPositioned(
+                        duration: _dur,
+                        curve: _curve,
+                        left: index * slot + inset,
+                        top: 10,
+                        bottom: 10,
+                        width: slot - inset * 2,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: cs.primary.withValues(alpha: 0.22),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: cs.primary.withValues(alpha: 0.45),
+                                width: 1),
+                            boxShadow: [
+                              BoxShadow(
+                                color: cs.primary.withValues(alpha: 0.35),
+                                blurRadius: 14,
+                                spreadRadius: -3,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          for (var i = 0; i < _icons.length; i++)
+                            Expanded(child: _item(context, i)),
+                        ],
+                      ),
+                    ]);
+                  }),
+                ),
+              ),
             ),
           ),
         ),
@@ -332,9 +373,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   // Rota inicial: onboarding (1ª vez) → início (se já autenticado) → login.
   final onboardingDone = ref.read(onboardingDoneProvider);
   final initiallyAuthed = fb.FirebaseAuth.instance.currentUser != null;
-  final initial = !onboardingDone
-      ? '/onboarding'
-      : (initiallyAuthed ? '/' : '/login');
+  final initial =
+      !onboardingDone ? '/onboarding' : (initiallyAuthed ? '/' : '/login');
 
   // Reavalia o gate quando a sessão / convidado / onboarding mudam.
   final refresh = ValueNotifier<int>(0);
@@ -348,7 +388,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: initial,
     refreshListenable: refresh,
     // Analytics: regista a navegação entre ecrãs automaticamente.
-    observers: [FirebaseAnalyticsObserver(analytics: ref.read(analyticsProvider))],
+    observers: [
+      FirebaseAnalyticsObserver(analytics: ref.read(analyticsProvider))
+    ],
     redirect: (context, state) {
       final auth = ref.read(authStateProvider);
       if (auth.isLoading) return null; // ainda a restaurar a sessão
@@ -363,48 +405,46 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-    GoRoute(
-        path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
-    GoRoute(path: '/', builder: (_, __) => const _Shell()),
-    GoRoute(
-      path: '/set/:id',
-      builder: (_, s) => SetCardsScreen(
-        setId: s.pathParameters['id']!,
-        initialStatus: s.uri.queryParameters['status'],
+      GoRoute(
+          path: '/onboarding', builder: (_, __) => const OnboardingScreen()),
+      GoRoute(path: '/', builder: (_, __) => const _Shell()),
+      GoRoute(
+        path: '/set/:id',
+        builder: (_, s) => SetCardsScreen(
+          setId: s.pathParameters['id']!,
+          initialStatus: s.uri.queryParameters['status'],
+        ),
       ),
-    ),
-    GoRoute(
-      path: '/card/:id',
-      builder: (_, s) => CardDetailScreen(id: s.pathParameters['id']!),
-    ),
-    GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
-    GoRoute(path: '/wishlist', builder: (_, __) => const WishlistScreen()),
-    GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
-    GoRoute(path: '/my-cards', builder: (_, __) => const MyCardsScreen()),
-    GoRoute(
-        path: '/my-listings', builder: (_, __) => const MyListingsScreen()),
-    GoRoute(
-      path: '/listing/:id',
-      builder: (_, s) => ListingDetailScreen(listing: s.extra as Listing),
-    ),
-    GoRoute(
-      path: '/community/card/:id',
-      builder: (_, s) => CardListingsScreen(cardId: s.pathParameters['id']!),
-    ),
-    GoRoute(path: '/premium', builder: (_, __) => const PremiumScreen()),
-    GoRoute(path: '/admin', builder: (_, __) => const AdminScreen()),
-    GoRoute(
-        path: '/trades', builder: (_, __) => const TradeMatchesScreen()),
-    GoRoute(path: '/messages', builder: (_, __) => const MessagesScreen()),
-    GoRoute(
-        path: '/notifications',
-        builder: (_, __) => const NotificationsScreen()),
-    GoRoute(
-        path: '/blocked', builder: (_, __) => const BlockedUsersScreen()),
-    GoRoute(
-      path: '/chat',
-      builder: (_, s) => ChatScreen(conversation: s.extra as Conversation),
-    ),
+      GoRoute(
+        path: '/card/:id',
+        builder: (_, s) => CardDetailScreen(id: s.pathParameters['id']!),
+      ),
+      GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
+      GoRoute(path: '/wishlist', builder: (_, __) => const WishlistScreen()),
+      GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
+      GoRoute(path: '/my-cards', builder: (_, __) => const MyCardsScreen()),
+      GoRoute(
+          path: '/my-listings', builder: (_, __) => const MyListingsScreen()),
+      GoRoute(
+        path: '/listing/:id',
+        builder: (_, s) => ListingDetailScreen(listing: s.extra as Listing),
+      ),
+      GoRoute(
+        path: '/community/card/:id',
+        builder: (_, s) => CardListingsScreen(cardId: s.pathParameters['id']!),
+      ),
+      GoRoute(path: '/premium', builder: (_, __) => const PremiumScreen()),
+      GoRoute(path: '/admin', builder: (_, __) => const AdminScreen()),
+      GoRoute(path: '/trades', builder: (_, __) => const TradeMatchesScreen()),
+      GoRoute(path: '/messages', builder: (_, __) => const MessagesScreen()),
+      GoRoute(
+          path: '/notifications',
+          builder: (_, __) => const NotificationsScreen()),
+      GoRoute(path: '/blocked', builder: (_, __) => const BlockedUsersScreen()),
+      GoRoute(
+        path: '/chat',
+        builder: (_, s) => ChatScreen(conversation: s.extra as Conversation),
+      ),
     ],
   );
 });
